@@ -1,0 +1,31 @@
+{
+  "dependencies": {
+    "adm-zip": "0.5.16",
+    "chokidar": "4.0.0",
+    "cors": "2.8.5",
+    "express": "4.21.0",
+    "inquirer": "11.0.1"
+  },
+  "name": "@cyn/construct-plugin",
+  "description": "Cyn construct plugin",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "node build.js --buildWrapperExtension",
+    "dev": "node dev.js",
+    "doc": "node doc.js",
+    "validate": "node validate.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CynToolkit/construct-plugin"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CynToolkit/construct-plugin/issues"
+  },
+  "homepage": "https://github.com/CynToolkit/construct-plugin#readme",
+  "devDependencies": {
+    "c3ide2-types": "1.0.0"
+  }
+}
