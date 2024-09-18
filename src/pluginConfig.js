@@ -146,108 +146,44 @@ const Config = {
     general: "General",
   },
   Acts: {
-    WriteText: {
-      // The category of the action as it appears in the add action dialog
+    Initialize: {
       category: "general",
-
-      // Forward to the instance function name
-      forward: "_WriteText",
-
-      // Set to true to highlight the action in the add action dialog
+      forward: "_Initialize",
       highlight: true,
-
-      // Set to true to hide the action in the interface. False by default if not specified.
       deprecated: false,
+      isAsync: true,
 
-      // Marks the action as async. Defaults to false if not specified.
-      isAsync: false,
+      listName: "Initialize integration",
+      displayText: "Initialize integration",
+      description: "Initialize the Cyn integration",
+    },
+    WriteText: {
+      category: "general",
+      forward: "_WriteText",
+      highlight: true,
+      deprecated: false,
+      isAsync: true,
 
-      // list of parameters
       params: [
         {
-          // The id of the parameter.
-          // It must be unique for each parameter.
           id: "path",
-          // The name of the parameter.
           name: "Path",
-          // The description of the parameter.
           desc: "Path",
-
-          // The type of the parameter.
           type: 'string',
-            // // The following types can take a default value
-            // - "string"
-            // - "number"
-            // - "any"
-            // - "boolean"
-
-            // // The following types can take a default value
-            // - "combo"
-
-            // // The following types CANNOT take a default value
-            // - "cmp"
-            // - "object"
-            // - "objectname"
-            // - "layer"
-            // - "layout"
-            // - "keyb"
-            // - "instancevar"
-            // - "instancevarbool"
-            // - "eventvar"
-            // - "eventvarbool"
-            // - "animation"
-            // - "objinstancevar"
-
-          // The default value of the parameter. Can be omitted if the type is not a string, number, any, boolean or combo.
           initialValue: "\"\"",
         },
         {
-          // The id of the parameter.
-          // It must be unique for each parameter.
           id: "contents",
-          // The name of the parameter.
           name: "Contents",
-          // The description of the parameter.
           desc: "Contents",
 
-          // The type of the parameter.
           type: 'string',
-            // // The following types can take a default value
-            // - "string"
-            // - "number"
-            // - "any"
-            // - "boolean"
-
-            // // The following types can take a default value
-            // - "combo"
-
-            // // The following types CANNOT take a default value
-            // - "cmp"
-            // - "object"
-            // - "objectname"
-            // - "layer"
-            // - "layout"
-            // - "keyb"
-            // - "instancevar"
-            // - "instancevarbool"
-            // - "eventvar"
-            // - "eventvarbool"
-            // - "animation"
-            // - "objinstancevar"
-
-          // The default value of the parameter. Can be omitted if the type is not a string, number, any, boolean or combo.
           initialValue: "\"\"",
         }
       ],
 
-      // The name of the action as it appears in the add action dialog
       listName: "Write text file",
-
-      // The text that appears in the event sheet. Note, every single param must be used in the display text.
-      // You can also use [b] and [i] tags.
       displayText: "Write text [b]{0}[/b] to file [i]{1}[/i]",
-
-      // The description of the action as it appears in the add action dialog
       description: "This is a sample action",
     },
   },
@@ -343,25 +279,15 @@ const Config = {
   },
   Exps: {
     UserFolder: {
-      // The category of the action as it appears in the expression picker
       category: "general",
-
-      // Forward to the instance function name
       forward: "_UserFolder",
-
-      // Set to true to highlight the expression in the expression picker
       highlight: true,
-
-      // Set to true to hide the expression in the interface. False by default if not specified.
       deprecated: false,
-
-      // The type of the expression.
       returnType: 'string',
         // - "string"
         // - "number"
         // - "any" // must be either string or number
 
-      // Set to true if the expression is variadic. False by default if not specified.
       isVariadicParameters: false,
 
       // list of parameters
@@ -384,7 +310,6 @@ const Config = {
       //   },
       // ],
 
-      // The description of the expression as it appears in the expression picker
       description: "Return the current User's folder",
     },
   },
