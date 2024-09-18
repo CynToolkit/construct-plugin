@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 
-const config = require("./src/behaviorConfig.js");
+const config = require("./src/pluginConfig.js");
 const { exit } = require("process");
 
 function validateDisplayText(name, obj) {
@@ -25,29 +25,29 @@ function validateDisplayText(name, obj) {
 
 const validationPipeline = [validateDisplayText];
 
-function validateBehavior(behaviorConfig) {
+function valiatePlugin(pluginConfig) {
   //assume file is valid
   const validations = [];
 
   // iterate over all the actions
-  Object.keys(behaviorConfig.Acts).forEach((key) => {
-    const action = behaviorConfig.Acts[key];
+  Object.keys(pluginConfig.Acts).forEach((key) => {
+    const action = pluginConfig.Acts[key];
     validationPipeline.forEach((validationFunction) => {
       validations.push(validationFunction(key, action));
     });
   });
 
   // iterate over all the conditions
-  Object.keys(behaviorConfig.Cnds).forEach((key) => {
-    const condition = behaviorConfig.Cnds[key];
+  Object.keys(pluginConfig.Cnds).forEach((key) => {
+    const condition = pluginConfig.Cnds[key];
     validationPipeline.forEach((validationFunction) => {
       validations.push(validationFunction(key, condition));
     });
   });
 
   // iterate over all the expressions
-  Object.keys(behaviorConfig.Exps).forEach((key) => {
-    const expression = behaviorConfig.Exps[key];
+  Object.keys(pluginConfig.Exps).forEach((key) => {
+    const expression = pluginConfig.Exps[key];
     validationPipeline.forEach((validationFunction) => {
       validations.push(validationFunction(key, expression));
     });
@@ -58,7 +58,7 @@ function validateBehavior(behaviorConfig) {
 }
 
 // check if the file is valid
-if (validateBehavior(config)) {
+if (valiatePlugin(config)) {
   console.info("Validation Passed");
   exit(0);
 } else {

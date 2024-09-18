@@ -59,7 +59,7 @@ C3.Plugins[PLUGIN_INFO.id] = class extends (
   }
 };
 const P_C = C3.Plugins[PLUGIN_INFO.id];
-P_C.Type = class extends globalThis.ISDKTypeBase {
+P_C.Type = class extends globalThis.ISDKObjectTypeBase {
   constructor(objectClass) {
     super(objectClass);
   }
@@ -70,6 +70,8 @@ P_C.Type = class extends globalThis.ISDKTypeBase {
 
   _onCreate() { }
 };
+
+const addonTriggers = [];
 
 //============ ACES ============
 P_C.Acts = {};

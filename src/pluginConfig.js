@@ -2,8 +2,8 @@
 /** @type {import("c3ide2-types").Plugin} */
 const Config = {
   addonType: "plugin",
-  id: "<@ADDON_ID>",
-  name: "<@ADDON_NAME>",
+  id: "cyn",
+  name: "Cyn",
   version: "1.0.0.0",
   category:
     // "3d",
@@ -16,7 +16,7 @@ const Config = {
     // "web",
     // "other"
     "general",
-  author: "<@ADDON_AUTHOR>",
+  author: "Armaldio",
   website: "https://www.construct.net",
   documentation: "https://www.construct.net",
   description: "Description",
@@ -24,12 +24,9 @@ const Config = {
   // githubUrl: "https://github.com/skymen/XXXX", // displays latest release version in auto-generated docs
   // icon: "icon.svg", // defaults to "icon.svg" if omitted
   type: "object", // world, object, dom
-  // <OPT_IN_DOMSIDE_START>
   domSideScripts: [
     // "domSide.js", // no need to include "c3runtime/" prefix
   ],
-  // <OPT_IN_DOMSIDE_END>
-  // <OPT_IN_WRAPPEREXTENSION_START>
   /* extensionScript: {
     enabled: false, // set to false to disable the extension script
     watch: false, // set to true to enable live reload on changes during development
@@ -42,7 +39,6 @@ const Config = {
     // you don't need to change this, the build step will rename the dll for you. Only change this if you change the name of the dll exported by Visual Studio
     name: "MyExtension",
   }, */
-  // <OPT_IN_WRAPPEREXTENSION_END>
   fileDependencies: [
     /*
     {
@@ -150,17 +146,12 @@ const Config = {
     general: "General",
   },
   Acts: {
-    /*
-    SampleAction: {
+    WriteText: {
       // The category of the action as it appears in the add action dialog
       category: "general",
 
       // Forward to the instance function name
-      forward: "_SampleAction",
-      // Or specify a handler function
-      handler: `function () {
-        // Your code here
-      }`,
+      forward: "_WriteText",
 
       // Set to true to highlight the action in the add action dialog
       highlight: true,
@@ -176,63 +167,89 @@ const Config = {
         {
           // The id of the parameter.
           // It must be unique for each parameter.
-          id: "param1",
+          id: "path",
           // The name of the parameter.
-          name: "Param 1",
+          name: "Path",
           // The description of the parameter.
-          desc: "The first parameter",
+          desc: "Path",
 
           // The type of the parameter.
-          type:
-            // The following types can take a default value
-            - "string"
-            - "number"
-            - "any"
-            - "boolean"
+          type: 'string',
+            // // The following types can take a default value
+            // - "string"
+            // - "number"
+            // - "any"
+            // - "boolean"
 
-            // The following types can take a default value
-            - "combo"
+            // // The following types can take a default value
+            // - "combo"
 
-            // The following types CANNOT take a default value
-            - "cmp"
-            - "object"
-            - "objectname"
-            - "layer"
-            - "layout"
-            - "keyb"
-            - "instancevar"
-            - "instancevarbool"
-            - "eventvar"
-            - "eventvarbool"
-            - "animation"
-            - "objinstancevar"
+            // // The following types CANNOT take a default value
+            // - "cmp"
+            // - "object"
+            // - "objectname"
+            // - "layer"
+            // - "layout"
+            // - "keyb"
+            // - "instancevar"
+            // - "instancevarbool"
+            // - "eventvar"
+            // - "eventvarbool"
+            // - "animation"
+            // - "objinstancevar"
 
           // The default value of the parameter. Can be omitted if the type is not a string, number, any, boolean or combo.
-          initialValue: "the default value of the parameter",
-
-          // Only for type "combo"
-          items: [
-            {"itemId1": "itemName1"},
-            {"itemId2": "itemName2"},
-            {"itemId3": "itemName3"},
-          ],
-
-          // Only for type "object"
-          allowedPluginIds: ["Sprite", "TiledBg"],
+          initialValue: "\"\"",
         },
+        {
+          // The id of the parameter.
+          // It must be unique for each parameter.
+          id: "contents",
+          // The name of the parameter.
+          name: "Contents",
+          // The description of the parameter.
+          desc: "Contents",
+
+          // The type of the parameter.
+          type: 'string',
+            // // The following types can take a default value
+            // - "string"
+            // - "number"
+            // - "any"
+            // - "boolean"
+
+            // // The following types can take a default value
+            // - "combo"
+
+            // // The following types CANNOT take a default value
+            // - "cmp"
+            // - "object"
+            // - "objectname"
+            // - "layer"
+            // - "layout"
+            // - "keyb"
+            // - "instancevar"
+            // - "instancevarbool"
+            // - "eventvar"
+            // - "eventvarbool"
+            // - "animation"
+            // - "objinstancevar"
+
+          // The default value of the parameter. Can be omitted if the type is not a string, number, any, boolean or combo.
+          initialValue: "\"\"",
+        }
       ],
 
       // The name of the action as it appears in the add action dialog
-      listName: "Sample Action",
+      listName: "Write text file",
 
       // The text that appears in the event sheet. Note, every single param must be used in the display text.
       // You can also use [b] and [i] tags.
-      displayText: "Sample action [i]{0}[/i]",
+      displayText: "Write text [b]{0}[/b] to file [i]{1}[/i]",
 
       // The description of the action as it appears in the add action dialog
       description: "This is a sample action",
     },
-    */
   },
   Cnds: {
     /*
@@ -325,17 +342,12 @@ const Config = {
     */
   },
   Exps: {
-    /*
-    SampleExpression: {
+    UserFolder: {
       // The category of the action as it appears in the expression picker
       category: "general",
 
       // Forward to the instance function name
-      forward: "_SampleAction",
-      // Or specify a handler function
-      handler: `function () {
-        // Your code here
-      }`,
+      forward: "_UserFolder",
 
       // Set to true to highlight the expression in the expression picker
       highlight: true,
@@ -344,38 +356,37 @@ const Config = {
       deprecated: false,
 
       // The type of the expression.
-      returnType:
-        - "string"
-        - "number"
-        - "any" // must be either string or number
+      returnType: 'string',
+        // - "string"
+        // - "number"
+        // - "any" // must be either string or number
 
       // Set to true if the expression is variadic. False by default if not specified.
-      isVariadicParameters: false
+      isVariadicParameters: false,
 
       // list of parameters
-      params: [
-        {
-          // The id of the parameter.
-          // It must be unique for each parameter.
-          id: "param1",
-          // The name of the parameter.
-          name: "Param 1",
-          // The description of the parameter.
-          desc: "The first parameter",
+      // params: [
+      //   {
+      //     // The id of the parameter.
+      //     // It must be unique for each parameter.
+      //     id: "param1",
+      //     // The name of the parameter.
+      //     name: "Param 1",
+      //     // The description of the parameter.
+      //     desc: "The first parameter",
 
-          // The type of the parameter.
-          type:
-            // The following types can take a default value
-            - "string"
-            - "number"
-            - "any"
-        },
-      ],
+      //     // The type of the parameter.
+      //     type:
+      //       // The following types can take a default value
+      //       - "string"
+      //       - "number"
+      //       - "any"
+      //   },
+      // ],
 
       // The description of the expression as it appears in the expression picker
-      description: "This is a sample expression",
+      description: "Return the current User's folder",
     },
-    */
   },
 };
 
