@@ -1,8 +1,12 @@
-const express = require("express");
-const { exec } = require("child_process");
-const chokidar = require("chokidar");
-const cors = require("cors");
-let pluginConfig = require("./src/pluginConfig.js");
+// @ts-check
+import express from "express";
+import { exec } from "child_process";
+import { watch } from "chokidar";
+import cors from "cors";
+import _pluginConfig from "./src/pluginConfig.js";
+
+let pluginConfig = _pluginConfig
+
 let hasWrapperBuild = false;
 let runBuildWrapperExtension = () => {};
 try {
@@ -12,9 +16,9 @@ try {
   console.log("No wrapper extension found.");
   hasWrapperBuild = false;
 }
-const fs = require("fs");
+import { existsSync } from "fs";
 
-const srcCppExists = fs.existsSync("./src_cpp");
+const srcCppExists = existsSync("./src_cpp");
 
 let port = 3000;
 const path = () => `http://localhost:${port}/addon.json`;
@@ -78,7 +82,7 @@ const runBuild = async (buildWrapperExtension = false) => {
   }
 
   console.log("Running build...");
-  exec("node build.js --dev", (error, stdout, stderr) => {
+  exec("node build.js --dev", async (error, stdout, stderr) => {
     if (error) {
       console.log(`Error: ${error.message}`);
       return;
@@ -94,8 +98,8 @@ const runBuild = async (buildWrapperExtension = false) => {
     console.log(path());
 
     // if the extension script is enabled and set to watch, watch the extension script
-    delete require.cache[require.resolve("./src/pluginConfig.js")];
-    pluginConfig = require("./src/pluginConfig.js");
+    // delete require.cache[require.resolve("./src/pluginConfig.js")];
+    pluginConfig = (await import("./src/pluginConfig.js")).default;
     const newHasWrapperExtension =
       hasWrapperBuild &&
       pluginConfig.extensionScript &&
@@ -131,13 +135,13 @@ const runBuild = async (buildWrapperExtension = false) => {
 runBuild(true);
 
 // Watch for file changes in the src directory
-const watcher = chokidar.watch("src", {
+const watcher = watch("src", {
   ignored: /(^|[\/\\])\../,
   persistent: true,
 });
 let wrapperWatcher;
 if (srcCppExists) {
-  wrapperWatcher = chokidar.watch("src_cpp/Project/**/*.cpp", {
+  wrapperWatcher = watch("src_cpp/Project/**/*.cpp", {
     ignored: /(^|[\/\\])\../,
     persistent: true,
   });

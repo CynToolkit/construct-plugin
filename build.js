@@ -1,5 +1,6 @@
-const fs = require("fs");
-const path = require("path");
+// @ts-check
+import { existsSync, readdirSync, lstatSync, unlinkSync, rmdirSync, mkdirSync, closeSync, openSync, writeFileSync, copyFileSync, readFileSync } from "fs";
+import { join } from "path";
 
 // get command line arguments
 const args = process.argv.slice(2);
@@ -18,18 +19,18 @@ try {
   }
 
   function removeFilesRecursively(dir) {
-    if (fs.existsSync(dir)) {
-      fs.readdirSync(dir).forEach(function (file) {
-        var curPath = path.join(dir, file);
-        if (fs.lstatSync(curPath).isDirectory()) {
+    if (existsSync(dir)) {
+      readdirSync(dir).forEach(function (file) {
+        var curPath = join(dir, file);
+        if (lstatSync(curPath).isDirectory()) {
           // recurse
           removeFilesRecursively(curPath);
         } else {
           // delete file
-          fs.unlinkSync(curPath);
+          unlinkSync(curPath);
         }
       });
-      fs.rmdirSync(dir);
+      rmdirSync(dir);
     }
   }
 
@@ -65,6 +66,7 @@ try {
   }
 
   function getFileListFromConfig(config) {
+    console.log('config', config)
     const files = [];
     if (config.domSideScripts) {
       config.domSideScripts.forEach(function (file) {
@@ -85,6 +87,8 @@ try {
         files.push(`c3runtime/${file.filename}`);
       });
     }
+
+    console.log('config', config)
 
     if (config.info.defaultImageUrl) {
       files.push(`c3runtime/${config.info.defaultImageUrl}`);
@@ -247,7 +251,7 @@ try {
     return lang;
   }
 
-  function acesFromConfig(config) {
+  async function acesFromConfig(config) {
     const aces = {};
 
     Object.keys(config.aceCategories).forEach((category) => {
@@ -391,14 +395,14 @@ try {
     return aces;
   }
 
-  if (fs.existsSync("./export")) {
+  if (existsSync("./export")) {
     removeFilesRecursively("./export");
   }
 
   // create lang and c3runtime folders
-  fs.mkdirSync("./export");
-  fs.mkdirSync("./export/lang");
-  fs.mkdirSync("./export/c3runtime");
+  mkdirSync("./export");
+  mkdirSync("./export/lang");
+  mkdirSync("./export/c3runtime");
 
   // create empty file called actions.js in c3runtime folder
   const emptyFiles = [
@@ -409,29 +413,32 @@ try {
     "type.js",
   ];
   emptyFiles.forEach((file) => {
-    fs.closeSync(fs.openSync(`./export/c3runtime/${file}`, "w"));
+    closeSync(openSync(`./export/c3runtime/${file}`, "w"));
   });
 
   // import config from config.js
-  const config = require("./src/pluginConfig.js");
+  const _config = await import("./src/pluginConfig.js");
+  const config = _config.default
 
   const addonJson = addonFromConfig(config);
   // write addon.json
-  fs.writeFileSync("./export/addon.json", JSON.stringify(addonJson, null, 2));
+  writeFileSync("./export/addon.json", JSON.stringify(addonJson, null, 2));
 
   const lang = langFromConfig(config);
   // write lang/en-US.json
-  fs.writeFileSync("./export/lang/en-US.json", JSON.stringify(lang, null, 2));
+  writeFileSync("./export/lang/en-US.json", JSON.stringify(lang, null, 2));
 
-  const aces = acesFromConfig(config);
+  const aces = await acesFromConfig(config);
   // write aces.json
-  fs.writeFileSync("./export/aces.json", JSON.stringify(aces, null, 2));
+  writeFileSync("./export/aces.json", JSON.stringify(aces, null, 2));
+
+  console.log('config', config)
 
   // copy icon.svg
   if (config.icon) {
-    fs.copyFileSync("./src/" + config.icon, "./export/" + config.icon);
+    copyFileSync("./src/" + config.icon, "./export/" + config.icon);
   } else {
-    fs.copyFileSync("./src/icon.svg", "./export/icon.svg");
+    copyFileSync("./src/icon.svg", "./export/icon.svg");
   }
 
   function getEditorPluginInfoFromConfig(config) {
@@ -490,13 +497,13 @@ try {
   }
 
   // write editor.js and replace "//<-- PLUGIN_INFO -->" with the plugin info
-  const editor = fs.readFileSync("./src/editor.js", "utf8");
+  const editor = readFileSync("./src/editor.js", "utf8");
   const editorPluginInfo = getEditorPluginInfoFromConfig(config);
   const editorWithPluginInfo = editor.replaceAll(
     "//<-- PLUGIN_INFO -->",
     editorPluginInfo
   );
-  fs.writeFileSync("./export/editor.js", editorWithPluginInfo);
+  writeFileSync("./export/editor.js", editorWithPluginInfo);
 
   function getRuntimePluginInfoFromConfig(config) {
     return `const PLUGIN_INFO = {
@@ -557,27 +564,27 @@ try {
   }
 
   // write plugin.js and replace "//<-- PLUGIN_INFO -->" with the plugin info
-  const plugin = fs.readFileSync("./src/plugin.js", "utf8");
-  const instance = fs.readFileSync("./src/instance.js", "utf8");
+  const plugin = readFileSync("./src/plugin.js", "utf8");
+  const instance = readFileSync("./src/instance.js", "utf8");
   const pluginPluginInfo = getRuntimePluginInfoFromConfig(config);
   const pluginWithPluginInfo = plugin
     .replaceAll("//<-- PLUGIN_INFO -->", pluginPluginInfo)
     .replaceAll("//<-- INSTANCE -->", instance);
 
-  fs.writeFileSync("./export/c3runtime/plugin.js", pluginWithPluginInfo);
+  writeFileSync("./export/c3runtime/plugin.js", pluginWithPluginInfo);
 
   if (config.domSideScripts) {
     config.domSideScripts.forEach((script) => {
-      const domSide = fs.readFileSync(
-        path.join(__dirname, "src", script),
+      const domSide = readFileSync(
+        join(__dirname, "src", script),
         "utf8"
       );
       const domSideWithId = domSide.replaceAll(
         "//<-- DOM_COMPONENT_ID -->",
         `const DOM_COMPONENT_ID = "${config.id}";`
       );
-      fs.writeFileSync(
-        path.join(__dirname, "export", "c3runtime", script),
+      writeFileSync(
+        join(__dirname, "export", "c3runtime", script),
         domSideWithId
       );
     });
@@ -586,13 +593,13 @@ try {
   if (config.extensionScript && config.extensionScript.enabled) {
     const targets = config.extensionScript.targets || [];
     targets.forEach((target) => {
-      fs.copyFileSync(
-        path.join(
+      copyFileSync(
+        join(
           __dirname,
           "src",
           `${config.extensionScript.name}_${target.toLowerCase()}.ext.dll`
         ),
-        path.join(
+        join(
           __dirname,
           "export",
           `${config.id}_${target.toLowerCase()}.ext.dll`
@@ -603,29 +610,29 @@ try {
 
   if (config.fileDependencies) {
     config.fileDependencies.forEach((file) => {
-      fs.copyFileSync(
-        path.join(__dirname, "src", file.filename),
-        path.join(__dirname, "export", "c3runtime", file.filename)
+      copyFileSync(
+        join(__dirname, "src", file.filename),
+        join(__dirname, "export", "c3runtime", file.filename)
       );
     });
   }
 
   if (config.info.defaultImageUrl) {
-    fs.copyFileSync(
-      path.join(__dirname, "src", config.info.defaultImageUrl),
-      path.join(__dirname, "export", "c3runtime", config.info / defaultImageUrl)
+    copyFileSync(
+      join(__dirname, "src", config.info.defaultImageUrl),
+      join(__dirname, "export", "c3runtime", config.info / defaultImageUrl)
     );
   }
 
   if (!devBuild) {
     // zip the content of the export folder and name it with the plugin id and version and use .c3addon as extension
-    var AdmZip = require("adm-zip");
-    const zip = new AdmZip();
+    var AdmZip = await import("adm-zip");
+    const zip = new AdmZip.default();
     zip.addLocalFolder("./export/c3runtime", "c3runtime");
     zip.addLocalFolder("./export/lang", "lang");
 
     // for each remaining file in the root export folder
-    fs.readdirSync("./export").forEach((file) => {
+    readdirSync("./export").forEach((file) => {
       // if the file is not the c3runtime or lang folder
       if (file !== "c3runtime" && file !== "lang") {
         // add it to the zip
@@ -634,8 +641,8 @@ try {
     });
 
     // if dist folder does not exist, create it
-    if (!fs.existsSync("./dist")) {
-      fs.mkdirSync("./dist");
+    if (!existsSync("./dist")) {
+      mkdirSync("./dist");
     }
     zip.writeZip(`./dist/${config.id}-${config.version}.c3addon`);
   }
