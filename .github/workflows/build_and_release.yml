@@ -66,17 +66,6 @@ jobs:
         with:
           files: dist/**/*
 
-      - name: Create Release
-        id: create_release
-        uses: ncipollo/release-action@v1
-        with:
-          artifacts: "dist/${{ steps.getfile.outputs.filename }}"
-          omitBody: true
-          tag: ${{ steps.getfile.outputs.filename }}
-          name: v${{ steps.getfile.outputs.version }}
-          allowUpdates: true
-          makeLatest: true
-
       - name: Check if variables are set
         id: check
         run: |
