@@ -1,11 +1,11 @@
 {
   "dependencies": {
-    "@cyn/core": "1.0.0",
+    "@cyn/core": "1.2.1",
     "adm-zip": "0.5.16",
-    "chokidar": "4.0.0",
+    "chokidar": "4.0.1",
     "cors": "2.8.5",
     "express": "4.21.0",
-    "inquirer": "11.0.1"
+    "inquirer": "11.0.2"
   },
   "name": "@cyn/construct-plugin",
   "description": "Cyn construct plugin",
@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/CynToolkit/construct-plugin#readme",
   "devDependencies": {
-    "c3ide2-types": "1.0.0",
+    "c3ide2-types": "1.0.1",
     "electron": "32.1.2"
   }
 }

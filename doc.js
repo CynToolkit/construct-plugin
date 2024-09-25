@@ -1,5 +1,5 @@
-const fs = require("fs");
-const path = require("path");
+import fs from "fs";
+import path from "path";
 
 const camelCasedMap = new Map();
 
@@ -19,6 +19,8 @@ function getFileExtension(filename) {
   return filename.slice(((filename.lastIndexOf(".") - 1) >>> 0) + 2);
 }
 
+const __dirname = import.meta.dirname;
+
 function getCoverImage() {
   const exampleFolderPath = path.join(__dirname, "examples");
   const images = getFileWithTypeFromFolder(exampleFolderPath, [
@@ -35,7 +37,7 @@ function getCoverImage() {
   return '<img src="./src/icon.svg" width="100" /><br>';
 }
 
-const config = require("./src/pluginConfig.js");
+import config from "./src/pluginConfig.js";
 
 const readme = [];
 readme.push(getCoverImage());

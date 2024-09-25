@@ -1,7 +1,7 @@
 // @ts-check
 
 /**
- * @satisfies {Config<'general' | 'window' | 'filesystem' | 'file-dialogs' | 'command-line'>}
+ * @satisfies {import('./sdk').Config<'general' | 'window' | 'filesystem' | 'file-dialogs' | 'command-line'>}
  */
 const Config = /** @type {const} */({
   addonType: "plugin",
@@ -130,7 +130,7 @@ const Config = /** @type {const} */({
     Initialize: {
       category: "general",
       forward: "_Initialize",
-      highlight: true,
+      highlight: false,
       deprecated: false,
       isAsync: true,
 
@@ -140,39 +140,10 @@ const Config = /** @type {const} */({
     },
 
     // filesystem
-    WriteText: {
-      category: "filesystem",
-      forward: "_WriteText",
-      highlight: true,
-      deprecated: false,
-      isAsync: true,
-
-      params: [
-        {
-          id: "path",
-          name: "Path",
-          desc: "Path",
-          type: 'string',
-          initialValue: "\"\"",
-        },
-        {
-          id: "contents",
-          name: "Contents",
-          desc: "Contents",
-
-          type: 'string',
-          initialValue: "\"\"",
-        }
-      ],
-
-      listName: "Write text file",
-      displayText: "Write text [b]{0}[/b] to file [i]{1}[/i]",
-      description: "This is a sample action",
-    },
     AppendFile: {
       category: "filesystem",
       forward: "_AppendFile",
-      highlight: true,
+      highlight: false,
       deprecated: false,
       isAsync: true,
       params: [
@@ -198,7 +169,7 @@ const Config = /** @type {const} */({
     CopyFile: {
       category: "filesystem",
       forward: "_CopyFile",
-      highlight: true,
+      highlight: false,
       deprecated: false,
       isAsync: true,
       params: [
@@ -224,7 +195,7 @@ const Config = /** @type {const} */({
     CreateFolder: {
       category: "filesystem",
       forward: "_CreateFolder",
-      highlight: true,
+      highlight: false,
       deprecated: false,
       isAsync: true,
       params: [
@@ -243,7 +214,7 @@ const Config = /** @type {const} */({
     DeleteFile: {
       category: "filesystem",
       forward: "_DeleteFile",
-      highlight: true,
+      highlight: false,
       deprecated: false,
       isAsync: true,
       params: [
@@ -262,7 +233,7 @@ const Config = /** @type {const} */({
     ListFiles: {
       category: "filesystem",
       forward: "_ListFiles",
-      highlight: true,
+      highlight: false,
       deprecated: false,
       isAsync: true,
       params: [
@@ -281,7 +252,7 @@ const Config = /** @type {const} */({
     MoveFile: {
       category: "filesystem",
       forward: "_MoveFile",
-      highlight: true,
+      highlight: false,
       deprecated: false,
       isAsync: true,
       params: [
@@ -307,7 +278,7 @@ const Config = /** @type {const} */({
     OpenBrowser: {
       category: "filesystem",
       forward: "_OpenBrowser",
-      highlight: true,
+      highlight: false,
       deprecated: false,
       isAsync: true,
       params: [
@@ -326,7 +297,7 @@ const Config = /** @type {const} */({
     ReadBinaryFile: {
       category: "filesystem",
       forward: "_ReadBinaryFile",
-      highlight: true,
+      highlight: false,
       deprecated: false,
       isAsync: true,
       params: [
@@ -348,6 +319,7 @@ const Config = /** @type {const} */({
           desc: "The Binary Data object to store the file contents.",
           name: "Destination",
           type: 'object',
+          allowedPluginIds: ['BinaryData']
         }
       ],
       listName: "Read binary file",
@@ -357,7 +329,7 @@ const Config = /** @type {const} */({
     RenameFile: {
       category: "filesystem",
       forward: "_RenameFile",
-      highlight: true,
+      highlight: false,
       deprecated: false,
       isAsync: true,
       params: [
@@ -383,7 +355,7 @@ const Config = /** @type {const} */({
     RunFile: {
       category: "filesystem",
       forward: "_RunFile",
-      highlight: true,
+      highlight: false,
       deprecated: false,
       isAsync: true,
       params: [
@@ -402,7 +374,7 @@ const Config = /** @type {const} */({
     ShellOpen: {
       category: "filesystem",
       forward: "_ShellOpen",
-      highlight: true,
+      highlight: false,
       deprecated: false,
       isAsync: true,
       params: [
@@ -418,10 +390,29 @@ const Config = /** @type {const} */({
       displayText: "Shell open [b]{0}[/b]",
       description: "Opens the file in the shell.",
     },
+    ExplorerOpen: {
+      category: "filesystem",
+      forward: "_ExplorerOpen",
+      highlight: false,
+      deprecated: false,
+      isAsync: true,
+      params: [
+        {
+          id: 'path',
+          desc: "The path to show in the default explorer.",
+          name: "Path",
+          type: 'string',
+          initialValue: "\"\"",
+        }
+      ],
+      listName: "Explorer open",
+      displayText: "Explorer open [b]{0}[/b]",
+      description: "Opens the path in the explorer.",
+    },
     WriteBinaryFile: {
       category: "filesystem",
       forward: "_WriteBinaryFile",
-      highlight: true,
+      highlight: false,
       deprecated: false,
       isAsync: true,
       params: [
@@ -444,6 +435,7 @@ const Config = /** @type {const} */({
           desc: "The Binary Data object to read the file contents from.",
           name: "Source",
           type: 'object',
+          allowedPluginIds: ['BinaryData']
         }
       ],
       listName: "Write binary file",
@@ -453,7 +445,7 @@ const Config = /** @type {const} */({
     WriteTextFile: {
       category: "filesystem",
       forward: "_WriteTextFile",
-      highlight: true,
+      highlight: false,
       deprecated: false,
       isAsync: true,
       params: [
@@ -476,14 +468,57 @@ const Config = /** @type {const} */({
       displayText: "Write text file [b]{0}[/b] to [b]{1}[/b]",
       description: "Writes the text file.",
     },
-
-
+    WriteText: {
+      category: "filesystem",
+      forward: "_WriteTextFile",
+      highlight: false,
+      deprecated: true,
+      isAsync: true,
+      params: [
+        {
+          id: 'path',
+          desc: "The path to the file to write.",
+          name: "Path",
+          type: 'string',
+          initialValue: "\"\"",
+        },
+        {
+          id: 'contents',
+          desc: "The contents to write to the file.",
+          name: "Contents",
+          type: 'string',
+          initialValue: "\"\"",
+        }
+      ],
+      listName: "Write text file",
+      displayText: "Write text file [b]{0}[/b] to [b]{1}[/b]",
+      description: "Writes the text file.",
+    },
+    ReadTextFile: {
+      category: "filesystem",
+      forward: "_ReadTextFile",
+      highlight: false,
+      deprecated: false,
+      isAsync: true,
+      params: [
+        {
+          id: 'path',
+          desc: "The path to the file to read.",
+          name: "Path",
+          type: 'string',
+          initialValue: "\"\"",
+        }
+      ],
+      description: "Reads the text file.",
+      listName: "Read text file",
+      displayText: "Read text file [b]{0}[/b]",
+    },
 
     // file-dialogs
     ShowFolderDialog: {
       category: "file-dialogs",
       forward: "_ShowFolderDialog",
-      highlight: true,
+      highlight: false,
       deprecated: false,
       isAsync: true,
 
@@ -495,7 +530,7 @@ const Config = /** @type {const} */({
     ShowOpenDialog: {
       category: "file-dialogs",
       forward: "_ShowOpenDialog",
-      highlight: true,
+      highlight: false,
       deprecated: false,
       isAsync: true,
 
@@ -516,7 +551,7 @@ const Config = /** @type {const} */({
     ShowSaveDialog: {
       category: "file-dialogs",
       forward: "_ShowSaveDialog",
-      highlight: true,
+      highlight: false,
       deprecated: false,
       isAsync: true,
 
@@ -539,7 +574,7 @@ const Config = /** @type {const} */({
     Maximize: {
       category: "window",
       forward: "_Maximize",
-      highlight: true,
+      highlight: false,
       deprecated: false,
       isAsync: true,
 
@@ -551,7 +586,7 @@ const Config = /** @type {const} */({
     Minimize: {
       category: "window",
       forward: "_Minimize",
-      highlight: true,
+      highlight: false,
       deprecated: false,
       isAsync: true,
 
@@ -563,7 +598,7 @@ const Config = /** @type {const} */({
     Restore: {
       category: "window",
       forward: "_Restore",
-      highlight: true,
+      highlight: false,
       deprecated: false,
       isAsync: true,
 
@@ -575,7 +610,7 @@ const Config = /** @type {const} */({
     RequestAttention: {
       category: "window",
       forward: "_RequestAttention",
-      highlight: true,
+      highlight: false,
       deprecated: false,
       isAsync: true,
 
@@ -599,7 +634,7 @@ const Config = /** @type {const} */({
     SetAlwaysOnTop: {
       category: "window",
       forward: "_SetAlwaysOnTop",
-      highlight: true,
+      highlight: false,
       deprecated: false,
       isAsync: true,
       params: [
@@ -622,7 +657,7 @@ const Config = /** @type {const} */({
     SetHeight: {
       category: "window",
       forward: "_SetHeight",
-      highlight: true,
+      highlight: false,
       deprecated: false,
       isAsync: true,
       params: [
@@ -642,7 +677,7 @@ const Config = /** @type {const} */({
     SetMaximumSize: {
       category: "window",
       forward: "_SetMaximumSize",
-      highlight: true,
+      highlight: false,
       deprecated: false,
       isAsync: true,
       params: [
@@ -669,7 +704,7 @@ const Config = /** @type {const} */({
     SetMinimumSize: {
       category: "window",
       forward: "_SetMinimumSize",
-      highlight: true,
+      highlight: false,
       deprecated: false,
       isAsync: true,
       params: [
@@ -696,7 +731,7 @@ const Config = /** @type {const} */({
     SetResizable: {
       category: "window",
       forward: "_SetResizable",
-      highlight: true,
+      highlight: false,
       deprecated: false,
       isAsync: true,
       params: [
@@ -719,7 +754,7 @@ const Config = /** @type {const} */({
     SetTitle: {
       category: "window",
       forward: "_SetTitle",
-      highlight: true,
+      highlight: false,
       deprecated: false,
       isAsync: true,
       params: [
@@ -739,7 +774,7 @@ const Config = /** @type {const} */({
     SetWidth: {
       category: "window",
       forward: "_SetWidth",
-      highlight: true,
+      highlight: false,
       deprecated: false,
       isAsync: true,
       params: [
@@ -759,7 +794,7 @@ const Config = /** @type {const} */({
     SetX: {
       category: "window",
       forward: "_SetX",
-      highlight: true,
+      highlight: false,
       deprecated: false,
       isAsync: true,
       params: [
@@ -779,7 +814,7 @@ const Config = /** @type {const} */({
     SetY: {
       category: "window",
       forward: "_SetY",
-      highlight: true,
+      highlight: false,
       deprecated: false,
       isAsync: true,
       params: [
@@ -799,7 +834,7 @@ const Config = /** @type {const} */({
     ShowDevTools: {
       category: "window",
       forward: "_ShowDevTools",
-      highlight: true,
+      highlight: false,
       deprecated: false,
       isAsync: true,
       params: [
@@ -822,7 +857,7 @@ const Config = /** @type {const} */({
     Unmaximize: {
       category: "window",
       forward: "_Unmaximize",
-      highlight: true,
+      highlight: false,
       deprecated: false,
       isAsync: true,
       listName: "Unmaximize",
@@ -831,10 +866,32 @@ const Config = /** @type {const} */({
     },
   },
   Cnds: {
+    IsEngine: {
+      category: "general",
+      forward: "_IsEngine",
+      highlight: false,
+      deprecated: false,
+      description: "Return true if the engine running the app is the one selected",
+      displayText: "Is engine {0}",
+      params: [
+        {
+          id: 'engine',
+          desc: "The engine to check",
+          name: "Engine",
+          type: 'combo',
+          items: [
+            { "electron": "Electron" },
+            { "tauri": "Tauri" }
+          ]
+        }
+      ],
+      listName: "Is engine",
+    },
+
     OnFolderDialogCancel: {
       category: "file-dialogs",
       forward: "_OnFolderDialogCancel",
-      highlight: true,
+      highlight: false,
       deprecated: false,
       isTrigger: true,
       isInvertible: false,
@@ -846,7 +903,7 @@ const Config = /** @type {const} */({
     OnFolderDialogOk: {
       category: "file-dialogs",
       forward: "_OnFolderDialogOk",
-      highlight: true,
+      highlight: false,
       deprecated: false,
       isTrigger: true,
       isInvertible: false,
@@ -858,7 +915,7 @@ const Config = /** @type {const} */({
     OnOpenDialogCancel: {
       category: "file-dialogs",
       forward: "_OnOpenDialogCancel",
-      highlight: true,
+      highlight: false,
       deprecated: false,
       isTrigger: true,
       isInvertible: false,
@@ -870,7 +927,7 @@ const Config = /** @type {const} */({
     OnOpenDialogOk: {
       category: "file-dialogs",
       forward: "_OnOpenDialogOk",
-      highlight: true,
+      highlight: false,
       deprecated: false,
       isTrigger: true,
       isInvertible: false,
@@ -882,7 +939,7 @@ const Config = /** @type {const} */({
     OnSaveDialogCancel: {
       category: "file-dialogs",
       forward: "_OnSaveDialogCancel",
-      highlight: true,
+      highlight: false,
       deprecated: false,
       isTrigger: true,
       isInvertible: false,
@@ -894,7 +951,7 @@ const Config = /** @type {const} */({
     OnSaveDialogOk: {
       category: "file-dialogs",
       forward: "_OnSaveDialogOk",
-      highlight: true,
+      highlight: false,
       deprecated: false,
       isTrigger: true,
       isInvertible: false,
@@ -907,7 +964,7 @@ const Config = /** @type {const} */({
     OnAnyBinaryFileRead: {
       category: "file-dialogs",
       forward: "_OnAnyBinaryFileRead",
-      highlight: true,
+      highlight: false,
       deprecated: false,
       isTrigger: true,
       isInvertible: false,
@@ -919,7 +976,7 @@ const Config = /** @type {const} */({
     OnAnyBinaryFileWrite: {
       category: "file-dialogs",
       forward: "_OnAnyBinaryFileWrite",
-      highlight: true,
+      highlight: false,
       deprecated: false,
       isTrigger: true,
       isInvertible: false,
@@ -931,31 +988,45 @@ const Config = /** @type {const} */({
     OnBinaryFileRead: {
       category: "file-dialogs",
       forward: "_OnBinaryFileRead",
-      highlight: true,
+      highlight: false,
       deprecated: false,
       isTrigger: true,
       isInvertible: false,
       listName: "On binary file read",
-      params: [],
-      displayText: "On binary file read",
+      params: [
+        {
+          id: 'tag',
+          desc: "The tag of the file.",
+          name: "Tag",
+          type: 'string',
+        }
+      ],
+      displayText: "On binary file {0} read",
       description: "Triggered when binary file read completes. The data is then available in the Binary Data object.",
     },
     OnBinaryFileWrite: {
       category: "file-dialogs",
       forward: "_OnBinaryFileWrite",
-      highlight: true,
+      highlight: false,
       deprecated: false,
       isTrigger: true,
       isInvertible: false,
       listName: "On binary file written",
-      params: [],
-      displayText: "On binary file written",
+      params: [
+        {
+          id: 'tag',
+          desc: "The tag of the file.",
+          name: "Tag",
+          type: 'string',
+        }
+      ],
+      displayText: "On binary file {0} written",
       description: "Triggered when a binary file write completes.",
     },
     OnFileDropped: {
       category: "file-dialogs",
       forward: "_OnFileDropped",
-      highlight: true,
+      highlight: false,
       deprecated: false,
       isTrigger: true,
       isInvertible: false,
@@ -967,7 +1038,7 @@ const Config = /** @type {const} */({
     OnFileSystemError: {
       category: "file-dialogs",
       forward: "_OnFileSystemError",
-      highlight: true,
+      highlight: false,
       deprecated: false,
       isTrigger: true,
       isInvertible: false,
@@ -979,7 +1050,7 @@ const Config = /** @type {const} */({
     OnPathVerification: {
       category: "file-dialogs",
       forward: "_OnPathVerification",
-      highlight: true,
+      highlight: false,
       deprecated: false,
       isTrigger: true,
       isInvertible: false,
@@ -1007,7 +1078,7 @@ const Config = /** @type {const} */({
     ArgumentAt: {
       category: "command-line",
       forward: "_ArgumentAt",
-      highlight: true,
+      highlight: false,
       deprecated: false,
       returnType: 'string',
       params: [
@@ -1023,7 +1094,7 @@ const Config = /** @type {const} */({
     ArgumentCount: {
       category: "command-line",
       forward: "_ArgumentCount",
-      highlight: true,
+      highlight: false,
       deprecated: false,
       returnType: 'number',
       description: "Get the number of arguments.",
@@ -1033,7 +1104,7 @@ const Config = /** @type {const} */({
     ChosenPath: {
       category: "file-dialogs",
       forward: "_ChosenPath",
-      highlight: true,
+      highlight: false,
       deprecated: false,
       returnType: 'string',
       description: "Return the chosen path after a file dialog.",
@@ -1043,7 +1114,7 @@ const Config = /** @type {const} */({
     AppFolder: {
       category: "filesystem",
       forward: "_AppFolder",
-      highlight: true,
+      highlight: false,
       deprecated: false,
       returnType: 'string',
       description: "Return the folder of the current app.",
@@ -1051,7 +1122,7 @@ const Config = /** @type {const} */({
     AppFolderURL: {
       category: "filesystem",
       forward: "_AppFolderURL",
-      highlight: true,
+      highlight: false,
       deprecated: false,
       returnType: 'string',
       description: "Return the URL of the folder of the current app.",
@@ -1059,7 +1130,7 @@ const Config = /** @type {const} */({
     DroppedFile: {
       category: "filesystem",
       forward: "_DroppedFile",
-      highlight: true,
+      highlight: false,
       deprecated: false,
       returnType: 'string',
       description: "Return the dropped file after a file drop.",
@@ -1067,7 +1138,7 @@ const Config = /** @type {const} */({
     FileError: {
       category: "filesystem",
       forward: "_FileError",
-      highlight: true,
+      highlight: false,
       deprecated: false,
       returnType: 'string',
       description: "Return the error message after a file operation fails.",
@@ -1075,7 +1146,7 @@ const Config = /** @type {const} */({
     FileSize: {
       category: "filesystem",
       forward: "_FileSize",
-      highlight: true,
+      highlight: false,
       deprecated: false,
       returnType: 'number',
       description: "Return the size of the file.",
@@ -1083,14 +1154,14 @@ const Config = /** @type {const} */({
     FileTag: {
       category: "filesystem",
       forward: "_FileTag",
-      highlight: true,
+      highlight: false,
       returnType: "string",
       description: "Return the tag of the action.",
     },
     ListAt: {
       category: "filesystem",
       forward: "_ListAt",
-      highlight: true,
+      highlight: false,
       deprecated: false,
       returnType: 'string',
       params: [
@@ -1106,7 +1177,7 @@ const Config = /** @type {const} */({
     ListCount: {
       category: "filesystem",
       forward: "_ListCount",
-      highlight: true,
+      highlight: false,
       deprecated: false,
       returnType: 'number',
       description: "Get the number of files in the folder.",
@@ -1114,7 +1185,7 @@ const Config = /** @type {const} */({
     ProjectFilesFolder: {
       category: "filesystem",
       forward: "_ProjectFilesFolder",
-      highlight: true,
+      highlight: false,
       deprecated: false,
       returnType: 'string',
       description: "Return the folder of the project files.",
@@ -1122,7 +1193,7 @@ const Config = /** @type {const} */({
     ProjectFilesFolderURL: {
       category: "filesystem",
       forward: "_ProjectFilesFolderURL",
-      highlight: true,
+      highlight: false,
       deprecated: false,
       returnType: 'string',
       description: "Return the URL of the folder of the project files.",
@@ -1130,7 +1201,7 @@ const Config = /** @type {const} */({
     ReadFile: {
       category: "filesystem",
       forward: "_ReadFile",
-      highlight: true,
+      highlight: false,
       deprecated: false,
       returnType: 'string',
       description: "Return the contents of the file.",
@@ -1138,7 +1209,7 @@ const Config = /** @type {const} */({
     UserFolder: {
       category: "filesystem",
       forward: "_UserFolder",
-      highlight: true,
+      highlight: false,
       deprecated: false,
       returnType: 'string',
       isVariadicParameters: false,
@@ -1149,7 +1220,7 @@ const Config = /** @type {const} */({
     WindowHeight: {
       category: "window",
       forward: "_WindowHeight",
-      highlight: true,
+      highlight: false,
       deprecated: false,
       returnType: 'number',
       description: "Return the height of the window.",
@@ -1157,7 +1228,7 @@ const Config = /** @type {const} */({
     WindowWidth: {
       category: "window",
       forward: "_WindowWidth",
-      highlight: true,
+      highlight: false,
       deprecated: false,
       returnType: 'number',
       description: "Return the width of the window.",
@@ -1165,7 +1236,7 @@ const Config = /** @type {const} */({
     WindowTitle: {
       category: "window",
       forward: "_WindowTitle",
-      highlight: true,
+      highlight: false,
       deprecated: false,
       returnType: 'string',
       description: "Return the title of the window.",
@@ -1173,7 +1244,7 @@ const Config = /** @type {const} */({
     WindowX: {
       category: "window",
       forward: "_WindowX",
-      highlight: true,
+      highlight: false,
       deprecated: false,
       returnType: 'number',
       description: "Return the x position of the window.",
@@ -1181,7 +1252,7 @@ const Config = /** @type {const} */({
     WindowY: {
       category: "window",
       forward: "_WindowY",
-      highlight: true,
+      highlight: false,
       deprecated: false,
       returnType: 'number',
       description: "Return the y position of the window.",

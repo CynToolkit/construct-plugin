@@ -1,5 +1,6 @@
 // @ts-check
 
+
 class WebSocketClient {
   constructor(url, options = {}) {
     this.url = url;
@@ -111,7 +112,7 @@ class WebSocketClient {
 }
 
 /**
- * @type {GetInstanceJSFn}
+ * @type {import('./sdk').GetInstanceJSFn}
  */
 function getInstanceJs(parentClass, addonTriggers, C3) {
   return class Cyn extends parentClass {
@@ -123,29 +124,72 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     /**
      * @type {string}
      */
-    userFolder
+    _userFolder
+
+    /** @type {string} */
+    _currentTag
+
+    /** @type {import('@cyn/core').MessageEngine['output']['body']['engine']} */
+    _engine
+
+    /** @type {boolean} */
+    _isInitialized
 
     constructor() {
       super();
+
+      this._currentTag = '';
+      this._isInitialized = false
 
       const properties = this._getInitProperties();
       if (properties) {
       }
     }
 
+    async unsupportedEngine() {
+      console.warn(`Unable to execute action: unsupported engine`)
+    }
+
     /**
-     * @template T
+     * @template {(...args: any[]) => any} T
      * @param {T} base
      * @param {T} callback
+     * @param {T} [fallback]
+     * @param {boolean} [force]
      * @returns T
      */
-    wrap(base, callback) {
-      return callback
+    wrap(base, callback, fallback, force) {
+      return (...args) => {
+        console.log('this._isInitialized', this._isInitialized)
+        // is initialized
+        if (this._isInitialized) {
+          // and is connected to an engine
+          console.log('this.ws?.isConnected', this.ws?.isConnected)
+          if (this.ws?.isConnected) {
+            // execute callback
+            return callback.call(this, ...args);
+          } else {
+            console.log('else 1')
+            // do nothing (web, nwjs, unsupported, ...)
+            return fallback
+              ? fallback.call(this, ...args)
+              : callback.call(this, ...args);
+          }
+        } else if (force) {
+          console.log('force')
+          return callback.call(this, ...args);
+        } else {
+          console.log('else 2')
+          return fallback
+            ? fallback.call(this, ...args)
+            : callback.call(this, ...args);
+        }
+      }
     }
 
     // Acts
 
-    _Initialize = async () => {
+    _Initialize = this.wrap(super._Initialize, async () => {
       // Initialize the WebSocket connection
       console.log('on instance created');
 
@@ -158,9 +202,10 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
 
       console.log('this.ws', this.ws)
 
+      // -----------------------------------------------------------------------
       // Fetch user folder
       /** @type {import('@cyn/core').MakeInputOutput<import('@cyn/core').MessagePaths, 'input'>} */
-      const order = {
+      const orderUserFolder = {
         url: '/paths',
         body: {
           name: 'home'
@@ -170,15 +215,32 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
       /**
        * @type {import('@cyn/core').MakeInputOutput<import('@cyn/core').MessagePaths, 'output'>}
        */
-      const userFolder = await this.ws.sendAndWaitForResponse(order)
+      const userFolder = await this.ws.sendAndWaitForResponse(orderUserFolder)
       console.log('userFolder', userFolder.body.data)
-      this.userFolder = userFolder.body.data
+      this._userFolder = userFolder.body.data
 
-      // Fetch XXX
-    }
+      // -----------------------------------------------------------------------
+      // Fetch engine
 
-    _WriteText = this.wrap(super._WriteText, async (contents, path) => {
-      console.log('Write text', arguments);
+      /** @type {import('@cyn/core').MakeInputOutput<import('@cyn/core').MessageEngine, 'input'>} */
+      const orderEngine = {
+        url: '/engine',
+      }
+
+      /**
+       * @type {import('@cyn/core').MakeInputOutput<import('@cyn/core').MessageEngine, 'output'>}
+       */
+      const engineResponse = await this.ws.sendAndWaitForResponse(orderEngine)
+      console.log('engineResponse', engineResponse.body.engine)
+      this._engine = engineResponse.body.engine
+
+      this._isInitialized = true
+
+      console.log('this', this)
+    }, this.unsupportedEngine, true)
+
+    _WriteTextFile = this.wrap(super._WriteTextFile, async (contents, path) => {
+      console.log('Write text', contents, path);
 
       /** @type {import('@cyn/core').MakeInputOutput<import('@cyn/core').MessageWriteFile, 'input'>} */
       const order = {
@@ -192,16 +254,37 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
 
       await this.ws?.sendAndWaitForResponse(order)
       console.log('this', this)
-    })
+    }, this.unsupportedEngine)
 
-    _Maximize = async () => {
+    _WriteText = () => {
+      //
+    }
+
+    _ReadTextFile = this.wrap(super._ReadTextFile, async (path) => {
+      console.log('Read text', path);
+
+      /** @type {import('@cyn/core').MakeInputOutput<import('@cyn/core').MessageReadFile, 'input'>} */
+      const order = {
+        url: '/fs/file/read',
+        body: {
+          path,
+          encoding: "utf8"
+        }
+      }
+
+      const answer = await this.ws?.sendAndWaitForResponse(order)
+      console.log('this', this)
+      this._readFile = answer?.body.content
+    }, this.unsupportedEngine)
+
+    _Maximize = this.wrap(super._Maximize, async () => {
       /** @type {import('@cyn/core').MakeInputOutput<import('@cyn/core').MessageWindowMaximize, 'input'>} */
       const order = {
         url: '/window/maximize',
       }
 
       await this.ws?.sendAndWaitForResponse(order)
-    }
+    }, this.unsupportedEngine)
 
     _Minimize = this.wrap(super._Minimize, async () => {
       /** @type {import('@cyn/core').MakeInputOutput<import('@cyn/core').MessageWindowMinimize, 'input'>} */
@@ -210,7 +293,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
       }
 
       await this.ws?.sendAndWaitForResponse(order)
-    })
+    }, this.unsupportedEngine)
 
     _Restore = this.wrap(super._Restore, async () => {
       /** @type {import('@cyn/core').MakeInputOutput<import('@cyn/core').MessageWindowRestore, 'input'>} */
@@ -219,7 +302,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
       }
 
       await this.ws?.sendAndWaitForResponse(order)
-    })
+    }, this.unsupportedEngine)
 
     _RequestAttention = this.wrap(super._RequestAttention, async (mode) => {
       console.log('mode', mode)
@@ -231,7 +314,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
       await this.ws?.sendAndWaitForResponse(order)
 
       // TODO: support stop
-    })
+    }, this.unsupportedEngine)
 
     _SetAlwaysOnTop = this.wrap(super._SetAlwaysOnTop, async (mode) => {
       /** @type {import('@cyn/core').MakeInputOutput<import('@cyn/core').MessageSetAlwaysOnTop, 'input'>} */
@@ -243,7 +326,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
       }
 
       await this.ws?.sendAndWaitForResponse(order)
-    })
+    }, this.unsupportedEngine)
 
     _SetHeight = this.wrap(super._SetHeight, async (height) => {
       /** @type {import('@cyn/core').MakeInputOutput<import('@cyn/core').MessageSetHeight, 'input'>} */
@@ -255,7 +338,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
       }
 
       await this.ws?.sendAndWaitForResponse(order)
-    })
+    }, this.unsupportedEngine)
 
     _SetMaximumSize = this.wrap(super._SetMaximumSize, async (width, height) => {
       /** @type {import('@cyn/core').MakeInputOutput<import('@cyn/core').MessageSetMaximumSize, 'input'>} */
@@ -268,7 +351,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
       }
 
       await this.ws?.sendAndWaitForResponse(order)
-    })
+    }, this.unsupportedEngine)
 
     _SetMinimumSize = this.wrap(super._SetMinimumSize, async (width, height) => {
       /** @type {import('@cyn/core').MakeInputOutput<import('@cyn/core').MessageSetMinimumSize, 'input'>} */
@@ -281,7 +364,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
       }
 
       await this.ws?.sendAndWaitForResponse(order)
-    })
+    }, this.unsupportedEngine)
 
     _SetResizable = this.wrap(super._SetResizable, async (resizable) => {
       /** @type {import('@cyn/core').MakeInputOutput<import('@cyn/core').MessageSetResizable, 'input'>} */
@@ -293,7 +376,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
       }
 
       await this.ws?.sendAndWaitForResponse(order)
-    })
+    }, this.unsupportedEngine)
 
     _SetTitle = this.wrap(super._SetTitle, async (title) => {
       /** @type {import('@cyn/core').MakeInputOutput<import('@cyn/core').MessageSetTitle, 'input'>} */
@@ -305,7 +388,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
       }
 
       await this.ws?.sendAndWaitForResponse(order)
-    })
+    }, this.unsupportedEngine)
 
     _SetWidth = this.wrap(super._SetWidth, async (width) => {
       /** @type {import('@cyn/core').MakeInputOutput<import('@cyn/core').MessageSetWidth, 'input'>} */
@@ -317,7 +400,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
       }
 
       await this.ws?.sendAndWaitForResponse(order)
-    })
+    }, this.unsupportedEngine)
 
     _SetX = this.wrap(super._SetX, async (x) => {
       /** @type {import('@cyn/core').MakeInputOutput<import('@cyn/core').MessageSetX, 'input'>} */
@@ -329,7 +412,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
       }
 
       await this.ws?.sendAndWaitForResponse(order)
-    })
+    }, this.unsupportedEngine)
 
     _SetY = this.wrap(super._SetY, async (y) => {
       /** @type {import('@cyn/core').MakeInputOutput<import('@cyn/core').MessageSetY, 'input'>} */
@@ -341,7 +424,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
       }
 
       await this.ws?.sendAndWaitForResponse(order)
-    })
+    }, this.unsupportedEngine)
 
     _ShowDevTools = this.wrap(super._ShowDevTools, async (toggle) => {
       /** @type {import('@cyn/core').MakeInputOutput<import('@cyn/core').MessageShowDevTools, 'input'>} */
@@ -353,7 +436,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
       }
 
       await this.ws?.sendAndWaitForResponse(order)
-    })
+    }, this.unsupportedEngine)
 
     _Unmaximize = this.wrap(super._Unmaximize, async () => {
       /** @type {import('@cyn/core').MakeInputOutput<import('@cyn/core').MessageWindowUnmaximize, 'input'>} */
@@ -362,7 +445,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
       }
 
       await this.ws?.sendAndWaitForResponse(order)
-    })
+    }, this.unsupportedEngine)
 
     _ShowFolderDialog = this.wrap(super._ShowFolderDialog, async () => {
       /** @type {import('@cyn/core').MakeInputOutput<import('@cyn/core').MessageShowFolderDialog, 'input'>} */
@@ -375,7 +458,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
       console.log('C3', C3)
       console.log('this', this)
       // this.Trigger(C3.Plugins.xxx.Cnds.OnFolderDialogOk)
-    })
+    }, this.unsupportedEngine)
 
     _ShowOpenDialog = this.wrap(super._ShowOpenDialog, async (accept) => {
       /**
@@ -398,7 +481,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
       }
 
       await this.ws?.sendAndWaitForResponse(order)
-    })
+    }, this.unsupportedEngine)
 
     _ShowSaveDialog = this.wrap(super._ShowSaveDialog, async (accept) => {
       /**
@@ -421,15 +504,15 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
       }
 
       await this.ws?.sendAndWaitForResponse(order)
-    })
+    }, this.unsupportedEngine)
 
     _AppendFile = this.wrap(super._AppendFile, async () => {
       throw new Error('Not implemented')
-    })
+    }, this.unsupportedEngine)
 
     _CopyFile = this.wrap(super._CopyFile, async () => {
       throw new Error('Not implemented')
-    })
+    }, this.unsupportedEngine)
 
     _CreateFolder = this.wrap(super._CreateFolder, async (path) => {
       /** @type {import('@cyn/core').MakeInputOutput<import('@cyn/core').MessageCreateFolder, 'input'>} */
@@ -441,109 +524,187 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
       }
 
       const answer = await this.ws?.sendAndWaitForResponse(order)
-      if (!answer || answer.body.success === false) {
-        this.Trigger(C3.Plugins.cyn.Cnds.OnAnyBinaryFileRead)
+      // if (!answer || answer.body.success === false) {
+      //   this.Trigger(C3.Plugins.cyn.Cnds.OnAnyBinaryFileRead)
+      // }
+    }, this.unsupportedEngine)
+
+    _DeleteFile = this.wrap(super._DeleteFile, async () => {
+      throw new Error('Not implemented')
+    }, this.unsupportedEngine)
+
+    _ListFiles = this.wrap(super._ListFiles, async () => {
+      throw new Error('Not implemented')
+    }, this.unsupportedEngine)
+
+    _MoveFile = this.wrap(super._MoveFile, async () => {
+      throw new Error('Not implemented')
+    }, this.unsupportedEngine)
+
+    _OpenBrowser = this.wrap(super._OpenBrowser, async () => {
+      throw new Error('Not implemented')
+    }, this.unsupportedEngine)
+
+    _ReadBinaryFile = this.wrap(super._ReadBinaryFile, async () => {
+      throw new Error('Not implemented')
+    }, this.unsupportedEngine)
+
+    _RenameFile = this.wrap(super._RenameFile, async () => {
+      throw new Error('Not implemented')
+    }, this.unsupportedEngine)
+
+    _RunFile = this.wrap(super._RunFile, async (command) => {
+      /** @type {import('@cyn/core').MakeInputOutput<import('@cyn/core').MessageRun, 'input'>} */
+      const order = {
+        url: '/run',
+        body: {
+          command,
+          args: [],
+        }
       }
-    })
 
-    _DeleteFile = this.wrap(super._DeleteFile , async () => {
-      throw new Error('Not implemented')
-    })
+      const answer = await this.ws?.sendAndWaitForResponse(order)
+    }, this.unsupportedEngine)
 
-    _ListFiles = this.wrap(super._ListFiles , async () => {
-      throw new Error('Not implemented')
-    })
+    _ShellOpen = this.wrap(super._ShellOpen, async (path) => {
+      /** @type {import('@cyn/core').MakeInputOutput<import('@cyn/core').MessageOpen, 'input'>} */
+      const order = {
+        url: '/open',
+        body: {
+          path,
+        }
+      }
 
-    _MoveFile = this.wrap(super._MoveFile , async () => {
-      throw new Error('Not implemented')
-    })
+      const answer = await this.ws?.sendAndWaitForResponse(order)
+    }, this.unsupportedEngine)
 
-    _OpenBrowser = this.wrap(super._OpenBrowser , async () => {
-      throw new Error('Not implemented')
-    })
+    _ExplorerOpen = this.wrap(super._ExplorerOpen, async (path) => {
+      /** @type {import('@cyn/core').MakeInputOutput<import('@cyn/core').MessageExplorerOpen, 'input'>} */
+      const order = {
+        url: '/show-in-explorer',
+        body: {
+          path,
+        }
+      }
 
-    _ReadBinaryFile = this.wrap(super._ReadBinaryFile , async () => {
-      throw new Error('Not implemented')
-    })
+      const answer = await this.ws?.sendAndWaitForResponse(order)
+    }, this.unsupportedEngine)
 
-    _RenameFile = this.wrap(super._RenameFile , async () => {
-      throw new Error('Not implemented')
-    })
+    /**
+     * @param {IObjectClass} objectClass
+     * @return {IBinaryDataInstance | null} objectClass
+     */
+    __GetBinaryDataSdkInstance(objectClass) {
+      console.log('this._inst', this._inst)
+      if (!objectClass)
+        return null;
+      const target = objectClass.getFirstPickedInstance(this._inst);
+      console.log('target', target)
+      if (!target)
+        return null;
+      // return target.GetSdkInstance()
+      return target
+    }
 
-    _RunFile = this.wrap(super._RunFile , async () => {
-      throw new Error('Not implemented')
-    })
+    _WriteBinaryFile = this.wrap(super._WriteBinaryFile, async (tag, path, source) => {
+      throw new Error('not supported')
+      console.log('tag', tag)
+      console.log('path', path)
+      console.log('source', source)
 
-    _ShellOpen = this.wrap(super._ShellOpen , async () => {
-      throw new Error('Not implemented')
-    })
+      console.log('C3', C3)
+      console.log('this', this)
 
-    _WriteBinaryFile = this.wrap(super._WriteBinaryFile , async () => {
-      throw new Error('Not implemented')
-    })
+      const sdkInst = this.__GetBinaryDataSdkInstance(source);
 
-    _WriteTextFile = this.wrap(super._WriteTextFile , async () => {
-      throw new Error('Not implemented')
-    })
+      if (!sdkInst) {
+        throw new Error("SDK instance not found")
+      }
+
+      console.log('sdkInst', sdkInst)
+
+      const buffer = sdkInst.getArrayBufferReadOnly();
+
+      console.log('buffer', buffer)
+
+      /** @type {import('@cyn/core').MakeInputOutput<import('@cyn/core').MessageWriteFile, 'input'>} */
+      const order = {
+        url: '/fs/file/write',
+        body: {
+          path,
+          contents: buffer,
+          encoding: undefined
+        }
+      }
+
+      const answer = await this.ws?.sendAndWaitForResponse(order)
+      if (!answer || answer.body.success === false) {
+        this._currentTag = tag;
+        await this.TriggerAsync(C3.Plugins.cyn.Cnds.OnAnyBinaryFileRead)
+        this._currentTag = tag;
+        await this.TriggerAsync(C3.Plugins.cyn.Cnds.OnBinaryFileRead)
+        this._currentTag = ''
+      }
+    }, this.unsupportedEngine)
 
     // Cnds
 
     _OnFolderDialogCancel = this.wrap(super._OnFolderDialogCancel, () => {
       throw new Error('Not implemented')
-    })
+    }, () => false)
 
     _OnFolderDialogOk = this.wrap(super._OnFolderDialogOk, () => {
       throw new Error('Not implemented')
-    })
+    }, () => false)
 
     _OnOpenDialogCancel = this.wrap(super._OnOpenDialogCancel, () => {
       throw new Error('Not implemented')
-    })
+    }, () => false)
 
     _OnOpenDialogOk = this.wrap(super._OnOpenDialogOk, () => {
       throw new Error('Not implemented')
-    })
+    }, () => false)
 
     _OnSaveDialogCancel = this.wrap(super._OnSaveDialogCancel, () => {
       throw new Error('Not implemented')
-    })
+    }, () => false)
 
     _OnSaveDialogOk = this.wrap(super._OnSaveDialogOk, () => {
       throw new Error('Not implemented')
-    })
+    }, () => false)
 
     _OnAnyBinaryFileRead = this.wrap(super._OnAnyBinaryFileRead, () => {
       throw new Error('Not implemented')
-    })
+    }, () => false)
 
     _OnAnyBinaryFileWrite = this.wrap(super._OnAnyBinaryFileWrite, () => {
       throw new Error('Not implemented')
-    })
+    }, () => false)
 
     _OnBinaryFileRead = this.wrap(super._OnBinaryFileRead, () => {
       throw new Error('Not implemented')
-    })
+    }, () => false)
 
     _OnBinaryFileWrite = this.wrap(super._OnBinaryFileWrite, () => {
       throw new Error('Not implemented')
-    })
+    }, () => false)
 
     _OnFileDropped = this.wrap(super._OnFileDropped, () => {
       throw new Error('Not implemented')
-    })
+    }, () => false)
 
     _OnFileSystemError = this.wrap(super._OnFileSystemError, () => {
       throw new Error('Not implemented')
-    })
+    }, () => false)
 
     _OnPathVerification = this.wrap(super._OnPathVerification, () => {
       throw new Error('Not implemented')
-    })
+    }, () => false)
 
     // Exps
     _UserFolder = this.wrap(super._UserFolder, () => {
       console.log('this', this)
-      return this.userFolder
+      return this._userFolder
     })
 
     _ArgumentAt = this.wrap(super._ArgumentAt, () => {
@@ -599,7 +760,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     })
 
     _ReadFile = this.wrap(super._ReadFile, () => {
-      throw new Error('Not implemented')
+      return this._readFile ?? ''
     })
 
     _WindowHeight = this.wrap(super._WindowHeight, () => {
@@ -621,6 +782,11 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     _WindowY = this.wrap(super._WindowY, () => {
       this._WindowX
       throw new Error('Not implemented')
+    })
+
+    _IsEngine = this.wrap(super._IsEngine, (engine) => {
+      console.log('engine', engine)
+      return this._engine === engine
     })
 
     //

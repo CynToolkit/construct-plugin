@@ -100,9 +100,11 @@ type ActionParamToType<T extends ActionParam> = T['type'] extends 'string'
     ? string
     : T['type'] extends 'number'
         ? number
-        : T['type'] extends 'combo'
-            ? keyof UnionToIntersection<DeepWriteable<T['items'][number]>>
-            : never
+        : T['type'] extends 'object'
+            ? unknown
+            : T['type'] extends 'combo'
+                ? keyof UnionToIntersection<DeepWriteable<T['items'][number]>>
+                : never
 
 type ReturnTypeToType<T extends 'string' | 'number'> = T extends 'string'
     ? string
@@ -164,8 +166,13 @@ type DynamicMethodsExpsParentClass = {
     ) => ReturnTypeToType<C3Plugin['Exps'][ExpsAssocReversed[exps]]['returnType']>
 }
 
+interface SDKInstanceDataObject {
+    GetArrayBufferReadOnly(): ArrayBuffer
+}
+
 type StaticMethodsParentClass = {
     Trigger(trigger: OpaqueCnds): void
+    TriggerAsync(trigger: OpaqueCnds): Promise<void>
     _getInitProperties(): {}
 }
 
@@ -187,7 +194,7 @@ interface C3 {
     }
 }
 
-type GetInstanceJSFn = (
+export type GetInstanceJSFn = (
     parentClass: new (...args: any[]) => ParentClass,
     addonTriggers: string[],
     C3: C3
