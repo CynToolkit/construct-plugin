@@ -1,5 +1,9 @@
 // @ts-check
 
+import pkg from '../package.json' with { type: 'json' };
+
+console.log('pkg', pkg)
+
 /**
  * @satisfies {import('./sdk').Config<'general' | 'window' | 'filesystem' | 'file-dialogs' | 'command-line'>}
  */
@@ -7,7 +11,7 @@ const Config = /** @type {const} */({
   addonType: "plugin",
   id: "cyn",
   name: "Cyn",
-  version: "1.0.0.0",
+  version: pkg.version,
   category: "platform-specific",
   author: "Armaldio",
   website: "https://www.construct.net",
