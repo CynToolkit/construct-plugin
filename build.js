@@ -66,7 +66,6 @@ try {
   }
 
   function getFileListFromConfig(config) {
-    console.log('config', config)
     const files = [];
     if (config.domSideScripts) {
       config.domSideScripts.forEach(function (file) {
@@ -87,8 +86,6 @@ try {
         files.push(`c3runtime/${file.filename}`);
       });
     }
-
-    console.log('config', config)
 
     if (config.info.defaultImageUrl) {
       files.push(`c3runtime/${config.info.defaultImageUrl}`);
@@ -431,8 +428,6 @@ try {
   const aces = await acesFromConfig(config);
   // write aces.json
   writeFileSync("./export/aces.json", JSON.stringify(aces, null, 2));
-
-  console.log('config', config)
 
   // copy icon.svg
   if (config.icon) {

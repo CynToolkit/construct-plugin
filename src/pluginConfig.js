@@ -2,8 +2,6 @@
 
 import pkg from '../package.json' with { type: 'json' };
 
-console.log('pkg', pkg)
-
 /**
  * @satisfies {import('./sdk').Config<'general' | 'window' | 'filesystem' | 'file-dialogs' | 'command-line'>}
  */
