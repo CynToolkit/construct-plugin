@@ -10,6 +10,7 @@
   "name": "@cyn/construct-plugin",
   "description": "Cyn construct plugin",
   "version": "1.0.0",
+  "packageManager": "pnpm@9.10.0",
   "type": "module",
   "scripts": {
     "build": "node build.js --buildWrapperExtension",

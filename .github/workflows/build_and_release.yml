@@ -10,22 +10,24 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 22
+
+      - uses: pnpm/action-setup@v4
 
       - name: Install dependencies and build
         run: |
-          npm ci
-          npm run build
+          pnpm install
+          pnpm run build
 
       - name: Auto Generate Documentation
         run: |
-          npm run doc
-      
+          pnpm run doc
+
       - name: Commit Documentation
         run: |
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
@@ -77,12 +79,12 @@ jobs:
             publish=false
           fi
           echo "publish=$publish" >> $GITHUB_OUTPUT
-  
+
       - name: Install publish dependencies
         if: steps.check.outputs.publish == 'true'
         run: |
           npm install -g c3addon
-              
+
       - name: Get Addon Url
         if: steps.check.outputs.publish == 'true'
         id: url
@@ -94,7 +96,7 @@ jobs:
             exit 1
           fi
           echo "url=$url" >> $GITHUB_OUTPUT
-          
+
       - name: Publish to Construct 3
         if: steps.check.outputs.publish == 'true'
         run: |
