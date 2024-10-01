@@ -1,14 +1,14 @@
 {
   "dependencies": {
-    "@cyn/core": "1.2.1",
+    "@pipelab/core": "1.2.3",
     "adm-zip": "0.5.16",
     "chokidar": "4.0.1",
     "cors": "2.8.5",
     "express": "4.21.0",
     "inquirer": "11.0.2"
   },
-  "name": "@cyn/construct-plugin",
-  "description": "Cyn construct plugin",
+  "name": "@pipelab/construct-plugin",
+  "description": "Pipelab construct plugin",
   "version": "1.0.5",
   "packageManager": "pnpm@9.10.0",
   "type": "module",

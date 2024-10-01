@@ -67,7 +67,7 @@ class WebSocketClient {
     }
   }
 
-  /** @param {import("@cyn/core").Message} message */
+  /** @param {import("@pipelab/core").Message} message */
   send(message) {
     if (this.isConnected) {
       if (this.socket) {
@@ -82,11 +82,11 @@ class WebSocketClient {
 
   /**
    * @function
-   * @template {import("@cyn/core").Message} TMessage
+   * @template {import("@pipelab/core").Message} TMessage
    * @param {TMessage} message
    * @returns {Promise<any>}
    */
-  /** @type {<T extends import("@cyn/core").Message>(message: T) => Promise<import("@cyn/core").InferResponseFromMessage<typeof message>>} */
+  /** @type {<T extends import("@pipelab/core").Message>(message: T) => Promise<import("@pipelab/core").InferResponseFromMessage<typeof message>>} */
   async sendAndWaitForResponse(message) {
     if (!this.isConnected || !this.socket) {
       throw new Error('WebSocket is not connected.');
@@ -115,7 +115,7 @@ class WebSocketClient {
  * @type {import('./sdk').GetInstanceJSFn}
  */
 function getInstanceJs(parentClass, addonTriggers, C3) {
-  return class Cyn extends parentClass {
+  return class Pipelab extends parentClass {
     /**
      * @type {WebSocketClient}
      */
@@ -129,7 +129,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     /** @type {string} */
     _currentTag
 
-    /** @type {import('@cyn/core').MessageEngine['output']['body']['engine']} */
+    /** @type {import('@pipelab/core').MessageEngine['output']['body']['engine']} */
     _engine
 
     /** @type {boolean} */
@@ -204,7 +204,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
 
       // -----------------------------------------------------------------------
       // Fetch user folder
-      /** @type {import('@cyn/core').MakeInputOutput<import('@cyn/core').MessagePaths, 'input'>} */
+      /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessagePaths, 'input'>} */
       const orderUserFolder = {
         url: '/paths',
         body: {
@@ -213,7 +213,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
       }
 
       /**
-       * @type {import('@cyn/core').MakeInputOutput<import('@cyn/core').MessagePaths, 'output'>}
+       * @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessagePaths, 'output'>}
        */
       const userFolder = await this.ws.sendAndWaitForResponse(orderUserFolder)
       console.log('userFolder', userFolder.body.data)
@@ -222,13 +222,13 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
       // -----------------------------------------------------------------------
       // Fetch engine
 
-      /** @type {import('@cyn/core').MakeInputOutput<import('@cyn/core').MessageEngine, 'input'>} */
+      /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageEngine, 'input'>} */
       const orderEngine = {
         url: '/engine',
       }
 
       /**
-       * @type {import('@cyn/core').MakeInputOutput<import('@cyn/core').MessageEngine, 'output'>}
+       * @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageEngine, 'output'>}
        */
       const engineResponse = await this.ws.sendAndWaitForResponse(orderEngine)
       console.log('engineResponse', engineResponse.body.engine)
@@ -242,7 +242,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     _WriteTextFile = this.wrap(super._WriteTextFile, async (contents, path) => {
       console.log('Write text', contents, path);
 
-      /** @type {import('@cyn/core').MakeInputOutput<import('@cyn/core').MessageWriteFile, 'input'>} */
+      /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageWriteFile, 'input'>} */
       const order = {
         url: '/fs/file/write',
         body: {
@@ -263,7 +263,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     _ReadTextFile = this.wrap(super._ReadTextFile, async (path) => {
       console.log('Read text', path);
 
-      /** @type {import('@cyn/core').MakeInputOutput<import('@cyn/core').MessageReadFile, 'input'>} */
+      /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageReadFile, 'input'>} */
       const order = {
         url: '/fs/file/read',
         body: {
@@ -278,7 +278,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     }, this.unsupportedEngine)
 
     _Maximize = this.wrap(super._Maximize, async () => {
-      /** @type {import('@cyn/core').MakeInputOutput<import('@cyn/core').MessageWindowMaximize, 'input'>} */
+      /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageWindowMaximize, 'input'>} */
       const order = {
         url: '/window/maximize',
       }
@@ -287,7 +287,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     }, this.unsupportedEngine)
 
     _Minimize = this.wrap(super._Minimize, async () => {
-      /** @type {import('@cyn/core').MakeInputOutput<import('@cyn/core').MessageWindowMinimize, 'input'>} */
+      /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageWindowMinimize, 'input'>} */
       const order = {
         url: '/window/minimize',
       }
@@ -296,7 +296,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     }, this.unsupportedEngine)
 
     _Restore = this.wrap(super._Restore, async () => {
-      /** @type {import('@cyn/core').MakeInputOutput<import('@cyn/core').MessageWindowRestore, 'input'>} */
+      /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageWindowRestore, 'input'>} */
       const order = {
         url: '/window/restore',
       }
@@ -306,7 +306,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
 
     _RequestAttention = this.wrap(super._RequestAttention, async (mode) => {
       console.log('mode', mode)
-      /** @type {import('@cyn/core').MakeInputOutput<import('@cyn/core').MessageRequestAttention, 'input'>} */
+      /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageRequestAttention, 'input'>} */
       const order = {
         url: '/window/request-attention',
       }
@@ -317,7 +317,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     }, this.unsupportedEngine)
 
     _SetAlwaysOnTop = this.wrap(super._SetAlwaysOnTop, async (mode) => {
-      /** @type {import('@cyn/core').MakeInputOutput<import('@cyn/core').MessageSetAlwaysOnTop, 'input'>} */
+      /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageSetAlwaysOnTop, 'input'>} */
       const order = {
         url: '/window/set-always-on-top',
         body: {
@@ -329,7 +329,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     }, this.unsupportedEngine)
 
     _SetHeight = this.wrap(super._SetHeight, async (height) => {
-      /** @type {import('@cyn/core').MakeInputOutput<import('@cyn/core').MessageSetHeight, 'input'>} */
+      /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageSetHeight, 'input'>} */
       const order = {
         url: '/window/set-height',
         body: {
@@ -341,7 +341,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     }, this.unsupportedEngine)
 
     _SetMaximumSize = this.wrap(super._SetMaximumSize, async (width, height) => {
-      /** @type {import('@cyn/core').MakeInputOutput<import('@cyn/core').MessageSetMaximumSize, 'input'>} */
+      /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageSetMaximumSize, 'input'>} */
       const order = {
         url: '/window/set-maximum-size',
         body: {
@@ -354,7 +354,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     }, this.unsupportedEngine)
 
     _SetMinimumSize = this.wrap(super._SetMinimumSize, async (width, height) => {
-      /** @type {import('@cyn/core').MakeInputOutput<import('@cyn/core').MessageSetMinimumSize, 'input'>} */
+      /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageSetMinimumSize, 'input'>} */
       const order = {
         url: '/window/set-minimum-size',
         body: {
@@ -367,7 +367,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     }, this.unsupportedEngine)
 
     _SetResizable = this.wrap(super._SetResizable, async (resizable) => {
-      /** @type {import('@cyn/core').MakeInputOutput<import('@cyn/core').MessageSetResizable, 'input'>} */
+      /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageSetResizable, 'input'>} */
       const order = {
         url: '/window/set-resizable',
         body: {
@@ -379,7 +379,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     }, this.unsupportedEngine)
 
     _SetTitle = this.wrap(super._SetTitle, async (title) => {
-      /** @type {import('@cyn/core').MakeInputOutput<import('@cyn/core').MessageSetTitle, 'input'>} */
+      /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageSetTitle, 'input'>} */
       const order = {
         url: '/window/set-title',
         body: {
@@ -391,7 +391,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     }, this.unsupportedEngine)
 
     _SetWidth = this.wrap(super._SetWidth, async (width) => {
-      /** @type {import('@cyn/core').MakeInputOutput<import('@cyn/core').MessageSetWidth, 'input'>} */
+      /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageSetWidth, 'input'>} */
       const order = {
         url: '/window/set-width',
         body: {
@@ -403,7 +403,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     }, this.unsupportedEngine)
 
     _SetX = this.wrap(super._SetX, async (x) => {
-      /** @type {import('@cyn/core').MakeInputOutput<import('@cyn/core').MessageSetX, 'input'>} */
+      /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageSetX, 'input'>} */
       const order = {
         url: '/window/set-x',
         body: {
@@ -415,7 +415,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     }, this.unsupportedEngine)
 
     _SetY = this.wrap(super._SetY, async (y) => {
-      /** @type {import('@cyn/core').MakeInputOutput<import('@cyn/core').MessageSetY, 'input'>} */
+      /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageSetY, 'input'>} */
       const order = {
         url: '/window/set-y',
         body: {
@@ -427,7 +427,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     }, this.unsupportedEngine)
 
     _ShowDevTools = this.wrap(super._ShowDevTools, async (toggle) => {
-      /** @type {import('@cyn/core').MakeInputOutput<import('@cyn/core').MessageShowDevTools, 'input'>} */
+      /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageShowDevTools, 'input'>} */
       const order = {
         url: '/window/show-dev-tools',
         body: {
@@ -439,7 +439,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     }, this.unsupportedEngine)
 
     _Unmaximize = this.wrap(super._Unmaximize, async () => {
-      /** @type {import('@cyn/core').MakeInputOutput<import('@cyn/core').MessageWindowUnmaximize, 'input'>} */
+      /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageWindowUnmaximize, 'input'>} */
       const order = {
         url: '/window/unmaximize',
       }
@@ -448,7 +448,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     }, this.unsupportedEngine)
 
     _ShowFolderDialog = this.wrap(super._ShowFolderDialog, async () => {
-      /** @type {import('@cyn/core').MakeInputOutput<import('@cyn/core').MessageShowFolderDialog, 'input'>} */
+      /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageShowFolderDialog, 'input'>} */
       const order = {
         url: '/dialog/folder',
       }
@@ -462,7 +462,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
 
     _ShowOpenDialog = this.wrap(super._ShowOpenDialog, async (accept) => {
       /**
-       * @type {import('@cyn/core').FileFilter[]}
+       * @type {import('@pipelab/core').FileFilter[]}
        */
       const filters = accept.split(',').map(filter => {
         const [name, extensions] = filter.split('|')
@@ -472,7 +472,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         }
       })
 
-      /** @type {import('@cyn/core').MakeInputOutput<import('@cyn/core').MessageShowOpenDialog, 'input'>} */
+      /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageShowOpenDialog, 'input'>} */
       const order = {
         url: '/dialog/open',
         body: {
@@ -485,7 +485,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
 
     _ShowSaveDialog = this.wrap(super._ShowSaveDialog, async (accept) => {
       /**
-       * @type {import('@cyn/core').FileFilter[]}
+       * @type {import('@pipelab/core').FileFilter[]}
        */
       const filters = accept.split(',').map(filter => {
         const [name, extensions] = filter.split('|')
@@ -495,7 +495,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         }
       })
 
-      /** @type {import('@cyn/core').MakeInputOutput<import('@cyn/core').MessageShowSaveDialog, 'input'>} */
+      /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageShowSaveDialog, 'input'>} */
       const order = {
         url: '/dialog/save',
         body: {
@@ -515,7 +515,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     }, this.unsupportedEngine)
 
     _CreateFolder = this.wrap(super._CreateFolder, async (path) => {
-      /** @type {import('@cyn/core').MakeInputOutput<import('@cyn/core').MessageCreateFolder, 'input'>} */
+      /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageCreateFolder, 'input'>} */
       const order = {
         url: '/fs/folder/create',
         body: {
@@ -525,7 +525,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
 
       const answer = await this.ws?.sendAndWaitForResponse(order)
       // if (!answer || answer.body.success === false) {
-      //   this.Trigger(C3.Plugins.cyn.Cnds.OnAnyBinaryFileRead)
+      //   this.Trigger(C3.Plugins.pipelab.Cnds.OnAnyBinaryFileRead)
       // }
     }, this.unsupportedEngine)
 
@@ -554,7 +554,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     }, this.unsupportedEngine)
 
     _RunFile = this.wrap(super._RunFile, async (command) => {
-      /** @type {import('@cyn/core').MakeInputOutput<import('@cyn/core').MessageRun, 'input'>} */
+      /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageRun, 'input'>} */
       const order = {
         url: '/run',
         body: {
@@ -567,7 +567,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     }, this.unsupportedEngine)
 
     _ShellOpen = this.wrap(super._ShellOpen, async (path) => {
-      /** @type {import('@cyn/core').MakeInputOutput<import('@cyn/core').MessageOpen, 'input'>} */
+      /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageOpen, 'input'>} */
       const order = {
         url: '/open',
         body: {
@@ -579,7 +579,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     }, this.unsupportedEngine)
 
     _ExplorerOpen = this.wrap(super._ExplorerOpen, async (path) => {
-      /** @type {import('@cyn/core').MakeInputOutput<import('@cyn/core').MessageExplorerOpen, 'input'>} */
+      /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageExplorerOpen, 'input'>} */
       const order = {
         url: '/show-in-explorer',
         body: {
@@ -627,7 +627,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
 
       console.log('buffer', buffer)
 
-      /** @type {import('@cyn/core').MakeInputOutput<import('@cyn/core').MessageWriteFile, 'input'>} */
+      /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageWriteFile, 'input'>} */
       const order = {
         url: '/fs/file/write',
         body: {
@@ -640,9 +640,9 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
       const answer = await this.ws?.sendAndWaitForResponse(order)
       if (!answer || answer.body.success === false) {
         this._currentTag = tag;
-        await this.TriggerAsync(C3.Plugins.cyn.Cnds.OnAnyBinaryFileRead)
+        await this.TriggerAsync(C3.Plugins.pipelab.Cnds.OnAnyBinaryFileRead)
         this._currentTag = tag;
-        await this.TriggerAsync(C3.Plugins.cyn.Cnds.OnBinaryFileRead)
+        await this.TriggerAsync(C3.Plugins.pipelab.Cnds.OnBinaryFileRead)
         this._currentTag = ''
       }
     }, this.unsupportedEngine)

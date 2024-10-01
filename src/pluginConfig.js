@@ -7,8 +7,8 @@ import pkg from '../package.json' with { type: 'json' };
  */
 const Config = /** @type {const} */({
   addonType: "plugin",
-  id: "cyn",
-  name: "Cyn",
+  id: "pipelab",
+  name: "Pipelab",
   version: pkg.version,
   category: "platform-specific",
   author: "Armaldio",
@@ -138,7 +138,7 @@ const Config = /** @type {const} */({
 
       listName: "Initialize integration",
       displayText: "Initialize integration",
-      description: "Initialize the Cyn integration",
+      description: "Initialize the Pipelab integration",
     },
 
     // filesystem

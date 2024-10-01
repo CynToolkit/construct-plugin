@@ -1,5 +1,5 @@
 <img src="./src/icon.svg" width="100" /><br>
-# Cyn <br>
+# Pipelab <br>
 Description <br>
 <br>
 Author: Armaldio <br>
@@ -46,7 +46,7 @@ The main files you may want to look at would be instance.js
 ## Actions
 | Action | Description | Params
 | --- | --- | --- |
-| Initialize integration | Initialize the Cyn integration |  |
+| Initialize integration | Initialize the Pipelab integration |  |
 | Append file | Appends the contents to the file. | Path             *(string)* <br>Contents             *(string)* <br> |
 | Copy file | Copies the file. | Source             *(string)* <br>Destination             *(string)* <br> |
 | Create folder | Creates the folder. | Path             *(string)* <br> |

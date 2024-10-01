@@ -8,9 +8,9 @@ importers:
 
   .:
     dependencies:
-      '@cyn/core':
-        specifier: 1.2.1
-        version: 1.2.1
+      '@pipelab/core':
+        specifier: 1.2.3
+        version: 1.2.3
       adm-zip:
         specifier: 0.5.16
         version: 0.5.16
@@ -35,9 +35,6 @@ importers:
         version: 32.1.2
 
 packages:
-
-  '@cyn/core@1.2.1':
-    resolution: {integrity: sha512-aPBVDPYhrodvN8A8PG5nStGoBzhZl/hcvhFZM3cBPnRqkIvixCWFLF5Q4Ypxw78jmix6G/KQbz8oP/KBWbHkwA==}
 
   '@electron/get@2.0.3':
     resolution: {integrity: sha512-Qkzpg2s9GnVV2I2BjRksUi43U5e6+zaQMcjoJy0C+C5oxaKl+fmckGDQFtRpZpZV0NQekuZZ+tGz7EA9TVnQtQ==}
@@ -98,6 +95,9 @@ packages:
   '@inquirer/type@2.0.0':
     resolution: {integrity: sha512-XvJRx+2KR3YXyYtPUUy+qd9i7p+GO9Ko6VIIpWlBrpWwXDv8WLFeHTxz35CfQFUiBMLXlGHhGzys7lqit9gWag==}
     engines: {node: '>=18'}
+
+  '@pipelab/core@1.2.3':
+    resolution: {integrity: sha512-cCJqDbvP253XWZWoeM3fnV0G3CSjsK6nTXB0k0bruXmJ9BPYn3B0jA64hL1/p8a68md/uux/NV8DEevkqBjPJQ==}
 
   '@sindresorhus/is@4.6.0':
     resolution: {integrity: sha512-t09vSN3MdfsyCHoFcTRCH/iUtG7OJ0CsjzB8cjAmKc/va/kIgeDI/TxsigdncE/4be734m0cvIYwNaV4i2XqAw==}
@@ -701,8 +701,6 @@ packages:
 
 snapshots:
 
-  '@cyn/core@1.2.1': {}
-
   '@electron/get@2.0.3':
     dependencies:
       debug: 4.3.7
@@ -812,6 +810,8 @@ snapshots:
   '@inquirer/type@2.0.0':
     dependencies:
       mute-stream: 1.0.0
+
+  '@pipelab/core@1.2.3': {}
 
   '@sindresorhus/is@4.6.0': {}
 
