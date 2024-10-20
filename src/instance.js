@@ -132,14 +132,47 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     /** @type {import('@pipelab/core').MessageEngine['output']['body']['engine']} */
     _engine
 
+    /** @type {import('@pipelab/core').FileFolder[]} */
+    _fileList
+
     /** @type {boolean} */
     _isInitialized
+
+    /** @type {string} */
+    _fileError
+
+    /** @type {number} */
+    _fileSize
+
+    /** @type {number} */
+    _windowHeight
+
+    /** @type {number} */
+    _windowWidth
+
+    /** @type {string} */
+    _windowTitle
+
+    /** @type {number} */
+    _windowX
+
+    /** @type {number} */
+    _windowY
 
     constructor() {
       super();
 
       this._currentTag = '';
       this._isInitialized = false
+      this._fileList = [];
+
+      this._fileError = ""
+      this._fileSize = 0
+      this._windowHeight = -1
+      this._windowWidth = -1
+      this._windowTitle = ""
+      this._windowX = -1
+      this._windowY = -1
 
       const properties = this._getInitProperties();
       if (properties) {
@@ -160,26 +193,26 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
      */
     wrap(base, callback, fallback, force) {
       return (...args) => {
-        console.log('this._isInitialized', this._isInitialized)
+        // console.log('this._isInitialized', this._isInitialized)
         // is initialized
         if (this._isInitialized) {
           // and is connected to an engine
-          console.log('this.ws?.isConnected', this.ws?.isConnected)
+          // console.log('this.ws?.isConnected', this.ws?.isConnected)
           if (this.ws?.isConnected) {
             // execute callback
             return callback.call(this, ...args);
           } else {
-            console.log('else 1')
+            // console.log('else 1')
             // do nothing (web, nwjs, unsupported, ...)
             return fallback
               ? fallback.call(this, ...args)
               : callback.call(this, ...args);
           }
         } else if (force) {
-          console.log('force')
+          // console.log('force')
           return callback.call(this, ...args);
         } else {
-          console.log('else 2')
+          // console.log('else 2')
           return fallback
             ? fallback.call(this, ...args)
             : callback.call(this, ...args);
@@ -453,24 +486,44 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         url: '/dialog/folder',
       }
 
-      await this.ws?.sendAndWaitForResponse(order)
+      /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageShowFolderDialog, 'output'> | undefined} */
+      const answer = await this.ws?.sendAndWaitForResponse(order)
+      console.log('answer', answer)
 
       console.log('C3', C3)
       console.log('this', this)
-      // this.Trigger(C3.Plugins.xxx.Cnds.OnFolderDialogOk)
+
+      if (!answer) {
+        await this._triggerAsync(C3.Plugins.pipelab.Cnds.OnFolderDialogCancel)
+        return
+      }
+
+      if (answer.body.canceled) {
+        await this._triggerAsync(C3.Plugins.pipelab.Cnds.OnFolderDialogCancel)
+      } else {
+        this._chosenPath = answer.body.paths[0]
+        await this._triggerAsync(C3.Plugins.pipelab.Cnds.OnFolderDialogOk)
+      }
+
     }, this.unsupportedEngine)
 
     _ShowOpenDialog = this.wrap(super._ShowOpenDialog, async (accept) => {
+      console.log('accept', accept)
       /**
        * @type {import('@pipelab/core').FileFilter[]}
        */
       const filters = accept.split(',').map(filter => {
+        console.log('filter', filter)
         const [name, extensions] = filter.split('|')
-        return {
-          name,
-          extensions: extensions.split(';')
+        if (name && extensions) {
+          return {
+            name,
+            extensions: extensions.split(';')
+          }
         }
       })
+
+      console.log('filters', filters)
 
       /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageShowOpenDialog, 'input'>} */
       const order = {
@@ -480,7 +533,19 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         }
       }
 
-      await this.ws?.sendAndWaitForResponse(order)
+      const answer = await this.ws?.sendAndWaitForResponse(order)
+
+      if (!answer) {
+        await this._triggerAsync(C3.Plugins.pipelab.Cnds.OnOpenDialogCancel)
+        return
+      }
+
+      if (answer.body.canceled) {
+        await this._triggerAsync(C3.Plugins.pipelab.Cnds.OnOpenDialogCancel)
+      } else {
+        this._chosenPath = answer.body.paths[0]
+        await this._triggerAsync(C3.Plugins.pipelab.Cnds.OnOpenDialogOk)
+      }
     }, this.unsupportedEngine)
 
     _ShowSaveDialog = this.wrap(super._ShowSaveDialog, async (accept) => {
@@ -488,10 +553,13 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
        * @type {import('@pipelab/core').FileFilter[]}
        */
       const filters = accept.split(',').map(filter => {
+        console.log('filter', filter)
         const [name, extensions] = filter.split('|')
-        return {
-          name,
-          extensions: extensions.split(';')
+        if (name && extensions) {
+          return {
+            name,
+            extensions: extensions.split(';')
+          }
         }
       })
 
@@ -503,7 +571,19 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         }
       }
 
-      await this.ws?.sendAndWaitForResponse(order)
+      const answer = await this.ws?.sendAndWaitForResponse(order)
+
+      if (!answer) {
+        await this._triggerAsync(C3.Plugins.pipelab.Cnds.OnSaveDialogCancel)
+        return
+      }
+
+      if (answer.body.canceled) {
+        await this._triggerAsync(C3.Plugins.pipelab.Cnds.OnSaveDialogCancel)
+      } else {
+        this._chosenPath = answer.body.path
+        await this._triggerAsync(C3.Plugins.pipelab.Cnds.OnSaveDialogOk)
+      }
     }, this.unsupportedEngine)
 
     _AppendFile = this.wrap(super._AppendFile, async () => {
@@ -533,8 +613,20 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
       throw new Error('"_DeleteFile" Not implemented')
     }, this.unsupportedEngine)
 
-    _ListFiles = this.wrap(super._ListFiles, async () => {
-      throw new Error('"_ListFiles" Not implemented')
+    _ListFiles = this.wrap(super._ListFiles, async (path) => {
+      /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageListFiles, 'input'>} */
+      const order = {
+        url: '/fs/list',
+        body: {
+          path
+        }
+      }
+      const files = await this.ws?.sendAndWaitForResponse(order)
+
+      if (files) {
+        this._fileList = files.body.list
+        console.log('this._fileList', this._fileList)
+      }
     }, this.unsupportedEngine)
 
     _MoveFile = this.wrap(super._MoveFile, async () => {
@@ -558,6 +650,26 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
 
       const answer = await this.ws?.sendAndWaitForResponse(order)
       console.log('answer', answer)
+
+      const sdkInst = this.__GetBinaryDataSdkInstance(destination);
+
+      if (!sdkInst) {
+        throw new Error("SDK instance not found")
+      }
+      console.log('sdkInst', sdkInst)
+      const newBuffer = new Uint8Array(answer?.body.content ?? [])
+      console.log('newBuffer', newBuffer)
+      sdkInst.setArrayBufferCopy(newBuffer.buffer);
+      console.log("getArrayBufferCopy()", sdkInst.getArrayBufferCopy())
+
+      console.log('addonTriggers', addonTriggers)
+      console.log('this', this)
+
+      this._currentTag = tag;
+      await this._triggerAsync(C3.Plugins.pipelab.Cnds.OnAnyBinaryFileRead)
+      await this._triggerAsync(C3.Plugins.pipelab.Cnds.OnBinaryFileRead)
+      this._currentTag = ''
+
     }, this.unsupportedEngine)
 
     _RenameFile = this.wrap(super._RenameFile, async () => {
@@ -658,42 +770,62 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
       }
     }, this.unsupportedEngine)
 
+    _FetchFileSize = this.wrap(super._FetchFileSize, async (path) => {
+      /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageFileSize, 'input'>} */
+      const order = {
+        url: '/fs/file/size',
+        body: {
+          path
+        }
+      }
+
+      /**
+       * @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageFileSize, 'output'>}
+       */
+      const answer = await this.ws?.sendAndWaitForResponse(order)
+      console.log('answer', answer)
+      this._fileSize = answer?.body.size ?? -1
+    })
+
     // Cnds
 
     _OnFolderDialogCancel = this.wrap(super._OnFolderDialogCancel, () => {
-      throw new Error('"_OnFolderDialogCancel" Not implemented')
+      return true
     }, () => false)
 
     _OnFolderDialogOk = this.wrap(super._OnFolderDialogOk, () => {
-      throw new Error('"_OnFolderDialogOk" Not implemented')
+      return true
     }, () => false)
 
     _OnOpenDialogCancel = this.wrap(super._OnOpenDialogCancel, () => {
-      throw new Error('"_OnOpenDialogCancel" Not implemented')
+      return true
     }, () => false)
 
     _OnOpenDialogOk = this.wrap(super._OnOpenDialogOk, () => {
-      throw new Error('"_OnOpenDialogOk" Not implemented')
+      return true
     }, () => false)
 
     _OnSaveDialogCancel = this.wrap(super._OnSaveDialogCancel, () => {
-      throw new Error('"_OnSaveDialogCancel" Not implemented')
+      return true
     }, () => false)
 
     _OnSaveDialogOk = this.wrap(super._OnSaveDialogOk, () => {
-      throw new Error('"_OnSaveDialogOk" Not implemented')
+      return true
     }, () => false)
 
     _OnAnyBinaryFileRead = this.wrap(super._OnAnyBinaryFileRead, () => {
-      throw new Error('"_OnAnyBinaryFileRead" Not implemented')
+      return true
     }, () => false)
 
     _OnAnyBinaryFileWrite = this.wrap(super._OnAnyBinaryFileWrite, () => {
       throw new Error('"_OnAnyBinaryFileWrite" Not implemented')
     }, () => false)
 
-    _OnBinaryFileRead = this.wrap(super._OnBinaryFileRead, () => {
-      throw new Error('"_OnBinaryFileRead" Not implemented')
+    _OnBinaryFileRead = this.wrap(super._OnBinaryFileRead, (tag) => {
+      if (this._currentTag === tag) {
+        return true
+      }
+      return false
     }, () => false)
 
     _OnBinaryFileWrite = this.wrap(super._OnBinaryFileWrite, () => {
@@ -729,8 +861,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     })
 
     _ChosenPath = this.wrap(super._ChosenPath, () => {
-      console.error('"_ChosenPath" Not implemented')
-      return ''
+      return this._chosenPath ?? ''
     })
 
     _AppFolder = this.wrap(super._AppFolder, () => {
@@ -749,28 +880,23 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     })
 
     _FileError = this.wrap(super._FileError, () => {
-      console.error('"_FileError" Not implemented')
-      return ''
+      return this._fileError
     })
 
     _FileSize = this.wrap(super._FileSize, () => {
-      console.error('"_FileSize" Not implemented')
-      return -1
+      return this._fileSize
     })
 
     _FileTag = this.wrap(super._FileTag, () => {
-      console.error('"_FileTag" Not implemented')
-      return ''
+      return this._currentTag ?? ""
     })
 
-    _ListAt = this.wrap(super._ListAt, () => {
-      console.error('"_ListAt" Not implemented')
-      return ''
+    _ListAt = this.wrap(super._ListAt, (index) => {
+      return this._fileList[index]?.name ?? ''
     })
 
     _ListCount = this.wrap(super._ListCount, () => {
-      console.error('"_ListCount" Not implemented')
-      return -1
+      return this._fileList.length
     })
 
     _ProjectFilesFolder = this.wrap(super._ProjectFilesFolder, () => {
@@ -788,29 +914,23 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     })
 
     _WindowHeight = this.wrap(super._WindowHeight, () => {
-      console.error('"_WindowHeight" Not implemented')
-      return -1
+      return this._windowHeight
     })
 
     _WindowWidth = this.wrap(super._WindowWidth, () => {
-      console.error('"_WindowWidth" Not implemented')
-      return -1
+      return this._windowWidth
     })
 
     _WindowTitle = this.wrap(super._WindowTitle, () => {
-      console.error('"_WindowTitle" Not implemented')
-      return ''
+      return this._windowTitle
     })
 
     _WindowX = this.wrap(super._WindowX, () => {
-      console.error('"_WindowX" Not implemented')
-      return -1
+      return this._windowX
     })
 
     _WindowY = this.wrap(super._WindowY, () => {
-      this._WindowX
-      console.error('"this" Not implemented')
-      return -1
+      return this._windowY
     })
 
     _IsEngine = this.wrap(super._IsEngine, (engine) => {

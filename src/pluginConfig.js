@@ -194,6 +194,25 @@ const Config = /** @type {const} */({
       displayText: "Copy [b]{0}[/b] to [b]{1}[/b]",
       description: "Copies the file.",
     },
+    FetchFileSize: {
+      category: "filesystem",
+      forward: "_FetchFileSize",
+      highlight: false,
+      deprecated: false,
+      isAsync: true,
+      params: [
+        {
+          id: 'path',
+          desc: "The path to the file to fetch the size.",
+          name: "Path",
+          type: 'string',
+          initialValue: "\"\"",
+        }
+      ],
+      listName: "Fetch file size",
+      displayText: "Fetch file size of [b]{0}[/b]",
+      description: "Fetch the size of the file.",
+    },
     CreateFolder: {
       category: "filesystem",
       forward: "_CreateFolder",

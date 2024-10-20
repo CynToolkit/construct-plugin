@@ -173,6 +173,10 @@ interface SDKInstanceDataObject {
 type StaticMethodsParentClass = {
     Trigger(trigger: OpaqueCnds): void
     TriggerAsync(trigger: OpaqueCnds): Promise<void>
+
+    _triggerAsync(trigger: OpaqueCnds): Promise<void>
+    _trigger(trigger: OpaqueCnds): void
+
     _getInitProperties(): {}
 }
 
