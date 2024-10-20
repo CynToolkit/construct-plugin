@@ -49,6 +49,7 @@ The main files you may want to look at would be instance.js
 | Initialize integration | Initialize the Pipelab integration |  |
 | Append file | Appends the contents to the file. | Path             *(string)* <br>Contents             *(string)* <br> |
 | Copy file | Copies the file. | Source             *(string)* <br>Destination             *(string)* <br> |
+| Fetch file size | Fetch the size of the file. | Path             *(string)* <br> |
 | Create folder | Creates the folder. | Path             *(string)* <br> |
 | Delete file | Deletes the file. | Path             *(string)* <br> |
 | List files | Load a list of files in a given folder. Use expressions after this action to get the count and file names | Path             *(string)* <br> |
