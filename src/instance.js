@@ -507,11 +507,11 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     }, this.unsupportedEngine)
 
     _AppendFile = this.wrap(super._AppendFile, async () => {
-      throw new Error('Not implemented')
+      throw new Error('"_AppendFile" Not implemented')
     }, this.unsupportedEngine)
 
     _CopyFile = this.wrap(super._CopyFile, async () => {
-      throw new Error('Not implemented')
+      throw new Error('"_CopyFile" Not implemented')
     }, this.unsupportedEngine)
 
     _CreateFolder = this.wrap(super._CreateFolder, async (path) => {
@@ -530,27 +530,38 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     }, this.unsupportedEngine)
 
     _DeleteFile = this.wrap(super._DeleteFile, async () => {
-      throw new Error('Not implemented')
+      throw new Error('"_DeleteFile" Not implemented')
     }, this.unsupportedEngine)
 
     _ListFiles = this.wrap(super._ListFiles, async () => {
-      throw new Error('Not implemented')
+      throw new Error('"_ListFiles" Not implemented')
     }, this.unsupportedEngine)
 
     _MoveFile = this.wrap(super._MoveFile, async () => {
-      throw new Error('Not implemented')
+      throw new Error('"_MoveFile" Not implemented')
     }, this.unsupportedEngine)
 
     _OpenBrowser = this.wrap(super._OpenBrowser, async () => {
-      throw new Error('Not implemented')
+      throw new Error('"_OpenBrowser" Not implemented')
     }, this.unsupportedEngine)
 
-    _ReadBinaryFile = this.wrap(super._ReadBinaryFile, async () => {
-      throw new Error('Not implemented')
+    _ReadBinaryFile = this.wrap(super._ReadBinaryFile, async (tag, path, destination) => {
+      console.log('Read text', path);
+
+      /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageReadFileBinary, 'input'>} */
+      const order = {
+        url: '/fs/file/read/binary',
+        body: {
+          path,
+        }
+      }
+
+      const answer = await this.ws?.sendAndWaitForResponse(order)
+      console.log('answer', answer)
     }, this.unsupportedEngine)
 
     _RenameFile = this.wrap(super._RenameFile, async () => {
-      throw new Error('Not implemented')
+      throw new Error('"_RenameFile" Not implemented')
     }, this.unsupportedEngine)
 
     _RunFile = this.wrap(super._RunFile, async (command) => {
@@ -650,113 +661,126 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     // Cnds
 
     _OnFolderDialogCancel = this.wrap(super._OnFolderDialogCancel, () => {
-      throw new Error('Not implemented')
+      throw new Error('"_OnFolderDialogCancel" Not implemented')
     }, () => false)
 
     _OnFolderDialogOk = this.wrap(super._OnFolderDialogOk, () => {
-      throw new Error('Not implemented')
+      throw new Error('"_OnFolderDialogOk" Not implemented')
     }, () => false)
 
     _OnOpenDialogCancel = this.wrap(super._OnOpenDialogCancel, () => {
-      throw new Error('Not implemented')
+      throw new Error('"_OnOpenDialogCancel" Not implemented')
     }, () => false)
 
     _OnOpenDialogOk = this.wrap(super._OnOpenDialogOk, () => {
-      throw new Error('Not implemented')
+      throw new Error('"_OnOpenDialogOk" Not implemented')
     }, () => false)
 
     _OnSaveDialogCancel = this.wrap(super._OnSaveDialogCancel, () => {
-      throw new Error('Not implemented')
+      throw new Error('"_OnSaveDialogCancel" Not implemented')
     }, () => false)
 
     _OnSaveDialogOk = this.wrap(super._OnSaveDialogOk, () => {
-      throw new Error('Not implemented')
+      throw new Error('"_OnSaveDialogOk" Not implemented')
     }, () => false)
 
     _OnAnyBinaryFileRead = this.wrap(super._OnAnyBinaryFileRead, () => {
-      throw new Error('Not implemented')
+      throw new Error('"_OnAnyBinaryFileRead" Not implemented')
     }, () => false)
 
     _OnAnyBinaryFileWrite = this.wrap(super._OnAnyBinaryFileWrite, () => {
-      throw new Error('Not implemented')
+      throw new Error('"_OnAnyBinaryFileWrite" Not implemented')
     }, () => false)
 
     _OnBinaryFileRead = this.wrap(super._OnBinaryFileRead, () => {
-      throw new Error('Not implemented')
+      throw new Error('"_OnBinaryFileRead" Not implemented')
     }, () => false)
 
     _OnBinaryFileWrite = this.wrap(super._OnBinaryFileWrite, () => {
-      throw new Error('Not implemented')
+      throw new Error('"_OnBinaryFileWrite" Not implemented')
     }, () => false)
 
     _OnFileDropped = this.wrap(super._OnFileDropped, () => {
-      throw new Error('Not implemented')
+      throw new Error('"_OnFileDropped" Not implemented')
     }, () => false)
 
     _OnFileSystemError = this.wrap(super._OnFileSystemError, () => {
-      throw new Error('Not implemented')
+      throw new Error('"_OnFileSystemError" Not implemented')
     }, () => false)
 
     _OnPathVerification = this.wrap(super._OnPathVerification, () => {
-      throw new Error('Not implemented')
+      throw new Error('"_OnPathVerification" Not implemented')
     }, () => false)
 
     // Exps
     _UserFolder = this.wrap(super._UserFolder, () => {
       console.log('this', this)
-      return this._userFolder
+      return this._userFolder ?? ''
     })
 
     _ArgumentAt = this.wrap(super._ArgumentAt, () => {
-      throw new Error('Not implemented')
+      console.error('"_ArgumentAt" Not implemented')
+      return ''
     })
 
     _ArgumentCount = this.wrap(super._ArgumentCount, () => {
-      throw new Error('Not implemented')
+      console.error('"_ArgumentCount" Not implemented')
+      return -1
     })
 
     _ChosenPath = this.wrap(super._ChosenPath, () => {
-      throw new Error('Not implemented')
+      console.error('"_ChosenPath" Not implemented')
+      return ''
     })
 
     _AppFolder = this.wrap(super._AppFolder, () => {
-      throw new Error('Not implemented')
+      console.error('"_AppFolder" Not implemented')
+      return ''
     })
 
     _AppFolderURL = this.wrap(super._AppFolderURL, () => {
-      throw new Error('Not implemented')
+      console.error('"_AppFolderURL" Not implemented')
+      return ''
     })
 
     _DroppedFile = this.wrap(super._DroppedFile, () => {
-      throw new Error('Not implemented')
+      console.error('"_DroppedFile" Not implemented')
+      return ''
     })
 
     _FileError = this.wrap(super._FileError, () => {
-      throw new Error('Not implemented')
+      console.error('"_FileError" Not implemented')
+      return ''
     })
 
     _FileSize = this.wrap(super._FileSize, () => {
-      throw new Error('Not implemented')
+      console.error('"_FileSize" Not implemented')
+      return -1
     })
 
     _FileTag = this.wrap(super._FileTag, () => {
-      throw new Error('Not implemented')
+      console.error('"_FileTag" Not implemented')
+      return ''
     })
 
     _ListAt = this.wrap(super._ListAt, () => {
-      throw new Error('Not implemented')
+      console.error('"_ListAt" Not implemented')
+      return ''
     })
 
     _ListCount = this.wrap(super._ListCount, () => {
-      throw new Error('Not implemented')
+      console.error('"_ListCount" Not implemented')
+      return -1
     })
 
     _ProjectFilesFolder = this.wrap(super._ProjectFilesFolder, () => {
-      throw new Error('Not implemented')
+      console.error('"_ProjectFilesFolder" Not implemented')
+      return ''
     })
 
     _ProjectFilesFolderURL = this.wrap(super._ProjectFilesFolderURL, () => {
-      throw new Error('Not implemented')
+      console.error('"_ProjectFilesFolderURL" Not implemented')
+      return ''
     })
 
     _ReadFile = this.wrap(super._ReadFile, () => {
@@ -764,24 +788,29 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     })
 
     _WindowHeight = this.wrap(super._WindowHeight, () => {
-      throw new Error('Not implemented')
+      console.error('"_WindowHeight" Not implemented')
+      return -1
     })
 
     _WindowWidth = this.wrap(super._WindowWidth, () => {
-      throw new Error('Not implemented')
+      console.error('"_WindowWidth" Not implemented')
+      return -1
     })
 
     _WindowTitle = this.wrap(super._WindowTitle, () => {
-      throw new Error('Not implemented')
+      console.error('"_WindowTitle" Not implemented')
+      return ''
     })
 
     _WindowX = this.wrap(super._WindowX, () => {
-      throw new Error('Not implemented')
+      console.error('"_WindowX" Not implemented')
+      return -1
     })
 
     _WindowY = this.wrap(super._WindowY, () => {
       this._WindowX
-      throw new Error('Not implemented')
+      console.error('"this" Not implemented')
+      return -1
     })
 
     _IsEngine = this.wrap(super._IsEngine, (engine) => {

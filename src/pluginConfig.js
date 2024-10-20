@@ -617,7 +617,7 @@ const Config = /** @type {const} */({
       isAsync: true,
 
       listName: "Request attention",
-      displayText: "{0}",
+      displayText: "Request window attention with mode {0}",
       description: "Start or stop requesting attention from the user, e.g. by flashing the title bar (depends on OS).",
       params: [
         {
@@ -652,7 +652,7 @@ const Config = /** @type {const} */({
         }
       ],
       listName: "Set always on top",
-      displayText: "{0}",
+      displayText: "Set always on top to {0}",
       description: "Enable or disable the window always being on top of other windows.",
     },
 
@@ -672,7 +672,7 @@ const Config = /** @type {const} */({
         }
       ],
       listName: "Set height",
-      displayText: "{0}",
+      displayText: "Set windown height to {0}",
       description: "Set the height of the window.",
     },
 
@@ -789,7 +789,7 @@ const Config = /** @type {const} */({
         }
       ],
       listName: "Set width",
-      displayText: "{0}",
+      displayText: "Set windown width to {0}",
       description: "Set the width of the window.",
     },
 
@@ -809,7 +809,7 @@ const Config = /** @type {const} */({
         }
       ],
       listName: "Set x",
-      displayText: "{0}",
+      displayText: "Set window X position to {0}",
       description: "Set the x position of the window.",
     },
 
@@ -829,7 +829,7 @@ const Config = /** @type {const} */({
         }
       ],
       listName: "Set y",
-      displayText: "{0}",
+      displayText: "Set window Y position to {0}",
       description: "Set the y position of the window.",
     },
 
@@ -852,7 +852,7 @@ const Config = /** @type {const} */({
         }
       ],
       listName: "Show dev tools",
-      displayText: "{0}",
+      displayText: "Set devtool to {0}",
       description: "Show or hide the dev tools.",
     },
 
