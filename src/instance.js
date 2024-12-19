@@ -231,6 +231,10 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         reconnectInterval: 5000
       });
 
+      window.pipelab = {
+        ws: this.ws
+      }
+
       await this.ws.connect();
 
       console.log('this.ws', this.ws)
