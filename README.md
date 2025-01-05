@@ -52,7 +52,7 @@ The main files you may want to look at would be instance.js
 | Fetch file size | Fetch the size of the file. | Path             *(string)* <br> |
 | Create folder | Creates the folder. | Path             *(string)* <br> |
 | Delete file | Deletes the file. | Path             *(string)* <br> |
-| List files | Load a list of files in a given folder. Use expressions after this action to get the count and file names | Path             *(string)* <br> |
+| List files | Load a list of files in a given folder. Use expressions after this action to get the count and file names | Path             *(string)* <br>Recursive             *(boolean)* <br> |
 | Move file | Moves the file. | Source             *(string)* <br>Destination             *(string)* <br> |
 | Open browser | Opens the browser. | URL             *(string)* <br> |
 | Read binary file | Reads a file into a Binary Data object. Triggers 'On binary file read' when completes. | Tag             *(string)* <br>Path             *(string)* <br>Destination             *(object)* <br> |
@@ -111,7 +111,6 @@ The main files you may want to look at would be instance.js
 | ArgumentAt | Get the argument at the given index. | string | Index *(number)* <br> | 
 | ArgumentCount | Get the number of arguments. | number |  | 
 | ChosenPath | Return the chosen path after a file dialog. | string |  | 
-| AppFolder | Return the folder of the current app. | string |  | 
 | AppFolderURL | Return the URL of the folder of the current app. | string |  | 
 | DroppedFile | Return the dropped file after a file drop. | string |  | 
 | FileError | Return the error message after a file operation fails. | string |  | 
@@ -123,6 +122,23 @@ The main files you may want to look at would be instance.js
 | ProjectFilesFolderURL | Return the URL of the folder of the project files. | string |  | 
 | ReadFile | Return the contents of the file. | string |  | 
 | UserFolder | Return the current User's folder | string |  | 
+| HomeFolder | Return the current Home folder | string |  | 
+| AppDataFolder | Return the current AppDataFolder folder | string |  | 
+| UserDataFolder | Return the current UserDataFolder folder | string |  | 
+| SessionDataFolder | Return the current SessionDataFolder folder | string |  | 
+| TempFolder | Return the current TempFolder folder | string |  | 
+| ExeFolder | Return the current ExeFolder folder | string |  | 
+| ModuleFolder | Return the current ModuleFolder folder | string |  | 
+| DesktopFolder | Return the current DesktopFolder folder | string |  | 
+| DocumentsFolder | Return the current DocumentsFolder folder | string |  | 
+| DownloadsFolder | Return the current DownloadsFolder folder | string |  | 
+| MusicFolder | Return the current MusicFolder folder | string |  | 
+| PicturesFolder | Return the current PicturesFolder folder | string |  | 
+| VideosFolder | Return the current VideosFolder folder | string |  | 
+| RecentFolder | Return the current RecentFolder folder | string |  | 
+| LogsFolder | Return the current LogsFolder folder | string |  | 
+| CrashDumpsFolder | Return the current CrashDumpsFolder folder | string |  | 
+| AppFolder | Return the folder of the current app. | string |  | 
 | WindowHeight | Return the height of the window. | number |  | 
 | WindowWidth | Return the width of the window. | number |  | 
 | WindowTitle | Return the title of the window. | string |  | 
