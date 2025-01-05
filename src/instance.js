@@ -126,6 +126,78 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
      */
     _userFolder
 
+    /**
+     * @type {string}
+     */
+    _homeFolder
+    /**
+     * @type {string}
+     */
+    _appDataFolder
+    /**
+     * @type {string}
+     */
+    _userDataFolder
+    /**
+     * @type {string}
+     */
+    _sessionDataFolder
+    /**
+     * @type {string}
+     */
+    _tempFolder
+    /**
+     * @type {string}
+     */
+    _exeFolder
+    /**
+     * @type {string}
+     */
+    _moduleFolder
+    /**
+     * @type {string}
+     */
+    _desktopFolder
+    /**
+     * @type {string}
+     */
+    _documentsFolder
+    /**
+     * @type {string}
+     */
+    _downloadsFolder
+    /**
+     * @type {string}
+     */
+    _musicFolder
+    /**
+     * @type {string}
+     */
+    _picturesFolder
+    /**
+     * @type {string}
+     */
+    _videosFolder
+    /**
+     * @type {string}
+     */
+    _recentFolder
+    /**
+     * @type {string}
+     */
+    _logsFolder
+    /**
+     * @type {string}
+     */
+    _crashDumpsFolder
+    /**
+     * @type {string}
+     */
+    _appFolder
+    /**
+     * @type {string}
+     */
+
     /** @type {string} */
     _currentTag
 
@@ -231,6 +303,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         reconnectInterval: 5000
       });
 
+      // expose websocket instance
       window.pipelab = {
         ws: this.ws
       }
@@ -239,22 +312,50 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
 
       console.log('this.ws', this.ws)
 
-      // -----------------------------------------------------------------------
-      // Fetch user folder
-      /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessagePaths, 'input'>} */
-      const orderUserFolder = {
-        url: '/paths',
-        body: {
-          name: 'home'
-        }
-      }
+      const paths = [
+        // app.getPath(name)
+        ['home', '_homeFolder' ],
+        ['appData', '_appDataFolder' ],
+        ['userData', '_userDataFolder' ],
+        ['sessionData', '_sessionDataFolder' ],
+        ['temp', '_tempFolder' ],
+        ['exe', '_exeFolder' ],
+        ['module', '_moduleFolder' ],
+        ['desktop', '_desktopFolder' ],
+        ['documents', '_documentsFolder' ],
+        ['downloads', '_downloadsFolder' ],
+        ['music', '_musicFolder' ],
+        ['pictures', '_picturesFolder' ],
+        ['videos', '_videosFolder' ],
+        ['recent', '_recentFolder' ],
+        ['logs', '_logsFolder' ],
+        ['crashDumps', '_crashDumpsFolder' ],
+        // app.getAppPath
+        ['app', '_appFolder' ],
+      ]
 
-      /**
-       * @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessagePaths, 'output'>}
-       */
-      const userFolder = await this.ws.sendAndWaitForResponse(orderUserFolder)
-      console.log('userFolder', userFolder.body.data)
-      this._userFolder = userFolder.body.data
+      const promises = paths.map(async (name) => {
+
+        // -----------------------------------------------------------------------
+        // Fetch user folder
+        /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessagePaths, 'input'>} */
+        const orderPath = {
+          url: '/paths',
+          body: {
+            name: name[0]
+          }
+        }
+
+        /**
+         * @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessagePaths, 'output'>}
+         */
+        const pathFolder = await this.ws?.sendAndWaitForResponse(orderPath)
+        console.log('pathFolder', pathFolder.body.data)
+        this[name[1]] = pathFolder.body.data
+
+      })
+
+      await Promise.all(promises)
 
       // -----------------------------------------------------------------------
       // Fetch engine
@@ -617,12 +718,13 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
       throw new Error('"_DeleteFile" Not implemented')
     }, this.unsupportedEngine)
 
-    _ListFiles = this.wrap(super._ListFiles, async (path) => {
+    _ListFiles = this.wrap(super._ListFiles, async (path, recursive) => {
       /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageListFiles, 'input'>} */
       const order = {
         url: '/fs/list',
         body: {
-          path
+          path,
+          recursive,
         }
       }
       const files = await this.ws?.sendAndWaitForResponse(order)
@@ -854,6 +956,80 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
       return this._userFolder ?? ''
     })
 
+    _HomeFolder = this.wrap(super._HomeFolder, () => {
+      console.log('this', this)
+      return this._homeFolder ?? ''
+    })
+    _AppDataFolder = this.wrap(super._AppDataFolder, () => {
+      console.log('this', this)
+      return this._appDataFolder ?? ''
+    })
+    _UserDataFolder = this.wrap(super._UserDataFolder, () => {
+      console.log('this', this)
+      return this._userFolder ?? ''
+    })
+    _SessionDataFolder = this.wrap(super._SessionDataFolder, () => {
+      console.log('this', this)
+      return this._sessionDataFolder ?? ''
+    })
+    _TempFolder = this.wrap(super._TempFolder, () => {
+      console.log('this', this)
+      return this._tempFolder ?? ''
+    })
+    _ExeFolder = this.wrap(super._ExeFolder, () => {
+      console.log('this', this)
+      return this._exeFolder ?? ''
+    })
+    _ModuleFolder = this.wrap(super._ModuleFolder, () => {
+      console.log('this', this)
+      return this._moduleFolder ?? ''
+    })
+    _DesktopFolder = this.wrap(super._DesktopFolder, () => {
+      console.log('this', this)
+      return this._desktopFolder ?? ''
+    })
+    _DocumentsFolder = this.wrap(super._DocumentsFolder, () => {
+      console.log('this', this)
+      return this._documentsFolder ?? ''
+    })
+    _DownloadsFolder = this.wrap(super._DownloadsFolder, () => {
+      console.log('this', this)
+      return this._downloadsFolder ?? ''
+    })
+    _MusicFolder = this.wrap(super._MusicFolder, () => {
+      console.log('this', this)
+      return this._musicFolder ?? ''
+    })
+    _PicturesFolder = this.wrap(super._PicturesFolder, () => {
+      console.log('this', this)
+      return this._picturesFolder ?? ''
+    })
+    _VideosFolder = this.wrap(super._VideosFolder, () => {
+      console.log('this', this)
+      return this._videosFolder ?? ''
+    })
+    _RecentFolder = this.wrap(super._RecentFolder, () => {
+      console.log('this', this)
+      return this._recentFolder ?? ''
+    })
+    _LogsFolder = this.wrap(super._LogsFolder, () => {
+      console.log('this', this)
+      return this._logsFolder ?? ''
+    })
+    _CrashDumpsFolder = this.wrap(super._CrashDumpsFolder, () => {
+      console.log('this', this)
+      return this._crashDumpsFolder ?? ''
+    })
+
+    _AppFolder = this.wrap(super._AppFolder, () => {
+      console.log('this', this)
+      return this._appFolder ?? ''
+    })
+
+    _AppFolderURL = this.wrap(super._AppFolderURL, () => {
+      return 'deprecrated'
+    })
+
     _ArgumentAt = this.wrap(super._ArgumentAt, () => {
       console.error('"_ArgumentAt" Not implemented')
       return ''
@@ -866,16 +1042,6 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
 
     _ChosenPath = this.wrap(super._ChosenPath, () => {
       return this._chosenPath ?? ''
-    })
-
-    _AppFolder = this.wrap(super._AppFolder, () => {
-      console.error('"_AppFolder" Not implemented')
-      return ''
-    })
-
-    _AppFolderURL = this.wrap(super._AppFolderURL, () => {
-      console.error('"_AppFolderURL" Not implemented')
-      return ''
     })
 
     _DroppedFile = this.wrap(super._DroppedFile, () => {
@@ -896,7 +1062,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     })
 
     _ListAt = this.wrap(super._ListAt, (index) => {
-      return this._fileList[index]?.name ?? ''
+      return this._fileList[index]?.path ?? ''
     })
 
     _ListCount = this.wrap(super._ListCount, () => {
