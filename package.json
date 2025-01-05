@@ -9,7 +9,7 @@
   },
   "name": "@pipelab/construct-plugin",
   "description": "Pipelab construct plugin",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "packageManager": "pnpm@9.10.0",
   "type": "module",
   "scripts": {
