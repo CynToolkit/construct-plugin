@@ -576,6 +576,18 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
       await this.ws?.sendAndWaitForResponse(order)
     }, this.unsupportedEngine)
 
+    _SetFullscreen = this.wrap(super._SetFullscreen, async (toggle) => {
+      /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageSetFullscreen, 'input'>} */
+      const order = {
+        url: '/window/set-fullscreen',
+        body: {
+          value: toggle
+        }
+      }
+
+      await this.ws?.sendAndWaitForResponse(order)
+    }, this.unsupportedEngine)
+
     _Unmaximize = this.wrap(super._Unmaximize, async () => {
       /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageWindowUnmaximize, 'input'>} */
       const order = {
