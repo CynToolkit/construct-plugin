@@ -304,7 +304,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
       });
 
       // expose websocket instance
-      window.pipelab = {
+      globalThis.pipelab = {
         ws: this.ws
       }
 
