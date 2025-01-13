@@ -892,6 +892,29 @@ const Config = /** @type {const} */({
       displayText: "Unmaximize window",
       description: "Unmaximize the window",
     },
+
+    SetFullscreen: {
+      category: "window",
+      forward: "_SetFullscreen",
+      highlight: false,
+      deprecated: false,
+      isAsync: true,
+      params: [
+        {
+          id: 'fullscreen',
+          desc: "Whether to set fullscreen or not.",
+          name: "Fullscreen",
+          type: 'combo',
+          items: [
+            { "normal": "Normal" },
+            { "fullscreen": "Fullscreen" },
+          ]
+        }
+      ],
+      listName: "Set Fullscreen",
+      displayText: "Set fullscreen {0}",
+      description: "Change fullscreen state",
+    }
   },
   Cnds: {
     IsEngine: {

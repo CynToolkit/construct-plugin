@@ -197,6 +197,10 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     /**
      * @type {string}
      */
+    _projectFilesFolder
+    /**
+     * @type {string}
+     */
 
     /** @type {string} */
     _currentTag
@@ -312,6 +316,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
 
       console.log('this.ws', this.ws)
 
+      /** @type [import("@pipelab/core").Paths, string][] */
       const paths = [
         // app.getPath(name)
         ['home', '_homeFolder' ],
@@ -332,6 +337,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         ['crashDumps', '_crashDumpsFolder' ],
         // app.getAppPath
         ['app', '_appFolder' ],
+        ['project', '_projectFilesFolder' ],
       ]
 
       const promises = paths.map(async (name) => {
@@ -570,6 +576,18 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         url: '/window/show-dev-tools',
         body: {
           value: true
+        }
+      }
+
+      await this.ws?.sendAndWaitForResponse(order)
+    }, this.unsupportedEngine)
+
+    _SetFullscreen = this.wrap(super._SetFullscreen, async (toggle) => {
+      /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageSetFullscreen, 'input'>} */
+      const order = {
+        url: '/window/set-fullscreen',
+        body: {
+          value: toggle
         }
       }
 
@@ -1070,8 +1088,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     })
 
     _ProjectFilesFolder = this.wrap(super._ProjectFilesFolder, () => {
-      console.error('"_ProjectFilesFolder" Not implemented')
-      return ''
+      return this._projectFilesFolder ?? ''
     })
 
     _ProjectFilesFolderURL = this.wrap(super._ProjectFilesFolderURL, () => {
