@@ -12,11 +12,11 @@ const Config = /** @type {const} */({
   version: pkg.version,
   category: "platform-specific",
   author: "Armaldio",
-  website: "https://www.construct.net",
-  documentation: "https://www.construct.net",
-  description: "Description",
-  addonUrl: "https://www.construct.net/en/make-games/addons/####/XXXX", // displayed in auto-generated docs
-  // githubUrl: "https://github.com/skymen/XXXX", // displays latest release version in auto-generated docs
+  website: "https://github.com/CynToolkit/construct-plugin",
+  documentation: "https://github.com/CynToolkit/construct-plugin",
+  description: "A plugin that integrate with Pipelab",
+  addonUrl: "https://github.com/CynToolkit/construct-plugin", // displayed in auto-generated docs
+  githubUrl: "https://github.com/CynToolkit/construct-plugin", // displays latest release version in auto-generated docs
   // icon: "icon.svg", // defaults to "icon.svg" if omitted
   type: "object", // world, object, dom
   fileDependencies: [
