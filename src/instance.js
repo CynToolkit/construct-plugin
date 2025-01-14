@@ -15,18 +15,18 @@ class WebSocketClient {
 
   async connect() {
     return new Promise((resolve, reject) => {
-      console.log('trying to connect')
+      // console.log('trying to connect')
       this.socket = new WebSocket(this.url);
 
       this.socket.onopen = () => {
-        console.log('Connected to WebSocket');
+        // console.log('Connected to WebSocket');
         this.isConnected = true;
         this.reconnectAttempts = 0;
         return resolve(this.socket);
       };
 
       this.socket.onmessage = (event) => {
-        console.log('Received message:', event.data);
+        // console.log('Received message:', event.data);
         const parsedData = JSON.parse(event.data);
         // Assuming the server sends a 'correlationId' with every message
         if (parsedData.correlationId && this.responseResolvers.has(parsedData.correlationId)) {
@@ -34,13 +34,13 @@ class WebSocketClient {
           resolver?.(parsedData);
           this.responseResolvers.delete(parsedData.correlationId);
         } else {
-          console.log('unhandled message', parsedData)
+          console.error('unhandled message', parsedData)
         }
         // Handle other incoming messages if needed
       };
 
       this.socket.onclose = () => {
-        console.log('WebSocket connection closed');
+        // console.log('WebSocket connection closed');
         this.isConnected = false;
         this.reconnect();
       };
@@ -235,8 +235,12 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     /** @type {number} */
     _windowY
 
-    constructor() {
-      super();
+    constructor(inst, _properties) {
+      if (sdk === 'v1') {
+        super(inst);
+      } else {
+        super();
+      }
 
       this._currentTag = '';
       this._isInitialized = false
@@ -250,8 +254,20 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
       this._windowX = -1
       this._windowY = -1
 
-      const properties = this._getInitProperties();
+      let properties
+      if (sdk == 'v1') {
+        properties = _properties
+      } else {
+        const properties = this._getInitProperties();
+      }
+
       if (properties) {
+        //
+      }
+
+      if (sdk === 'v1') {
+        this._triggerAsync = this.TriggerAsync
+        this._trigger = this.Trigger
       }
     }
 
@@ -300,7 +316,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
 
     _Initialize = this.wrap(super._Initialize, async () => {
       // Initialize the WebSocket connection
-      console.log('on instance created');
+      // console.log('on instance created');
 
       this.ws = new WebSocketClient('ws://localhost:31753', {
         maxReconnectAttempts: 3,
@@ -314,7 +330,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
 
       await this.ws.connect();
 
-      console.log('this.ws', this.ws)
+      // console.log('this.ws', this.ws)
 
       /** @type [import("@pipelab/core").Paths, string][] */
       const paths = [
@@ -356,7 +372,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
          * @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessagePaths, 'output'>}
          */
         const pathFolder = await this.ws?.sendAndWaitForResponse(orderPath)
-        console.log('pathFolder', pathFolder.body.data)
+        // console.log('pathFolder', pathFolder.body.data)
         this[name[1]] = pathFolder.body.data
 
       })
@@ -375,16 +391,16 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
        * @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageEngine, 'output'>}
        */
       const engineResponse = await this.ws.sendAndWaitForResponse(orderEngine)
-      console.log('engineResponse', engineResponse.body.engine)
+      // console.log('engineResponse', engineResponse.body.engine)
       this._engine = engineResponse.body.engine
 
       this._isInitialized = true
 
-      console.log('this', this)
+      // console.log('this', this)
     }, this.unsupportedEngine, true)
 
     _WriteTextFile = this.wrap(super._WriteTextFile, async (contents, path) => {
-      console.log('Write text', contents, path);
+      // console.log('Write text', contents, path);
 
       /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageWriteFile, 'input'>} */
       const order = {
@@ -397,7 +413,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
       }
 
       await this.ws?.sendAndWaitForResponse(order)
-      console.log('this', this)
+      // console.log('this', this)
     }, this.unsupportedEngine)
 
     _WriteText = () => {
@@ -405,7 +421,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     }
 
     _ReadTextFile = this.wrap(super._ReadTextFile, async (path) => {
-      console.log('Read text', path);
+      // console.log('Read text', path);
 
       /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageReadFile, 'input'>} */
       const order = {
@@ -417,7 +433,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
       }
 
       const answer = await this.ws?.sendAndWaitForResponse(order)
-      console.log('this', this)
+      // console.log('this', this)
       this._readFile = answer?.body.content
     }, this.unsupportedEngine)
 
@@ -449,7 +465,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     }, this.unsupportedEngine)
 
     _RequestAttention = this.wrap(super._RequestAttention, async (mode) => {
-      console.log('mode', mode)
+      // console.log('mode', mode)
       /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageRequestAttention, 'input'>} */
       const order = {
         url: '/window/request-attention',
@@ -611,10 +627,10 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
 
       /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageShowFolderDialog, 'output'> | undefined} */
       const answer = await this.ws?.sendAndWaitForResponse(order)
-      console.log('answer', answer)
+      // console.log('answer', answer)
 
-      console.log('C3', C3)
-      console.log('this', this)
+      // console.log('C3', C3)
+      // console.log('this', this)
 
       if (!answer) {
         await this._triggerAsync(C3.Plugins.pipelab.Cnds.OnFolderDialogCancel)
@@ -631,12 +647,12 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     }, this.unsupportedEngine)
 
     _ShowOpenDialog = this.wrap(super._ShowOpenDialog, async (accept) => {
-      console.log('accept', accept)
+      // console.log('accept', accept)
       /**
        * @type {import('@pipelab/core').FileFilter[]}
        */
       const filters = accept.split(',').map(filter => {
-        console.log('filter', filter)
+        // console.log('filter', filter)
         const [name, extensions] = filter.split('|')
         if (name && extensions) {
           return {
@@ -646,7 +662,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         }
       })
 
-      console.log('filters', filters)
+      // console.log('filters', filters)
 
       /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageShowOpenDialog, 'input'>} */
       const order = {
@@ -676,7 +692,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
        * @type {import('@pipelab/core').FileFilter[]}
        */
       const filters = accept.split(',').map(filter => {
-        console.log('filter', filter)
+        // console.log('filter', filter)
         const [name, extensions] = filter.split('|')
         if (name && extensions) {
           return {
@@ -749,7 +765,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
 
       if (files) {
         this._fileList = files.body.list
-        console.log('this._fileList', this._fileList)
+        // console.log('this._fileList', this._fileList)
       }
     }, this.unsupportedEngine)
 
@@ -762,7 +778,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     }, this.unsupportedEngine)
 
     _ReadBinaryFile = this.wrap(super._ReadBinaryFile, async (tag, path, destination) => {
-      console.log('Read text', path);
+      // console.log('Read text', path);
 
       /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageReadFileBinary, 'input'>} */
       const order = {
@@ -773,21 +789,21 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
       }
 
       const answer = await this.ws?.sendAndWaitForResponse(order)
-      console.log('answer', answer)
+      // console.log('answer', answer)
 
       const sdkInst = this.__GetBinaryDataSdkInstance(destination);
 
       if (!sdkInst) {
         throw new Error("SDK instance not found")
       }
-      console.log('sdkInst', sdkInst)
+      // console.log('sdkInst', sdkInst)
       const newBuffer = new Uint8Array(answer?.body.content ?? [])
-      console.log('newBuffer', newBuffer)
+      // console.log('newBuffer', newBuffer)
       sdkInst.setArrayBufferCopy(newBuffer.buffer);
-      console.log("getArrayBufferCopy()", sdkInst.getArrayBufferCopy())
+      // console.log("getArrayBufferCopy()", sdkInst.getArrayBufferCopy())
 
-      console.log('addonTriggers', addonTriggers)
-      console.log('this', this)
+      // console.log('addonTriggers', addonTriggers)
+      // console.log('this', this)
 
       this._currentTag = tag;
       await this._triggerAsync(C3.Plugins.pipelab.Cnds.OnAnyBinaryFileRead)
@@ -842,11 +858,11 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
      * @return {IBinaryDataInstance | null} objectClass
      */
     __GetBinaryDataSdkInstance(objectClass) {
-      console.log('this._inst', this._inst)
+      // console.log('this._inst', this._inst)
       if (!objectClass)
         return null;
       const target = objectClass.getFirstPickedInstance(this._inst);
-      console.log('target', target)
+      // console.log('target', target)
       if (!target)
         return null;
       // return target.GetSdkInstance()
@@ -855,12 +871,12 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
 
     _WriteBinaryFile = this.wrap(super._WriteBinaryFile, async (tag, path, source) => {
       throw new Error('not supported')
-      console.log('tag', tag)
-      console.log('path', path)
-      console.log('source', source)
+      // console.log('tag', tag)
+      // console.log('path', path)
+      // console.log('source', source)
 
-      console.log('C3', C3)
-      console.log('this', this)
+      // console.log('C3', C3)
+      // console.log('this', this)
 
       const sdkInst = this.__GetBinaryDataSdkInstance(source);
 
@@ -868,11 +884,11 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         throw new Error("SDK instance not found")
       }
 
-      console.log('sdkInst', sdkInst)
+      // console.log('sdkInst', sdkInst)
 
       const buffer = sdkInst.getArrayBufferReadOnly();
 
-      console.log('buffer', buffer)
+      // console.log('buffer', buffer)
 
       /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageWriteFile, 'input'>} */
       const order = {
@@ -907,7 +923,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
        * @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageFileSize, 'output'>}
        */
       const answer = await this.ws?.sendAndWaitForResponse(order)
-      console.log('answer', answer)
+      // console.log('answer', answer)
       this._fileSize = answer?.body.size ?? -1
     })
 
@@ -970,77 +986,77 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
 
     // Exps
     _UserFolder = this.wrap(super._UserFolder, () => {
-      console.log('this', this)
+      // console.log('this', this)
       return this._userFolder ?? ''
     })
 
     _HomeFolder = this.wrap(super._HomeFolder, () => {
-      console.log('this', this)
+      // console.log('this', this)
       return this._homeFolder ?? ''
     })
     _AppDataFolder = this.wrap(super._AppDataFolder, () => {
-      console.log('this', this)
+      // console.log('this', this)
       return this._appDataFolder ?? ''
     })
     _UserDataFolder = this.wrap(super._UserDataFolder, () => {
-      console.log('this', this)
+      // console.log('this', this)
       return this._userFolder ?? ''
     })
     _SessionDataFolder = this.wrap(super._SessionDataFolder, () => {
-      console.log('this', this)
+      // console.log('this', this)
       return this._sessionDataFolder ?? ''
     })
     _TempFolder = this.wrap(super._TempFolder, () => {
-      console.log('this', this)
+      // console.log('this', this)
       return this._tempFolder ?? ''
     })
     _ExeFolder = this.wrap(super._ExeFolder, () => {
-      console.log('this', this)
+      // console.log('this', this)
       return this._exeFolder ?? ''
     })
     _ModuleFolder = this.wrap(super._ModuleFolder, () => {
-      console.log('this', this)
+      // console.log('this', this)
       return this._moduleFolder ?? ''
     })
     _DesktopFolder = this.wrap(super._DesktopFolder, () => {
-      console.log('this', this)
+      // console.log('this', this)
       return this._desktopFolder ?? ''
     })
     _DocumentsFolder = this.wrap(super._DocumentsFolder, () => {
-      console.log('this', this)
+      // console.log('this', this)
       return this._documentsFolder ?? ''
     })
     _DownloadsFolder = this.wrap(super._DownloadsFolder, () => {
-      console.log('this', this)
+      // console.log('this', this)
       return this._downloadsFolder ?? ''
     })
     _MusicFolder = this.wrap(super._MusicFolder, () => {
-      console.log('this', this)
+      // console.log('this', this)
       return this._musicFolder ?? ''
     })
     _PicturesFolder = this.wrap(super._PicturesFolder, () => {
-      console.log('this', this)
+      // console.log('this', this)
       return this._picturesFolder ?? ''
     })
     _VideosFolder = this.wrap(super._VideosFolder, () => {
-      console.log('this', this)
+      // console.log('this', this)
       return this._videosFolder ?? ''
     })
     _RecentFolder = this.wrap(super._RecentFolder, () => {
-      console.log('this', this)
+      // console.log('this', this)
       return this._recentFolder ?? ''
     })
     _LogsFolder = this.wrap(super._LogsFolder, () => {
-      console.log('this', this)
+      // console.log('this', this)
       return this._logsFolder ?? ''
     })
     _CrashDumpsFolder = this.wrap(super._CrashDumpsFolder, () => {
-      console.log('this', this)
+      // console.log('this', this)
       return this._crashDumpsFolder ?? ''
     })
 
     _AppFolder = this.wrap(super._AppFolder, () => {
-      console.log('this', this)
+      // console.log('this', this)
       return this._appFolder ?? ''
     })
 
@@ -1121,7 +1137,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     })
 
     _IsEngine = this.wrap(super._IsEngine, (engine) => {
-      console.log('engine', engine)
+      // console.log('engine', engine)
       return this._engine === engine
     })
 
@@ -1137,8 +1153,4 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
       // load state for savegames
     }
   };
-}
-
-export {
-  getInstanceJs
 }

@@ -1,6 +1,10 @@
-const C3 = globalThis.C3;
+//<-- C3_INSTANCE -->
 
 //<-- PLUGIN_INFO -->
+
+/** @type {'v1' | 'v2'} */
+let sdk
+//<-- SDK_VERSION -->
 
 const camelCasedMap = new Map();
 
@@ -33,44 +37,104 @@ function camelCasify(str) {
   return result;
 }
 
+let SDKPluginBaseVar = sdk === 'v1'
+  ? C3.SDKPluginBase
+  : globalThis.ISDKPluginBase
+
+let SDKInstanceBaseVar = sdk === 'v1'
+  ? C3.SDKInstanceBase
+  : globalThis.ISDKInstanceBase
+
+let SDKWorldInstanceBaseVar = sdk === 'v1'
+  ? C3.SDKWorldInstanceBase
+  : globalThis.ISDKWorldInstanceBase
+
+let SDKDOMPluginBaseVar = sdk === 'v1'
+  ? C3.SDKDOMPluginBase
+  : globalThis.ISDKDOMPluginBase
+
+let SDKDOMInstanceBaseVar = sdk === 'v1'
+  ? C3.SDKDOMInstanceBase
+  : globalThis.ISDKDOMInstanceBase
+
+let InstanceVar = sdk === 'v1'
+  ? self.IInstance
+  : globalThis.IInstance
+
+let WorldInstanceVar = sdk === 'v1'
+  ? self.IWorldInstance
+  : globalThis.IWorldInstance
+
+let DOMInstanceVar = sdk === 'v1'
+  ? self.IDOMInstance
+  : globalThis.IDOMInstance
+
 const parentClass = {
   object: {
-    scripting: globalThis.IInstance,
-    instance: globalThis.ISDKInstanceBase,
-    plugin: globalThis.ISDKPluginBase,
+    scripting: InstanceVar,
+    instance: SDKInstanceBaseVar,
+    plugin: SDKPluginBaseVar,
   },
   world: {
-    scripting: globalThis.IWorldInstance,
-    instance: globalThis.ISDKWorldInstanceBase,
-    plugin: globalThis.ISDKPluginBase,
+    scripting: WorldInstanceVar,
+    instance: SDKWorldInstanceBaseVar,
+    plugin: SDKPluginBaseVar,
   },
   dom: {
-    scripting: globalThis.IDOMInstance,
-    instance: globalThis.ISDKDOMInstanceBase,
-    plugin: globalThis.ISDKDOMPluginBase,
+    scripting: DOMInstanceVar,
+    instance: SDKDOMInstanceBaseVar,
+    plugin: SDKDOMPluginBaseVar,
   },
 };
 
-C3.Plugins[PLUGIN_INFO.id] = class extends (
-  parentClass[PLUGIN_INFO.type].plugin
-) {
-  _release() {
-    super._release();
-  }
-};
+if (sdk === 'v1') {
+  C3.Plugins[PLUGIN_INFO.id] = class extends (
+    parentClass[PLUGIN_INFO.type].plugin
+  ) {
+    Release() {
+      super.Release();
+    }
+  };
+} else {
+  C3.Plugins[PLUGIN_INFO.id] = class extends (
+    parentClass[PLUGIN_INFO.type].plugin
+  ) {
+    _release() {
+      super._release();
+    }
+  };
+}
+
+let SDKObjectTypeBaseVar = sdk === 'v1'
+  ? C3.SDKTypeBase
+  : globalThis.ISDKObjectTypeBase
+
 const P_C = C3.Plugins[PLUGIN_INFO.id];
-P_C.Type = class extends globalThis.ISDKObjectTypeBase {
-  constructor(objectClass) {
-    super(objectClass);
-  }
+if (sdk === 'v1') {
+  P_C.Type = class extends SDKObjectTypeBaseVar {
+    constructor(objectClass) {
+      super(objectClass);
+    }
 
-  _release() {
-    super._release();
-  }
+    Release() {
+      super.Release();
+    }
 
-  _onCreate() { }
-};
+    OnCreate() { }
+  };
+} else {
+  P_C.Type = class extends SDKObjectTypeBaseVar {
+    constructor(objectClass) {
+      super(objectClass);
+    }
 
+    _release() {
+      super._release();
+    }
+
+    _onCreate() { }
+  };
+}
 const addonTriggers = [];
 
 //============ ACES ============
