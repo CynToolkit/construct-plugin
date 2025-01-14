@@ -1,9 +1,11 @@
 <img src="./src/icon.svg" width="100" /><br>
 # Pipelab <br>
-Description <br>
+A plugin that integrate with Pipelab <br>
 <br>
 Author: Armaldio <br>
-Addon Url: https://www.construct.net/en/make-games/addons/####/XXXX <br>
+Website: https://github.com/CynToolkit/construct-plugin <br>
+Addon Url: https://github.com/CynToolkit/construct-plugin <br>
+Download Latest Version : [Version: 1.6.0](https://github.com/CynToolkit/construct-plugin/releases/latest) <br>
 <sub>Made using [c3ide2-framework](https://github.com/ConstructFund/c3ide2-framework) </sub><br>
 
 ## Table of Contents
@@ -64,6 +66,7 @@ The main files you may want to look at would be instance.js
 | Write text file | Writes the text file. | Path             *(string)* <br>Contents             *(string)* <br> |
 | Write text file | Writes the text file. | Path             *(string)* <br>Contents             *(string)* <br> |
 | Read text file | Reads the text file. | Path             *(string)* <br> |
+| Check if the path exist | Check if the path exist. | Path             *(string)* <br> |
 | Show folder dialog | Show a folder dialog |  |
 | Show open dialog | Show an open dialog | Accept             *(string)* <br> |
 | Show save dialog | Show a save dialog | Accept             *(string)* <br> |
@@ -82,6 +85,7 @@ The main files you may want to look at would be instance.js
 | Set y | Set the y position of the window. | Y             *(number)* <br> |
 | Show dev tools | Show or hide the dev tools. | Show             *(combo)* <br> |
 | Unmaximize | Unmaximize the window |  |
+| Set Fullscreen | Change fullscreen state | Fullscreen             *(combo)* <br> |
 
 
 ---
@@ -89,6 +93,7 @@ The main files you may want to look at would be instance.js
 | Condition | Description | Params
 | --- | --- | --- |
 | Is engine | Return true if the engine running the app is the one selected | Engine *(combo)* <br> |
+| If last checked path exist | Return 'true' if the last checked path exists. 'false' otherwise |  |
 | On folder dialog cancel | Triggered when the folder dialog is canceled |  |
 | On folder dialog ok | Triggered after a folder chosen from a folder dialog |  |
 | On open dialog cancel | Triggered when the open dialog is canceled |  |

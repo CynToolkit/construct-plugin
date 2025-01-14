@@ -1,6 +1,5 @@
 // @ts-check
 
-
 class WebSocketClient {
   constructor(url, options = {}) {
     this.url = url;
@@ -220,6 +219,9 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     /** @type {number} */
     _fileSize
 
+    /** @type {boolean} */
+    _lastPathExists
+
     /** @type {number} */
     _windowHeight
 
@@ -434,7 +436,24 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
 
       const answer = await this.ws?.sendAndWaitForResponse(order)
       // console.log('this', this)
-      this._readFile = answer?.body.content
+      if (answer?.body.success === true) {
+        this._readFile = answer?.body.content
+      }
+    }, this.unsupportedEngine)
+
+    _CheckIfPathExist = this.wrap(super._CheckIfPathExist, async (path) => {
+      // console.log('Read text', path);
+
+      /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageExistFile, 'input'>} */
+      const order = {
+        url: '/fs/exist',
+        body: {
+          path,
+        }
+      }
+
+      const answer = await this.ws?.sendAndWaitForResponse(order)
+      this._lastPathExists = answer?.body.success ?? false
     }, this.unsupportedEngine)
 
     _Maximize = this.wrap(super._Maximize, async () => {
@@ -1139,6 +1158,10 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     _IsEngine = this.wrap(super._IsEngine, (engine) => {
       // console.log('engine', engine)
       return this._engine === engine
+    })
+
+    _LastPathExists = this.wrap(super._LastPathExists, () => {
+      return this._lastPathExists
     })
 
     //

@@ -541,6 +541,25 @@ const Config = /** @type {const} */({
       listName: "Read text file",
       displayText: "Read text file [b]{0}[/b]",
     },
+    CheckIfPathExist: {
+      category: "filesystem",
+      forward: "_CheckIfPathExist",
+      highlight: false,
+      deprecated: false,
+      isAsync: true,
+      params: [
+        {
+          id: 'path',
+          desc: "The path to check",
+          name: "Path",
+          type: 'string',
+          initialValue: "\"\"",
+        }
+      ],
+      description: "Check if the path exist.",
+      listName: "Check if the path exist",
+      displayText: "Check if path [b]{0}[/b] exists",
+    },
 
     // file-dialogs
     ShowFolderDialog: {
@@ -698,7 +717,7 @@ const Config = /** @type {const} */({
         }
       ],
       listName: "Set height",
-      displayText: "Set windown height to {0}",
+      displayText: "Set window height to {0}",
       description: "Set the height of the window.",
     },
 
@@ -815,7 +834,7 @@ const Config = /** @type {const} */({
         }
       ],
       listName: "Set width",
-      displayText: "Set windown width to {0}",
+      displayText: "Set window width to {0}",
       description: "Set the width of the window.",
     },
 
@@ -937,6 +956,16 @@ const Config = /** @type {const} */({
         }
       ],
       listName: "Is engine",
+    },
+    LastPathExists: {
+      category: "filesystem",
+      forward: "_LastPathExists",
+      highlight: false,
+      deprecated: false,
+      description: "Return 'true' if the last checked path exists. 'false' otherwise",
+      displayText: 'Last checked path exists',
+      listName: 'If last checked path exist',
+      params: []
     },
 
     OnFolderDialogCancel: {
