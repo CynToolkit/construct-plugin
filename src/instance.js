@@ -113,7 +113,7 @@ class WebSocketClient {
 /**
  * @type {import('./sdk').GetInstanceJSFn}
  */
-function getInstanceJs(parentClass, addonTriggers, C3) {
+export function getInstanceJs(parentClass, addonTriggers, C3) {
   return class Pipelab extends parentClass {
     /**
      * @type {WebSocketClient}
@@ -337,25 +337,25 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
       /** @type [import("@pipelab/core").Paths, string][] */
       const paths = [
         // app.getPath(name)
-        ['home', '_homeFolder' ],
-        ['appData', '_appDataFolder' ],
-        ['userData', '_userDataFolder' ],
-        ['sessionData', '_sessionDataFolder' ],
-        ['temp', '_tempFolder' ],
-        ['exe', '_exeFolder' ],
-        ['module', '_moduleFolder' ],
-        ['desktop', '_desktopFolder' ],
-        ['documents', '_documentsFolder' ],
-        ['downloads', '_downloadsFolder' ],
-        ['music', '_musicFolder' ],
-        ['pictures', '_picturesFolder' ],
-        ['videos', '_videosFolder' ],
-        ['recent', '_recentFolder' ],
-        ['logs', '_logsFolder' ],
-        ['crashDumps', '_crashDumpsFolder' ],
+        ['home', '_homeFolder'],
+        ['appData', '_appDataFolder'],
+        ['userData', '_userDataFolder'],
+        ['sessionData', '_sessionDataFolder'],
+        ['temp', '_tempFolder'],
+        ['exe', '_exeFolder'],
+        ['module', '_moduleFolder'],
+        ['desktop', '_desktopFolder'],
+        ['documents', '_documentsFolder'],
+        ['downloads', '_downloadsFolder'],
+        ['music', '_musicFolder'],
+        ['pictures', '_picturesFolder'],
+        ['videos', '_videosFolder'],
+        ['recent', '_recentFolder'],
+        ['logs', '_logsFolder'],
+        ['crashDumps', '_crashDumpsFolder'],
         // app.getAppPath
-        ['app', '_appFolder' ],
-        ['project', '_projectFilesFolder' ],
+        ['app', '_appFolder'],
+        ['project', '_projectFilesFolder'],
       ]
 
       const promises = paths.map(async (name) => {
@@ -370,12 +370,11 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
           }
         }
 
-        /**
-         * @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessagePaths, 'output'>}
-         */
         const pathFolder = await this.ws?.sendAndWaitForResponse(orderPath)
-        // console.log('pathFolder', pathFolder.body.data)
-        this[name[1]] = pathFolder.body.data
+        if (pathFolder) {
+          // console.log('pathFolder', pathFolder.body.data)
+          this[name[1]] = pathFolder.body.data
+        }
 
       })
 
@@ -390,11 +389,14 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
       }
 
       /**
-       * @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageEngine, 'output'>}
+       * @type {(import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageEngine, 'output'>) | undefined}
        */
+      // @ts-expect-error
       const engineResponse = await this.ws.sendAndWaitForResponse(orderEngine)
-      // console.log('engineResponse', engineResponse.body.engine)
-      this._engine = engineResponse.body.engine
+      if (engineResponse) {
+        // console.log('engineResponse', engineResponse.body.engine)
+        this._engine = engineResponse.body.engine
+      }
 
       this._isInitialized = true
 
@@ -500,7 +502,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
       const order = {
         url: '/window/set-always-on-top',
         body: {
-          value: true
+          value: mode === 'enable' ? true : false
         }
       }
 
@@ -550,7 +552,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
       const order = {
         url: '/window/set-resizable',
         body: {
-          value: true
+          value: resizable === 'enable' ? true : false
         }
       }
 
@@ -610,7 +612,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
       const order = {
         url: '/window/show-dev-tools',
         body: {
-          value: true
+          value: toggle === 'show' ? true : false
         }
       }
 
@@ -645,6 +647,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
       }
 
       /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageShowFolderDialog, 'output'> | undefined} */
+      // @ts-expect-error
       const answer = await this.ws?.sendAndWaitForResponse(order)
       // console.log('answer', answer)
 
@@ -670,16 +673,20 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
       /**
        * @type {import('@pipelab/core').FileFilter[]}
        */
-      const filters = accept.split(',').map(filter => {
-        // console.log('filter', filter)
-        const [name, extensions] = filter.split('|')
-        if (name && extensions) {
-          return {
-            name,
-            extensions: extensions.split(';')
+      const filters = accept.split(',')
+        .map(filter => {
+          // console.log('filter', filter)
+          const [name, extensions] = filter.split('|')
+          if (name && extensions) {
+            /** @type {import("electron").FileFilter} */
+            const result = {
+              name,
+              extensions: extensions.split(';')
+            }
+            return result
           }
-        }
-      })
+        })
+        .filter(x => !!x)
 
       // console.log('filters', filters)
 
@@ -710,16 +717,20 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
       /**
        * @type {import('@pipelab/core').FileFilter[]}
        */
-      const filters = accept.split(',').map(filter => {
-        // console.log('filter', filter)
-        const [name, extensions] = filter.split('|')
-        if (name && extensions) {
-          return {
-            name,
-            extensions: extensions.split(';')
+      const filters = accept.split(',')
+        .map(filter => {
+          // console.log('filter', filter)
+          const [name, extensions] = filter.split('|')
+          if (name && extensions) {
+            /** @type {import("electron").FileFilter} */
+            const result = {
+              name,
+              extensions: extensions.split(';')
+            }
+            return result
           }
-        }
-      })
+        })
+        .filter(x => !!x)
 
       /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageShowSaveDialog, 'input'>} */
       const order = {
@@ -873,8 +884,8 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     }, this.unsupportedEngine)
 
     /**
-     * @param {IObjectClass} objectClass
-     * @return {IBinaryDataInstance | null} objectClass
+     * @param {import("./sdk").IObjectClass} objectClass
+     * @return {import("./sdk").IBinaryDataInstance | null} objectClass
      */
     __GetBinaryDataSdkInstance(objectClass) {
       // console.log('this._inst', this._inst)
@@ -897,36 +908,36 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
       // console.log('C3', C3)
       // console.log('this', this)
 
-      const sdkInst = this.__GetBinaryDataSdkInstance(source);
+      // const sdkInst = this.__GetBinaryDataSdkInstance(source);
 
-      if (!sdkInst) {
-        throw new Error("SDK instance not found")
-      }
+      // if (!sdkInst) {
+      //   throw new Error("SDK instance not found")
+      // }
 
-      // console.log('sdkInst', sdkInst)
+      // // console.log('sdkInst', sdkInst)
 
-      const buffer = sdkInst.getArrayBufferReadOnly();
+      // const buffer = sdkInst.getArrayBufferReadOnly();
 
-      // console.log('buffer', buffer)
+      // // console.log('buffer', buffer)
 
-      /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageWriteFile, 'input'>} */
-      const order = {
-        url: '/fs/file/write',
-        body: {
-          path,
-          contents: buffer,
-          encoding: undefined
-        }
-      }
+      // /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageWriteFile, 'input'>} */
+      // const order = {
+      //   url: '/fs/file/write',
+      //   body: {
+      //     path,
+      //     contents: buffer,
+      //     encoding: undefined
+      //   }
+      // }
 
-      const answer = await this.ws?.sendAndWaitForResponse(order)
-      if (!answer || answer.body.success === false) {
-        this._currentTag = tag;
-        await this.TriggerAsync(C3.Plugins.pipelab.Cnds.OnAnyBinaryFileRead)
-        this._currentTag = tag;
-        await this.TriggerAsync(C3.Plugins.pipelab.Cnds.OnBinaryFileRead)
-        this._currentTag = ''
-      }
+      // const answer = await this.ws?.sendAndWaitForResponse(order)
+      // if (!answer || answer.body.success === false) {
+      //   this._currentTag = tag;
+      //   await this.TriggerAsync(C3.Plugins.pipelab.Cnds.OnAnyBinaryFileRead)
+      //   this._currentTag = tag;
+      //   await this.TriggerAsync(C3.Plugins.pipelab.Cnds.OnBinaryFileRead)
+      //   this._currentTag = ''
+      // }
     }, this.unsupportedEngine)
 
     _FetchFileSize = this.wrap(super._FetchFileSize, async (path) => {
@@ -941,6 +952,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
       /**
        * @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageFileSize, 'output'>}
        */
+      // @ts-expect-error
       const answer = await this.ws?.sendAndWaitForResponse(order)
       // console.log('answer', answer)
       this._fileSize = answer?.body.size ?? -1
