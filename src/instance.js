@@ -801,9 +801,9 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
     }, this.unsupportedEngine)
 
     _DeleteFile = this.wrap(super._DeleteFile, async (path, recursive) => {
-      /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageRemoveFile, 'input'>} */
+      /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageDelete, 'input'>} */
       const order = {
-        url: '/fs/remove',
+        url: '/fs/delete',
         body: {
           path,
           recursive
@@ -830,7 +830,7 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
     }, this.unsupportedEngine)
 
     _MoveFile = this.wrap(super._MoveFile, async (source, destination) => {
-      /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageMoveFile, 'input'>} */
+      /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageMove, 'input'>} */
       const order = {
         url: '/fs/move',
         body: {
@@ -1080,7 +1080,7 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
     })
     _UserDataFolder = this.wrap(super._UserDataFolder, () => {
       // console.log('this', this)
-      return this._userFolder ?? ''
+      return this._userDataFolder ?? ''
     })
     _SessionDataFolder = this.wrap(super._SessionDataFolder, () => {
       // console.log('this', this)
@@ -1188,8 +1188,7 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
     })
 
     _ProjectFilesFolderURL = this.wrap(super._ProjectFilesFolderURL, () => {
-      console.error('"_ProjectFilesFolderURL" Not implemented')
-      return ''
+      return this._projectFilesFolder ?? ''
     })
 
     _ReadFile = this.wrap(super._ReadFile, () => {

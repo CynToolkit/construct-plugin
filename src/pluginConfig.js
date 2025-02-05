@@ -17,7 +17,7 @@ const Config = /** @type {const} */({
   description: "A plugin that integrate with Pipelab",
   addonUrl: "https://github.com/CynToolkit/construct-plugin", // displayed in auto-generated docs
   githubUrl: "https://github.com/CynToolkit/construct-plugin", // displays latest release version in auto-generated docs
-  // icon: "icon.svg", // defaults to "icon.svg" if omitted
+  icon: "icon.png", // defaults to "icon.svg" if omitted
   type: "object", // world, object, dom
   fileDependencies: [
     /*
@@ -198,7 +198,7 @@ const Config = /** @type {const} */({
         }
       ],
       listName: "Copy file",
-      displayText: "Copy [b]{0}[/b] to [b]{1}[/b]",
+      displayText: "Copy [b]{0}[/b] to [b]{1}[/b] (recursive: {2})",
       description: "Copies the file.",
     },
     FetchFileSize: {
@@ -262,7 +262,7 @@ const Config = /** @type {const} */({
         }
       ],
       listName: "Delete file",
-      displayText: "Delete file [b]{0}[/b]",
+      displayText: "Delete file [b]{0}[/b] (recursive: {1})",
       description: "Deletes the file.",
     },
     ListFiles: {

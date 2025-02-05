@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@pipelab/core':
-        specifier: 1.4.0
-        version: 1.4.0
+        specifier: 1.4.3
+        version: 1.4.3
       adm-zip:
         specifier: 0.5.16
         version: 0.5.16
@@ -161,8 +161,8 @@ packages:
       '@types/node':
         optional: true
 
-  '@pipelab/core@1.4.0':
-    resolution: {integrity: sha512-vC621ZcrDAgja3/8ojW9cAUqxkOTgyF+3Y1CsfKqeIqYiiy68DseN7Rc9gDkiGdJY0lFzrLyHBFjSPqBr4adew==}
+  '@pipelab/core@1.4.3':
+    resolution: {integrity: sha512-WWLQTlswyQ38mjxmWjydnJfWykvlUb6Y/lShbkenQFekUIugkd9rFpwat312WKWH+ZYTDACKwXW2SjT4JYNmAg==}
 
   '@sindresorhus/is@4.6.0':
     resolution: {integrity: sha512-t09vSN3MdfsyCHoFcTRCH/iUtG7OJ0CsjzB8cjAmKc/va/kIgeDI/TxsigdncE/4be734m0cvIYwNaV4i2XqAw==}
@@ -896,7 +896,7 @@ snapshots:
     optionalDependencies:
       '@types/node': 22.7.0
 
-  '@pipelab/core@1.4.0': {}
+  '@pipelab/core@1.4.3': {}
 
   '@sindresorhus/is@4.6.0': {}
 
