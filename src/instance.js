@@ -143,6 +143,14 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
     /**
      * @type {string}
      */
+    _localAppDataFolder
+    /**
+     * @type {string}
+     */
+    _localUserDataFolder
+    /**
+     * @type {string}
+     */
     _sessionDataFolder
     /**
      * @type {string}
@@ -343,6 +351,8 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
         ['home', '_homeFolder'],
         ['appData', '_appDataFolder'],
         ['userData', '_userDataFolder'],
+        ['localAppData', '_localAppDataFolder'],
+        ['localUserData', '_localUserDataFolder'],
         ['sessionData', '_sessionDataFolder'],
         ['temp', '_tempFolder'],
         ['exe', '_exeFolder'],
@@ -829,13 +839,14 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
       }
     }, this.unsupportedEngine)
 
-    _MoveFile = this.wrap(super._MoveFile, async (source, destination) => {
+    _MoveFile = this.wrap(super._MoveFile, async (source, destination, overwrite) => {
       /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageMove, 'input'>} */
       const order = {
         url: '/fs/move',
         body: {
           source,
-          destination
+          destination,
+          overwrite
         }
       }
       const result = await this.ws?.sendAndWaitForResponse(order)
@@ -880,7 +891,7 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
 
     }, this.unsupportedEngine)
 
-    _RenameFile = this.wrap(super._RenameFile, async (source, newFileName) => {
+    _RenameFile = this.wrap(super._RenameFile, async (source, newFileName, overwrite) => {
       const directory = posixPath.dirname(source);
       const newPath = posixPath.join(directory, newFileName);
 
@@ -889,7 +900,8 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
         url: '/fs/move',
         body: {
           source,
-          destination: newPath
+          destination: newPath,
+          overwrite,
         }
       }
       const result = await this.ws?.sendAndWaitForResponse(order)
@@ -1081,6 +1093,14 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
     _UserDataFolder = this.wrap(super._UserDataFolder, () => {
       // console.log('this', this)
       return this._userDataFolder ?? ''
+    })
+    _LocalAppDataFolder = this.wrap(super._LocalAppDataFolder, () => {
+      // console.log('this', this)
+      return this._localAppDataFolder ?? ''
+    })
+    _LocalUserDataFolder = this.wrap(super._LocalUserDataFolder, () => {
+      // console.log('this', this)
+      return this._localUserDataFolder ?? ''
     })
     _SessionDataFolder = this.wrap(super._SessionDataFolder, () => {
       // console.log('this', this)

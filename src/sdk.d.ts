@@ -96,24 +96,26 @@ type ActionParam =
     | ActionParamCombo
 
 type UnionToIntersection<U> =
-    (U extends any ? (x: U)=>void : never) extends ((x: infer I)=>void) ? I : never
+    (U extends any ? (x: U) => void : never) extends ((x: infer I) => void) ? I : never
 
 
 type ActionParamToType<T extends ActionParam> = T['type'] extends 'string'
     ? string
     : T['type'] extends 'number'
-        ? number
-        : T['type'] extends 'object'
-            ? import("./sdk").IObjectClass
-            : T['type'] extends 'combo'
-                ? keyof UnionToIntersection<DeepWriteable<T['items'][number]>>
-                : never
+    ? number
+    : T['type'] extends 'boolean'
+    ? boolean
+    : T['type'] extends 'object'
+    ? import("./sdk").IObjectClass
+    : T['type'] extends 'combo'
+    ? keyof UnionToIntersection<DeepWriteable<T['items'][number]>>
+    : never
 
 type ReturnTypeToType<T extends 'string' | 'number'> = T extends 'string'
     ? string
     : T extends 'number'
-        ? number
-        : never
+    ? number
+    : never
 
 // support only 10 typed parametes
 // TODO: find a way to support more
@@ -122,17 +124,17 @@ type ReturnTypeToType<T extends 'string' | 'number'> = T extends 'string'
 //     rest function parameters
 type DynamicMethodsActsParentClass = {
     [acts in Acts]: (
-            param1: ActionParamToType<GetActsParams<acts>['0']>,
-            param2: ActionParamToType<GetActsParams<acts>['1']>,
-            param3: ActionParamToType<GetActsParams<acts>['2']>,
-            param4: ActionParamToType<GetActsParams<acts>['3']>,
-            param5: ActionParamToType<GetActsParams<acts>['4']>,
-            param6: ActionParamToType<GetActsParams<acts>['5']>,
-            param7: ActionParamToType<GetActsParams<acts>['6']>,
-            param8: ActionParamToType<GetActsParams<acts>['7']>,
-            param9: ActionParamToType<GetActsParams<acts>['8']>,
-            param10: ActionParamToType<GetActsParams<acts>['9']>
-        ) => C3Plugin['Acts'][ActsAssocReversed[acts]]['isAsync'] extends true
+        param1: ActionParamToType<GetActsParams<acts>['0']>,
+        param2: ActionParamToType<GetActsParams<acts>['1']>,
+        param3: ActionParamToType<GetActsParams<acts>['2']>,
+        param4: ActionParamToType<GetActsParams<acts>['3']>,
+        param5: ActionParamToType<GetActsParams<acts>['4']>,
+        param6: ActionParamToType<GetActsParams<acts>['5']>,
+        param7: ActionParamToType<GetActsParams<acts>['6']>,
+        param8: ActionParamToType<GetActsParams<acts>['7']>,
+        param9: ActionParamToType<GetActsParams<acts>['8']>,
+        param10: ActionParamToType<GetActsParams<acts>['9']>
+    ) => C3Plugin['Acts'][ActsAssocReversed[acts]]['isAsync'] extends true
         ? Promise<void>
         : void
 }

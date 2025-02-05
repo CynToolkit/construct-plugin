@@ -5,7 +5,7 @@ A plugin that integrate with Pipelab <br>
 Author: Armaldio <br>
 Website: https://github.com/CynToolkit/construct-plugin <br>
 Addon Url: https://github.com/CynToolkit/construct-plugin <br>
-Download Latest Version : [Version: 1.6.0](https://github.com/CynToolkit/construct-plugin/releases/latest) <br>
+Download Latest Version : [Version: 1.7.1](https://github.com/CynToolkit/construct-plugin/releases/latest) <br>
 <sub>Made using [c3ide2-framework](https://github.com/ConstructFund/c3ide2-framework) </sub><br>
 
 ## Table of Contents
@@ -15,6 +15,7 @@ Download Latest Version : [Version: 1.6.0](https://github.com/CynToolkit/constru
 - [Actions](#actions)
 - [Conditions](#conditions)
 - [Expressions](#expressions)
+- [Paths](#paths)
 ---
 ## Usage
 To build the addon, run the following commands:
@@ -50,15 +51,15 @@ The main files you may want to look at would be instance.js
 | --- | --- | --- |
 | Initialize integration | Initialize the Pipelab integration |  |
 | Append file | Appends the contents to the file. | Path             *(string)* <br>Contents             *(string)* <br> |
-| Copy file | Copies the file. | Source             *(string)* <br>Destination             *(string)* <br> |
+| Copy file | Copies the file. | Source             *(string)* <br>Destination             *(string)* <br>Overwrite             *(boolean)* <br> |
 | Fetch file size | Fetch the size of the file. | Path             *(string)* <br> |
 | Create folder | Creates the folder. | Path             *(string)* <br> |
-| Delete file | Deletes the file. | Path             *(string)* <br> |
+| Delete file | Deletes the file. | Path             *(string)* <br>Recursive             *(boolean)* <br> |
 | List files | Load a list of files in a given folder. Use expressions after this action to get the count and file names | Path             *(string)* <br>Recursive             *(boolean)* <br> |
-| Move file | Moves the file. | Source             *(string)* <br>Destination             *(string)* <br> |
+| Move file | Moves the file. | Source             *(string)* <br>Destination             *(string)* <br>Overwrite             *(boolean)* <br> |
 | Open browser | Opens the browser. | URL             *(string)* <br> |
 | Read binary file | Reads a file into a Binary Data object. Triggers 'On binary file read' when completes. | Tag             *(string)* <br>Path             *(string)* <br>Destination             *(object)* <br> |
-| Rename file | Renames the file. | Source             *(string)* <br>Destination             *(string)* <br> |
+| Rename file | Renames the file. | Existing file             *(string)* <br>New name             *(string)* <br>Overwrite             *(boolean)* <br> |
 | Run file | Runs the file. | Path             *(string)* <br> |
 | Shell open | Opens the file in the shell. | Path             *(string)* <br> |
 | Explorer open | Opens the path in the explorer. | Path             *(string)* <br> |
@@ -129,7 +130,9 @@ The main files you may want to look at would be instance.js
 | UserFolder | Return the current User's folder | string |  | 
 | HomeFolder | Return the current Home folder | string |  | 
 | AppDataFolder | Return the current AppDataFolder folder | string |  | 
+| LocalAppDataFolder | Return the current AppDataFolder folder | string |  | 
 | UserDataFolder | Return the current UserDataFolder folder | string |  | 
+| LocalUserDataFolder | Return the current LocalUserDataFolder folder | string |  | 
 | SessionDataFolder | Return the current SessionDataFolder folder | string |  | 
 | TempFolder | Return the current TempFolder folder | string |  | 
 | ExeFolder | Return the current ExeFolder folder | string |  | 
@@ -149,3 +152,110 @@ The main files you may want to look at would be instance.js
 | WindowTitle | Return the title of the window. | string |  | 
 | WindowX | Return the x position of the window. | number |  | 
 | WindowY | Return the y position of the window. | number |  | 
+
+## Paths
+**ProjectFilesFolder**: Direct path to your games's content
+- Windows: `C:/Users/quent/AppData/Local/Temp/f0e3c24c1443adce014e5924d5f47e1b571c92e0f29d11d4/build/out/Pipelab-win32-x64/resources/app.asar/src/app`
+- Linux: 
+- MacOS: 
+
+UserFolder: 
+- Windows: ``
+- Linux: 
+- MacOS: 
+
+HomeFolder: 
+- Windows: C:/Users/quent
+- Linux: 
+- MacOS: 
+
+AppDataFolder: 
+- Windows: C:/Users/quent/AppData/Roaming
+- Linux: 
+- MacOS: 
+
+LocalAppDataFolder: 
+- Windows: ``
+- Linux: 
+- MacOS: 
+
+UserDataFolder: 
+- Windows: C:/Users/quent/AppData/Roaming/app
+- Linux: 
+- MacOS: 
+
+LocalUserDataFolder: 
+- Windows: ``
+- Linux: 
+- MacOS: 
+
+SessionDataFolder: 
+- Windows: ``
+- Linux: 
+- MacOS: 
+
+TempFolder: 
+- Windows: ``
+- Linux: 
+- MacOS: 
+
+ExeFolder: 
+- Windows: ``
+- Linux: 
+- MacOS: 
+
+ModuleFolder: 
+- Windows: ``
+- Linux: 
+- MacOS: 
+
+DesktopFolder: 
+- Windows: ``
+- Linux: 
+- MacOS: 
+
+DocumentsFolder: 
+- Windows: ``
+- Linux: 
+- MacOS: 
+
+DownloadsFolder: 
+- Windows: ``
+- Linux: 
+- MacOS: 
+
+MusicFolder: 
+- Windows: ``
+- Linux: 
+- MacOS: 
+
+PicturesFolder: 
+- Windows: ``
+- Linux: 
+- MacOS: 
+
+VideosFolder: 
+- Windows: ``
+- Linux: 
+- MacOS: 
+
+RecentFolder: 
+- Windows: ``
+- Linux: 
+- MacOS: 
+
+LogsFolder: 
+- Windows: ``
+- Linux: 
+- MacOS: 
+
+CrashDumpsFolder: 
+- Windows: C:/Users/quent/AppData/Roaming/app/Crashpad
+- Linux: 
+- MacOS: 
+
+AppFolder: 
+- Windows: 
+- Linux: 
+- MacOS: 
+

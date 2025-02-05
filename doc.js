@@ -73,6 +73,7 @@ readme.push(`- [Properties](#properties)`);
 readme.push(`- [Actions](#actions)`);
 readme.push(`- [Conditions](#conditions)`);
 readme.push(`- [Expressions](#expressions)`);
+readme.push(`- [Paths](#paths)`);
 
 readme.push(`---`);
 readme.push(`## Usage`);
@@ -262,6 +263,135 @@ Object.keys(config.Exps).forEach((key) => {
     `| ${key} | ${expression.description} | ${expression.returnType} | ${paramString} | `
   );
 });
+readme.push(``);
+readme.push(`## Paths`);
+
+readme.push('**ProjectFilesFolder**: Direct path to your games\'s content')
+readme.push('- Windows: `C:/Users/quent/AppData/Local/Temp/f0e3c24c1443adce014e5924d5f47e1b571c92e0f29d11d4/build/out/Pipelab-win32-x64/resources/app.asar/src/app`')
+readme.push('- Linux: ')
+readme.push('- MacOS: ')
+readme.push('')
+
+readme.push('UserFolder: ')
+readme.push('- Windows: ``')
+readme.push('- Linux: ')
+readme.push('- MacOS: ')
+readme.push('')
+
+readme.push('HomeFolder: ')
+readme.push('- Windows: C:/Users/quent')
+readme.push('- Linux: ')
+readme.push('- MacOS: ')
+readme.push('')
+
+readme.push('AppDataFolder: ')
+readme.push('- Windows: C:/Users/quent/AppData/Roaming')
+readme.push('- Linux: ')
+readme.push('- MacOS: ')
+readme.push('')
+
+readme.push('LocalAppDataFolder: ')
+readme.push('- Windows: ``')
+readme.push('- Linux: ')
+readme.push('- MacOS: ')
+readme.push('')
+
+readme.push('UserDataFolder: ')
+readme.push('- Windows: C:/Users/quent/AppData/Roaming/app')
+readme.push('- Linux: ')
+readme.push('- MacOS: ')
+readme.push('')
+
+readme.push('LocalUserDataFolder: ')
+readme.push('- Windows: ``')
+readme.push('- Linux: ')
+readme.push('- MacOS: ')
+readme.push('')
+
+readme.push('SessionDataFolder: ')
+readme.push('- Windows: ``')
+readme.push('- Linux: ')
+readme.push('- MacOS: ')
+readme.push('')
+
+readme.push('TempFolder: ')
+readme.push('- Windows: ``')
+readme.push('- Linux: ')
+readme.push('- MacOS: ')
+readme.push('')
+
+readme.push('ExeFolder: ')
+readme.push('- Windows: ``')
+readme.push('- Linux: ')
+readme.push('- MacOS: ')
+readme.push('')
+
+readme.push('ModuleFolder: ')
+readme.push('- Windows: ``')
+readme.push('- Linux: ')
+readme.push('- MacOS: ')
+readme.push('')
+
+readme.push('DesktopFolder: ')
+readme.push('- Windows: ``')
+readme.push('- Linux: ')
+readme.push('- MacOS: ')
+readme.push('')
+
+readme.push('DocumentsFolder: ')
+readme.push('- Windows: ``')
+readme.push('- Linux: ')
+readme.push('- MacOS: ')
+readme.push('')
+
+readme.push('DownloadsFolder: ')
+readme.push('- Windows: ``')
+readme.push('- Linux: ')
+readme.push('- MacOS: ')
+readme.push('')
+
+readme.push('MusicFolder: ')
+readme.push('- Windows: ``')
+readme.push('- Linux: ')
+readme.push('- MacOS: ')
+readme.push('')
+
+readme.push('PicturesFolder: ')
+readme.push('- Windows: ``')
+readme.push('- Linux: ')
+readme.push('- MacOS: ')
+readme.push('')
+
+readme.push('VideosFolder: ')
+readme.push('- Windows: ``')
+readme.push('- Linux: ')
+readme.push('- MacOS: ')
+readme.push('')
+
+readme.push('RecentFolder: ')
+readme.push('- Windows: ``')
+readme.push('- Linux: ')
+readme.push('- MacOS: ')
+readme.push('')
+
+readme.push('LogsFolder: ')
+readme.push('- Windows: ``')
+readme.push('- Linux: ')
+readme.push('- MacOS: ')
+readme.push('')
+
+readme.push('CrashDumpsFolder: ')
+readme.push('- Windows: C:/Users/quent/AppData/Roaming/app/Crashpad')
+readme.push('- Linux: ')
+readme.push('- MacOS: ')
+readme.push('')
+
+readme.push('AppFolder: ')
+readme.push('- Windows: ')
+readme.push('- Linux: ')
+readme.push('- MacOS: ')
+readme.push('')
+
 readme.push(``);
 
 // Object.keys(config.Exps).forEach((key) => {

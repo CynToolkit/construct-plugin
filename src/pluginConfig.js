@@ -311,10 +311,17 @@ const Config = /** @type {const} */({
           name: "Destination",
           type: 'string',
           initialValue: "\"\"",
+        },
+        {
+          id: 'overwrite',
+          desc: "Weather to overwrite the destination file.",
+          name: "Overwrite",
+          type: 'boolean',
+          initialValue: 'false',
         }
       ],
       listName: "Move file",
-      displayText: "Move [b]{0}[/b] to [b]{1}[/b]",
+      displayText: "Move [b]{0}[/b] to [b]{1}[/b] (overwrite: {2})",
       description: "Moves the file.",
     },
     OpenBrowser: {
@@ -388,10 +395,17 @@ const Config = /** @type {const} */({
           name: "New name",
           type: 'string',
           initialValue: "\"\"",
+        },
+        {
+          id: 'overwrite',
+          desc: "Weather to overwrite the destination file.",
+          name: "Overwrite",
+          type: 'boolean',
+          initialValue: 'false',
         }
       ],
       listName: "Rename file",
-      displayText: "Rename [b]{0}[/b] to [b]{1}[/b]",
+      displayText: "Rename [b]{0}[/b] to [b]{1}[/b] (overwrite: {2})",
       description: "Renames the file.",
     },
     RunFile: {
@@ -1322,6 +1336,15 @@ const Config = /** @type {const} */({
       isVariadicParameters: false,
       description: "Return the current AppDataFolder folder",
     },
+    LocalAppDataFolder: {
+      category: "filesystem",
+      forward: "_LocalAppDataFolder",
+      highlight: false,
+      deprecated: false,
+      returnType: 'string',
+      isVariadicParameters: false,
+      description: "Return the current AppDataFolder folder",
+    },
     UserDataFolder: {
       category: "filesystem",
       forward: "_UserDataFolder",
@@ -1330,6 +1353,15 @@ const Config = /** @type {const} */({
       returnType: 'string',
       isVariadicParameters: false,
       description: "Return the current UserDataFolder folder",
+    },
+    LocalUserDataFolder: {
+      category: "filesystem",
+      forward: "_LocalUserDataFolder",
+      highlight: false,
+      deprecated: false,
+      returnType: 'string',
+      isVariadicParameters: false,
+      description: "Return the current LocalUserDataFolder folder",
     },
     SessionDataFolder: {
       category: "filesystem",
