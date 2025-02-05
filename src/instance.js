@@ -1,5 +1,8 @@
 // @ts-check
 
+// TODO: must use a bundler to support dependencies & typescript
+function assertPath(e){if("string"!=typeof e)throw new TypeError("Path must be a string. Received "+JSON.stringify(e))}function normalizeStringPosix(e,t){for(var r,n="",a=0,i=-1,o=0,l=0;l<=e.length;++l){if(l<e.length)r=e.charCodeAt(l);else{if(47===r)break;r=47}if(47===r){if(i===l-1||1===o);else if(i!==l-1&&2===o){if(n.length<2||2!==a||46!==n.charCodeAt(n.length-1)||46!==n.charCodeAt(n.length-2))if(n.length>2){var h=n.lastIndexOf("/");if(h!==n.length-1){-1===h?(n="",a=0):a=(n=n.slice(0,h)).length-1-n.lastIndexOf("/"),i=l,o=0;continue}}else if(2===n.length||1===n.length){n="",a=0,i=l,o=0;continue}t&&(n.length>0?n+="/..":n="..",a=2)}else n.length>0?n+="/"+e.slice(i+1,l):n=e.slice(i+1,l),a=l-i-1;i=l,o=0}else 46===r&&-1!==o?++o:o=-1}return n}function _format(e,t){var r=t.dir||t.root,n=t.base||(t.name||"")+(t.ext||"");return r?r===t.root?r+n:r+e+n:n}var posixPath={resolve:function(){for(var e,t="",r=!1,n=arguments.length-1;n>=-1&&!r;n--){var a;n>=0?a=arguments[n]:(void 0===e&&(e=process.cwd()),a=e),assertPath(a),0!==a.length&&(t=a+"/"+t,r=47===a.charCodeAt(0))}return t=normalizeStringPosix(t,!r),r?t.length>0?"/"+t:"/":t.length>0?t:"."},normalize:function(e){if(assertPath(e),0===e.length)return".";var t=47===e.charCodeAt(0),r=47===e.charCodeAt(e.length-1);return 0!==(e=normalizeStringPosix(e,!t)).length||t||(e="."),e.length>0&&r&&(e+="/"),t?"/"+e:e},isAbsolute:function(e){return assertPath(e),e.length>0&&47===e.charCodeAt(0)},join:function(){if(0===arguments.length)return".";for(var e,t=0;t<arguments.length;++t){var r=arguments[t];assertPath(r),r.length>0&&(void 0===e?e=r:e+="/"+r)}return void 0===e?".":posixPath.normalize(e)},relative:function(e,t){if(assertPath(e),assertPath(t),e===t)return"";if((e=posixPath.resolve(e))===(t=posixPath.resolve(t)))return"";for(var r=1;r<e.length&&47===e.charCodeAt(r);++r);for(var n=e.length,a=n-r,i=1;i<t.length&&47===t.charCodeAt(i);++i);for(var o=t.length-i,l=a<o?a:o,h=-1,s=0;s<=l;++s){if(s===l){if(o>l){if(47===t.charCodeAt(i+s))return t.slice(i+s+1);if(0===s)return t.slice(i+s)}else a>l&&(47===e.charCodeAt(r+s)?h=s:0===s&&(h=0));break}var f=e.charCodeAt(r+s);if(f!==t.charCodeAt(i+s))break;47===f&&(h=s)}var c="";for(s=r+h+1;s<=n;++s)s!==n&&47!==e.charCodeAt(s)||(0===c.length?c+="..":c+="/..");return c.length>0?c+t.slice(i+h):(i+=h,47===t.charCodeAt(i)&&++i,t.slice(i))},_makeLong:function(e){return e},dirname:function(e){if(assertPath(e),0===e.length)return".";for(var t=e.charCodeAt(0),r=47===t,n=-1,a=!0,i=e.length-1;i>=1;--i)if(47===(t=e.charCodeAt(i))){if(!a){n=i;break}}else a=!1;return-1===n?r?"/":".":r&&1===n?"//":e.slice(0,n)},basename:function(e,t){if(void 0!==t&&"string"!=typeof t)throw new TypeError('"ext" argument must be a string');assertPath(e);var r,n=0,a=-1,i=!0;if(void 0!==t&&t.length>0&&t.length<=e.length){if(t.length===e.length&&t===e)return"";var o=t.length-1,l=-1;for(r=e.length-1;r>=0;--r){var h=e.charCodeAt(r);if(47===h){if(!i){n=r+1;break}}else-1===l&&(i=!1,l=r+1),o>=0&&(h===t.charCodeAt(o)?-1==--o&&(a=r):(o=-1,a=l))}return n===a?a=l:-1===a&&(a=e.length),e.slice(n,a)}for(r=e.length-1;r>=0;--r)if(47===e.charCodeAt(r)){if(!i){n=r+1;break}}else-1===a&&(i=!1,a=r+1);return-1===a?"":e.slice(n,a)},extname:function(e){assertPath(e);for(var t=-1,r=0,n=-1,a=!0,i=0,o=e.length-1;o>=0;--o){var l=e.charCodeAt(o);if(47!==l)-1===n&&(a=!1,n=o+1),46===l?-1===t?t=o:1!==i&&(i=1):-1!==t&&(i=-1);else if(!a){r=o+1;break}}return-1===t||-1===n||0===i||1===i&&t===n-1&&t===r+1?"":e.slice(t,n)},format:function(e){if(null===e||"object"!=typeof e)throw new TypeError('The "pathObject" argument must be of type Object. Received type '+typeof e);return _format("/",e)},parse:function(e){assertPath(e);var t={root:"",dir:"",base:"",ext:"",name:""};if(0===e.length)return t;var r,n=e.charCodeAt(0),a=47===n;a?(t.root="/",r=1):r=0;for(var i=-1,o=0,l=-1,h=!0,s=e.length-1,f=0;s>=r;--s)if(47!==(n=e.charCodeAt(s)))-1===l&&(h=!1,l=s+1),46===n?-1===i?i=s:1!==f&&(f=1):-1!==i&&(f=-1);else if(!h){o=s+1;break}return-1===i||-1===l||0===f||1===f&&i===l-1&&i===o+1?-1!==l&&(t.base=t.name=0===o&&a?e.slice(1,l):e.slice(o,l)):(0===o&&a?(t.name=e.slice(1,i),t.base=e.slice(1,l)):(t.name=e.slice(o,i),t.base=e.slice(o,l)),t.ext=e.slice(i,l)),o>0?t.dir=e.slice(0,o-1):a&&(t.dir="/"),t},sep:"/",delimiter:":",win32:null,posix:null};
+
 class WebSocketClient {
   constructor(url, options = {}) {
     this.url = url;
@@ -755,12 +758,31 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
       }
     }, this.unsupportedEngine)
 
-    _AppendFile = this.wrap(super._AppendFile, async () => {
-      throw new Error('"_AppendFile" Not implemented')
+    _AppendFile = this.wrap(super._AppendFile, async (path, contents) => {
+      /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageWriteFile, 'input'>} */
+      const order = {
+        url: '/fs/file/write',
+        body: {
+          path,
+          contents,
+          encoding: 'utf-8',
+          flag: 'a' // Append
+        }
+      }
+      const result = await this.ws?.sendAndWaitForResponse(order)
     }, this.unsupportedEngine)
 
-    _CopyFile = this.wrap(super._CopyFile, async () => {
-      throw new Error('"_CopyFile" Not implemented')
+    _CopyFile = this.wrap(super._CopyFile, async (source, destination, overwrite) => {
+      /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageCopyFile, 'input'>} */
+      const order = {
+        url: '/fs/copy',
+        body: {
+          source,
+          destination,
+          overwrite
+        }
+      }
+      const result = await this.ws?.sendAndWaitForResponse(order)
     }, this.unsupportedEngine)
 
     _CreateFolder = this.wrap(super._CreateFolder, async (path) => {
@@ -778,8 +800,16 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
       // }
     }, this.unsupportedEngine)
 
-    _DeleteFile = this.wrap(super._DeleteFile, async () => {
-      throw new Error('"_DeleteFile" Not implemented')
+    _DeleteFile = this.wrap(super._DeleteFile, async (path, recursive) => {
+      /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageRemoveFile, 'input'>} */
+      const order = {
+        url: '/fs/remove',
+        body: {
+          path,
+          recursive
+        }
+      }
+      const result = await this.ws?.sendAndWaitForResponse(order)
     }, this.unsupportedEngine)
 
     _ListFiles = this.wrap(super._ListFiles, async (path, recursive) => {
@@ -799,8 +829,16 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
       }
     }, this.unsupportedEngine)
 
-    _MoveFile = this.wrap(super._MoveFile, async () => {
-      throw new Error('"_MoveFile" Not implemented')
+    _MoveFile = this.wrap(super._MoveFile, async (source, destination) => {
+      /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageMoveFile, 'input'>} */
+      const order = {
+        url: '/fs/move',
+        body: {
+          source,
+          destination
+        }
+      }
+      const result = await this.ws?.sendAndWaitForResponse(order)
     }, this.unsupportedEngine)
 
     _OpenBrowser = this.wrap(super._OpenBrowser, async () => {
@@ -842,8 +880,19 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
 
     }, this.unsupportedEngine)
 
-    _RenameFile = this.wrap(super._RenameFile, async () => {
-      throw new Error('"_RenameFile" Not implemented')
+    _RenameFile = this.wrap(super._RenameFile, async (source, newFileName) => {
+      const directory = posixPath.dirname(source);
+      const newPath = posixPath.join(directory, newFileName);
+
+      /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageMove, 'input'>} */
+      const order = {
+        url: '/fs/move',
+        body: {
+          source,
+          destination: newPath
+        }
+      }
+      const result = await this.ws?.sendAndWaitForResponse(order)
     }, this.unsupportedEngine)
 
     _RunFile = this.wrap(super._RunFile, async (command) => {

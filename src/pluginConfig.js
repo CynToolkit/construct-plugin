@@ -188,6 +188,13 @@ const Config = /** @type {const} */({
           name: "Destination",
           type: 'string',
           initialValue: "\"\"",
+        },
+        {
+          id: 'overwrite',
+          desc: "Weather to overwrite the destination file.",
+          name: "Overwrite",
+          type: 'boolean',
+          initialValue: 'false',
         }
       ],
       listName: "Copy file",
@@ -245,6 +252,13 @@ const Config = /** @type {const} */({
           name: "Path",
           type: 'string',
           initialValue: "\"\"",
+        },
+        {
+          id: 'recursive',
+          desc: "Weather to remove files recursively.",
+          name: "Recursive",
+          type: 'boolean',
+          initialValue: 'false',
         }
       ],
       listName: "Delete file",
@@ -363,15 +377,15 @@ const Config = /** @type {const} */({
       params: [
         {
           id: 'source',
-          desc: "The path to the file to rename.",
-          name: "Source",
+          desc: "The path to rename.",
+          name: "Existing file",
           type: 'string',
           initialValue: "\"\"",
         },
         {
           id: 'destination',
-          desc: "The path to the destination file.",
-          name: "Destination",
+          desc: "The new file name.",
+          name: "New name",
           type: 'string',
           initialValue: "\"\"",
         }
