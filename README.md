@@ -5,7 +5,7 @@ A plugin that integrate with Pipelab <br>
 Author: Armaldio <br>
 Website: https://github.com/CynToolkit/construct-plugin <br>
 Addon Url: https://github.com/CynToolkit/construct-plugin <br>
-Download Latest Version : [Version: 1.7.1](https://github.com/CynToolkit/construct-plugin/releases/latest) <br>
+Download Latest Version : [Version: 1.8.0](https://github.com/CynToolkit/construct-plugin/releases/latest) <br>
 <sub>Made using [c3ide2-framework](https://github.com/ConstructFund/c3ide2-framework) </sub><br>
 
 ## Table of Contents

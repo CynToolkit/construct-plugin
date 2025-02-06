@@ -515,7 +515,7 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
       const order = {
         url: '/window/set-always-on-top',
         body: {
-          value: mode === 'enable' ? true : false
+          value: mode === 1 ? true : false
         }
       }
 
@@ -565,7 +565,7 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
       const order = {
         url: '/window/set-resizable',
         body: {
-          value: resizable === 'enable' ? true : false
+          value: resizable === 1 ? true : false
         }
       }
 
@@ -625,7 +625,7 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
       const order = {
         url: '/window/show-dev-tools',
         body: {
-          value: toggle === 'show' ? true : false
+          value: toggle === 1 ? true : false
         }
       }
 
@@ -637,7 +637,7 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
       const order = {
         url: '/window/set-fullscreen',
         body: {
-          value: toggle
+          value: toggle === 0 ? 'normal' : 'fullscreen'
         }
       }
 
@@ -1236,8 +1236,9 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
     })
 
     _IsEngine = this.wrap(super._IsEngine, (engine) => {
-      // console.log('engine', engine)
-      return this._engine === engine
+      if (engine === 0 && this._engine === 'electron') return true
+      if (engine === 1 && this._engine === 'tauri') return true
+      return false
     })
 
     _LastPathExists = this.wrap(super._LastPathExists, () => {

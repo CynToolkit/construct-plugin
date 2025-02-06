@@ -719,8 +719,8 @@ const Config = /** @type {const} */({
           name: "Mode",
           type: 'combo',
           items: [
-            { "enable": "Not always on top" },
             { "disable": "Always on top" },
+            { "enable": "Not always on top" },
           ]
         }
       ],
@@ -816,8 +816,8 @@ const Config = /** @type {const} */({
           name: "Resizable",
           type: 'combo',
           items: [
-            { "enable": "Not resizable" },
             { "disable": "Resizable" },
+            { "enable": "Not resizable" },
           ]
         }
       ],
@@ -919,8 +919,8 @@ const Config = /** @type {const} */({
           name: "Show",
           type: 'combo',
           items: [
-            { "show": "Show dev tools" },
             { "hide": "Hide dev tools" },
+            { "show": "Show dev tools" },
           ]
         }
       ],
@@ -959,7 +959,7 @@ const Config = /** @type {const} */({
         }
       ],
       listName: "Set Fullscreen",
-      displayText: "Set fullscreen {0}",
+      displayText: "Set fullscreen state to \"{0}\"",
       description: "Change fullscreen state",
     }
   },
