@@ -1,6 +1,19 @@
 declare global {
     /** The SDK version available at runtime. */
     const sdk: "v1" | "v2";
+
+    interface WebSocketClient {
+        connect(): Promise<WebSocket>;
+        send(message: any): void;
+        sendAndWaitForResponse(message: any): Promise<any>;
+        close(): void;
+        on(event: string, listener: (data: any) => void): void;
+        off(event: string, listener: (data: any) => void): void;
+    }
+
+    var pipelab: {
+        ws: WebSocketClient;
+    };
 }
 
 type Config<T extends string> = import("c3ide2-types").Plugin<T>;
@@ -8,7 +21,7 @@ type Config<T extends string> = import("c3ide2-types").Plugin<T>;
 // TODO:
 type ActionParam = Required<Config<string>["Acts"][string]>["params"][number];
 
-type C3Plugin = typeof import("./pluginConfig").default;
+type C3Plugin = typeof import("./pluginConfig.js").default;
 
 declare const cndsSymbol: unique symbol;
 type OpaqueCnds = { readonly [cndsSymbol]: "Cnds" };
@@ -103,8 +116,8 @@ type UnionToIntersection<U> = (U extends any ? (x: U) => void : never) extends (
     : never;
 
 type BuildUnion<
-  N extends number,
-  Acc extends number[] = []
+    N extends number,
+    Acc extends number[] = []
 > = Acc['length'] extends N
     ? Acc[number]
     : BuildUnion<N, [...Acc, Acc['length']]>;
@@ -119,7 +132,7 @@ type ActionParamToType<T extends ActionParam> = T["type"] extends "string"
     : T["type"] extends "boolean"
     ? boolean
     : T["type"] extends "object"
-    ? import("./sdk").IObjectClass
+    ? IObjectClass
     : T["type"] extends "combo"
     ? // ? keyof UnionToIntersection<DeepWriteable<T['items'][number]>>
     ArrayUnion<T['items']>
@@ -199,12 +212,14 @@ type StaticMethodsParentClass = {
     _getInitProperties(): {};
 
     _inst: any;
+
+    runtime: IRuntime
 };
 
 type ParentClass = DynamicMethodsActsParentClass &
     DynamicMethodsCndsParentClass &
     DynamicMethodsExpsParentClass &
-    StaticMethodsParentClass;
+    ISDKInstanceBase_;
 
 interface C3 {
     Plugins: {
@@ -228,9 +243,4 @@ export type GetInstanceJSFn = (
     C3: C3
 ) => new (...args: any[]) => ParentClass;
 
-export type IObjectClass = {
-    getFirstPickedInstance: (inst: unknown) => IBinaryDataInstance | null;
-};
-export type IBinaryDataInstance = {
-    setArrayBufferCopy: (buff: ArrayBuffer) => void;
-};
+export type IsFullScreenState = ActionParamToType<GetCndsParams<'_IsFullScreen'>['0']>

@@ -4,3 +4,4 @@ node_modules/
 # Ignore all files in the build directories
 /dist/*
 /export*/*
+src/c3/

@@ -2,6 +2,7 @@
 	"compilerOptions": {
 		"allowJs": true,
 		"checkJs": true,
+		"resolveJsonModule": true,
 		/* Visit https://aka.ms/tsconfig to read more about this file */
 
 		/* Construct-specific configuration */
@@ -17,7 +18,7 @@
 		"target": "ES2021",
 
 		/* Use modern standard JavaScript (ES) Modules */
-		"module": "ES2022",
+		"module": "NodeNext",
 
 		/* Avoid removing unused imports, as it can break importsForEvents.js. */
 		"verbatimModuleSyntax": true,
@@ -29,7 +30,5 @@
 		"forceConsistentCasingInFileNames": true,            /* Ensure that casing is correct in imports. */
 		"strict": true,                                      /* Enable all strict type-checking options. */
 		"skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
-	},
-	"include": [
-	]
+	}
 }

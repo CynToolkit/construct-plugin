@@ -3,7 +3,7 @@
 import pkg from '../package.json' with { type: 'json' };
 
 /**
- * @satisfies {import('./sdk').Config<'general' | 'window' | 'filesystem' | 'file-dialogs' | 'command-line'>}
+ * @satisfies {import('./sdk.js').Config<'general' | 'window' | 'filesystem' | 'file-dialogs' | 'command-line'>}
  */
 const Config = /** @type {const} */({
   addonType: "plugin",
@@ -1180,6 +1180,30 @@ const Config = /** @type {const} */({
       displayText: "On path {0} verification ({1})",
       description: "Triggered when a file verification result is available.",
     },
+
+    IsFullScreen: {
+      category: "window",
+      forward: "_IsFullScreen",
+      highlight: false,
+      deprecated: false,
+      params: [
+        {
+          id: 'state',
+          desc: "The state to check.",
+          name: "State",
+          type: 'combo',
+          items: [
+            { "normal": "Normal" },
+            { "fullscreen": "Fullscreen" },
+          ]
+        }
+      ],
+      description: "Returns true if the window is in full screen mode.",
+      displayText: "Is full screen {0}",
+      listName: "Is full screen",
+      isInvertible: true,
+      isTrigger: false,
+    }
   },
   Exps: {
     // command line
@@ -1529,6 +1553,14 @@ const Config = /** @type {const} */({
       deprecated: false,
       returnType: 'number',
       description: "Return the y position of the window.",
+    },
+    FullscreenState: {
+      category: "window",
+      forward: "_FullscreenState",
+      highlight: false,
+      deprecated: false,
+      returnType: 'number',
+      description: "Return the fullscreen state of the window.",
     },
   },
 });

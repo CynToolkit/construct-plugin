@@ -1,9 +1,18 @@
-// @ts-check
-
+// @ts-ignore
 // TODO: must use a bundler to support dependencies & typescript
 function assertPath(e){if("string"!=typeof e)throw new TypeError("Path must be a string. Received "+JSON.stringify(e))}function normalizeStringPosix(e,t){for(var r,n="",a=0,i=-1,o=0,l=0;l<=e.length;++l){if(l<e.length)r=e.charCodeAt(l);else{if(47===r)break;r=47}if(47===r){if(i===l-1||1===o);else if(i!==l-1&&2===o){if(n.length<2||2!==a||46!==n.charCodeAt(n.length-1)||46!==n.charCodeAt(n.length-2))if(n.length>2){var h=n.lastIndexOf("/");if(h!==n.length-1){-1===h?(n="",a=0):a=(n=n.slice(0,h)).length-1-n.lastIndexOf("/"),i=l,o=0;continue}}else if(2===n.length||1===n.length){n="",a=0,i=l,o=0;continue}t&&(n.length>0?n+="/..":n="..",a=2)}else n.length>0?n+="/"+e.slice(i+1,l):n=e.slice(i+1,l),a=l-i-1;i=l,o=0}else 46===r&&-1!==o?++o:o=-1}return n}function _format(e,t){var r=t.dir||t.root,n=t.base||(t.name||"")+(t.ext||"");return r?r===t.root?r+n:r+e+n:n}var posixPath={resolve:function(){for(var e,t="",r=!1,n=arguments.length-1;n>=-1&&!r;n--){var a;n>=0?a=arguments[n]:(void 0===e&&(e=process.cwd()),a=e),assertPath(a),0!==a.length&&(t=a+"/"+t,r=47===a.charCodeAt(0))}return t=normalizeStringPosix(t,!r),r?t.length>0?"/"+t:"/":t.length>0?t:"."},normalize:function(e){if(assertPath(e),0===e.length)return".";var t=47===e.charCodeAt(0),r=47===e.charCodeAt(e.length-1);return 0!==(e=normalizeStringPosix(e,!t)).length||t||(e="."),e.length>0&&r&&(e+="/"),t?"/"+e:e},isAbsolute:function(e){return assertPath(e),e.length>0&&47===e.charCodeAt(0)},join:function(){if(0===arguments.length)return".";for(var e,t=0;t<arguments.length;++t){var r=arguments[t];assertPath(r),r.length>0&&(void 0===e?e=r:e+="/"+r)}return void 0===e?".":posixPath.normalize(e)},relative:function(e,t){if(assertPath(e),assertPath(t),e===t)return"";if((e=posixPath.resolve(e))===(t=posixPath.resolve(t)))return"";for(var r=1;r<e.length&&47===e.charCodeAt(r);++r);for(var n=e.length,a=n-r,i=1;i<t.length&&47===t.charCodeAt(i);++i);for(var o=t.length-i,l=a<o?a:o,h=-1,s=0;s<=l;++s){if(s===l){if(o>l){if(47===t.charCodeAt(i+s))return t.slice(i+s+1);if(0===s)return t.slice(i+s)}else a>l&&(47===e.charCodeAt(r+s)?h=s:0===s&&(h=0));break}var f=e.charCodeAt(r+s);if(f!==t.charCodeAt(i+s))break;47===f&&(h=s)}var c="";for(s=r+h+1;s<=n;++s)s!==n&&47!==e.charCodeAt(s)||(0===c.length?c+="..":c+="/..");return c.length>0?c+t.slice(i+h):(i+=h,47===t.charCodeAt(i)&&++i,t.slice(i))},_makeLong:function(e){return e},dirname:function(e){if(assertPath(e),0===e.length)return".";for(var t=e.charCodeAt(0),r=47===t,n=-1,a=!0,i=e.length-1;i>=1;--i)if(47===(t=e.charCodeAt(i))){if(!a){n=i;break}}else a=!1;return-1===n?r?"/":".":r&&1===n?"//":e.slice(0,n)},basename:function(e,t){if(void 0!==t&&"string"!=typeof t)throw new TypeError('"ext" argument must be a string');assertPath(e);var r,n=0,a=-1,i=!0;if(void 0!==t&&t.length>0&&t.length<=e.length){if(t.length===e.length&&t===e)return"";var o=t.length-1,l=-1;for(r=e.length-1;r>=0;--r){var h=e.charCodeAt(r);if(47===h){if(!i){n=r+1;break}}else-1===l&&(i=!1,l=r+1),o>=0&&(h===t.charCodeAt(o)?-1==--o&&(a=r):(o=-1,a=l))}return n===a?a=l:-1===a&&(a=e.length),e.slice(n,a)}for(r=e.length-1;r>=0;--r)if(47===e.charCodeAt(r)){if(!i){n=r+1;break}}else-1===a&&(i=!1,a=r+1);return-1===a?"":e.slice(n,a)},extname:function(e){assertPath(e);for(var t=-1,r=0,n=-1,a=!0,i=0,o=e.length-1;o>=0;--o){var l=e.charCodeAt(o);if(47!==l)-1===n&&(a=!1,n=o+1),46===l?-1===t?t=o:1!==i&&(i=1):-1!==t&&(i=-1);else if(!a){r=o+1;break}}return-1===t||-1===n||0===i||1===i&&t===n-1&&t===r+1?"":e.slice(t,n)},format:function(e){if(null===e||"object"!=typeof e)throw new TypeError('The "pathObject" argument must be of type Object. Received type '+typeof e);return _format("/",e)},parse:function(e){assertPath(e);var t={root:"",dir:"",base:"",ext:"",name:""};if(0===e.length)return t;var r,n=e.charCodeAt(0),a=47===n;a?(t.root="/",r=1):r=0;for(var i=-1,o=0,l=-1,h=!0,s=e.length-1,f=0;s>=r;--s)if(47!==(n=e.charCodeAt(s)))-1===l&&(h=!1,l=s+1),46===n?-1===i?i=s:1!==f&&(f=1):-1!==i&&(f=-1);else if(!h){o=s+1;break}return-1===i||-1===l||0===f||1===f&&i===l-1&&i===o+1?-1!==l&&(t.base=t.name=0===o&&a?e.slice(1,l):e.slice(o,l)):(0===o&&a?(t.name=e.slice(1,i),t.base=e.slice(1,l)):(t.name=e.slice(o,i),t.base=e.slice(o,l)),t.ext=e.slice(i,l)),o>0?t.dir=e.slice(0,o-1):a&&(t.dir="/"),t},sep:"/",delimiter:":",win32:null,posix:null};
 
+/**
+ * @class WebSocketClient
+ * @classdesc A WebSocket client with reconnect functionality.
+ */
 class WebSocketClient {
+  /**
+   * @param {string} url - The URL to connect to.
+   * @param {Object} [options={}] - Optional configuration options.
+   * @param {number} [options.maxReconnectAttempts=5] - The maximum number of reconnect attempts.
+   * @param {number} [options.reconnectInterval=3000] - The interval between reconnect attempts in milliseconds.
+   */
   constructor(url, options = {}) {
     this.url = url;
     this.options = options;
@@ -13,8 +22,13 @@ class WebSocketClient {
     this.maxReconnectAttempts = options.maxReconnectAttempts || 5;
     this.reconnectInterval = options.reconnectInterval || 3000;
     this.responseResolvers = new Map();
+    /** @type {Map<string, Function[]>} */
+    this.listeners = new Map();
   }
-
+  /**
+   * Connects to the WebSocket server.
+   * @returns {Promise<WebSocket>} A promise that resolves with the WebSocket instance when connected.
+   */
   async connect() {
     return new Promise((resolve, reject) => {
       // console.log('trying to connect')
@@ -24,7 +38,10 @@ class WebSocketClient {
         // console.log('Connected to WebSocket');
         this.isConnected = true;
         this.reconnectAttempts = 0;
+        if (this.socket) {
         return resolve(this.socket);
+        }
+        return reject(new Error('WebSocket is undefined'));
       };
 
       this.socket.onmessage = (event) => {
@@ -35,8 +52,12 @@ class WebSocketClient {
           const resolver = this.responseResolvers.get(parsedData.correlationId);
           resolver?.(parsedData);
           this.responseResolvers.delete(parsedData.correlationId);
+        } else if (parsedData.url) {
+          console.log('parsedData', parsedData)
+          // Propagate the message to listeners
+          this.#propagateMessage(parsedData);
         } else {
-          console.error('unhandled message', parsedData)
+          console.error('unhandled message', parsedData);
         }
         // Handle other incoming messages if needed
       };
@@ -54,6 +75,9 @@ class WebSocketClient {
     });
   }
 
+  /**
+   * Attempts to reconnect to the WebSocket server.
+   */
   async reconnect() {
     if (this.reconnectAttempts < this.maxReconnectAttempts) {
       this.reconnectAttempts++;
@@ -69,7 +93,10 @@ class WebSocketClient {
     }
   }
 
-  /** @param {import("@pipelab/core").Message} message */
+  /**
+   * Sends a message to the WebSocket server.
+   * @param {import("@pipelab/core").Message} message - The message to send.
+   */
   send(message) {
     if (this.isConnected) {
       if (this.socket) {
@@ -83,10 +110,10 @@ class WebSocketClient {
   }
 
   /**
-   * @function
+   * Sends a message to the WebSocket server and waits for a response.
    * @template {import("@pipelab/core").Message} TMessage
-   * @param {TMessage} message
-   * @returns {Promise<any>}
+   * @param {TMessage} message - The message to send.
+   * @returns {Promise<any>} A promise that resolves with the response from the server.
    */
   /** @type {<T extends import("@pipelab/core").Message>(message: T) => Promise<import("@pipelab/core").InferResponseFromMessage<typeof message>>} */
   async sendAndWaitForResponse(message) {
@@ -102,185 +129,221 @@ class WebSocketClient {
     return responsePromise;
   }
 
+  /**
+   * Closes the WebSocket connection.
+   */
   close() {
     if (this.socket) {
       this.socket.close();
     }
   }
 
+  /**
+   * Generates a unique correlation ID.
+   * @returns {string} A unique correlation ID.
+   */
   #generateCorrelationId() {
     return Math.random().toString(36).substring(2, 15);
   }
-}
 
 /**
- * @type {import('./sdk').GetInstanceJSFn}
- */
+   * Propagates a message to registered listeners.
+   * @param {{ url: any; }} message - The message to propagate.
+   */
+  #propagateMessage(message) {
+    console.log('this.listeners', this.listeners)
+    const listeners = this.listeners.get(message.url);
+    if (listeners) {
+      listeners.forEach(listener => listener(message));
+    }
+  }
+
+    /**
+   * Registers a listener for a specific event.
+   * @param {string} event - The event to listen for.
+   * @param {Function} listener - The listener function.
+   */
+  on(event, listener) {
+    if (!this.listeners.has(event)) {
+      this.listeners.set(event, []);
+    }
+    this.listeners.get(event)?.push(listener);
+  }
+
+    /**
+   * Unregisters a listener for a specific event.
+   * @param {string} event - The event to stop listening for.
+   * @param {Function} listener - The listener function to remove.
+   */
+  off(event, listener) {
+    const listeners = this.listeners.get(event);
+    if (listeners) {
+      this.listeners.set(event, listeners.filter(l => l !== listener));
+    }
+  }
+}
+
+export const fullscreenC3StateToPipelabState = (/** @type {import("./sdk.js").IsFullScreenState} */ state) => {
+  switch (state) {
+    case 0:
+      return 'normal';
+    case 1:
+      return 'fullscreen';
+    default:
+      return 'normal';
+  }
+};
+
+export const fullscreenPipelabStateToC3State = (/** @type {import('@pipelab/core').FullscreenStates} */ state) => {
+  switch (state) {
+    case 'normal':
+      return 0;
+    case 'fullscreen':
+      return 1;
+    default:
+      return 0;
+  }
+}
+
+/** @type {import('./sdk.js').GetInstanceJSFn} */
 export function getInstanceJs(parentClass, addonTriggers, C3) {
   return class Pipelab extends parentClass {
-    /**
-     * @type {WebSocketClient}
-     */
+    /** @type {SDK.IObjectInstance | undefined} */
+    _inst;
+
+    /** @type {WebSocketClient | undefined} */
     WebSocketClient;
 
-    /**
-     * @type {string}
-     */
-    _userFolder
-
-    /**
-     * @type {string}
-     */
-    _homeFolder
-    /**
-     * @type {string}
-     */
-    _appDataFolder
-    /**
-     * @type {string}
-     */
-    _userDataFolder
-    /**
-     * @type {string}
-     */
-    _localAppDataFolder
-    /**
-     * @type {string}
-     */
-    _localUserDataFolder
-    /**
-     * @type {string}
-     */
-    _sessionDataFolder
-    /**
-     * @type {string}
-     */
-    _tempFolder
-    /**
-     * @type {string}
-     */
-    _exeFolder
-    /**
-     * @type {string}
-     */
-    _moduleFolder
-    /**
-     * @type {string}
-     */
-    _desktopFolder
-    /**
-     * @type {string}
-     */
-    _documentsFolder
-    /**
-     * @type {string}
-     */
-    _downloadsFolder
-    /**
-     * @type {string}
-     */
-    _musicFolder
-    /**
-     * @type {string}
-     */
-    _picturesFolder
-    /**
-     * @type {string}
-     */
-    _videosFolder
-    /**
-     * @type {string}
-     */
-    _recentFolder
-    /**
-     * @type {string}
-     */
-    _logsFolder
-    /**
-     * @type {string}
-     */
-    _crashDumpsFolder
-    /**
-     * @type {string}
-     */
-    _appFolder
-    /**
-     * @type {string}
-     */
-    _projectFilesFolder
-    /**
-     * @type {string}
-     */
+    /** @type {string} */
+    _userFolder = '';
 
     /** @type {string} */
-    _currentTag
+    _homeFolder = '';
+
+    /** @type {string} */
+    _appDataFolder = '';
+
+    /** @type {string} */
+    _userDataFolder = '';
+
+    /** @type {string} */
+    _localAppDataFolder = '';
+
+    /** @type {string} */
+    _localUserDataFolder = '';
+
+    /** @type {string} */
+    _sessionDataFolder = '';
+
+    /** @type {string} */
+    _tempFolder = '';
+
+    /** @type {string} */
+    _exeFolder = '';
+
+    /** @type {string} */
+    _moduleFolder = '';
+
+    /** @type {string} */
+    _desktopFolder = '';
+
+    /** @type {string} */
+    _documentsFolder = '';
+
+    /** @type {string} */
+    _downloadsFolder = '';
+
+    /** @type {string} */
+    _musicFolder = '';
+
+    /** @type {string} */
+    _picturesFolder = '';
+
+    /** @type {string} */
+    _videosFolder = '';
+
+    /** @type {string} */
+    _recentFolder = '';
+
+    /** @type {string} */
+    _logsFolder = '';
+
+    /** @type {string} */
+    _crashDumpsFolder = '';
+
+    /** @type {string} */
+    _appFolder = '';
+
+    /** @type {string} */
+    _projectFilesFolder = '';
+
+    /** @type {string} */
+    _currentTag = '';
 
     /** @type {import('@pipelab/core').MessageEngine['output']['body']['engine']} */
-    _engine
+    _engine = 'electron';
 
     /** @type {import('@pipelab/core').FileFolder[]} */
-    _fileList
+    _fileList = [];
 
     /** @type {boolean} */
-    _isInitialized
+    _isInitialized = false;
 
     /** @type {string} */
-    _fileError
+    _fileError = '';
 
     /** @type {number} */
-    _fileSize
+    _fileSize = 0;
 
     /** @type {boolean} */
-    _lastPathExists
+    _lastPathExists = false;
 
     /** @type {number} */
-    _windowHeight
+    _windowHeight = -1;
 
     /** @type {number} */
-    _windowWidth
+    _windowWidth = -1;
 
     /** @type {string} */
-    _windowTitle
+    _windowTitle = '';
 
     /** @type {number} */
-    _windowX
+    _windowX = -1;
 
     /** @type {number} */
-    _windowY
+    _windowY = -1;
 
+    /** @type {import("./sdk.js").IsFullScreenState} */
+    _fullscreenState = 0;
+
+    /**
+     * Description
+     * @param {ISDKInstanceBase_} inst
+     * @param {any} _properties
+     */
     constructor(inst, _properties) {
+      let dummyInst = undefined
       if (sdk === 'v1') {
-        super(inst);
-      } else {
-        super();
+        dummyInst = inst
       }
+      super(inst);
 
-      this._currentTag = '';
-      this._isInitialized = false
-      this._fileList = [];
-
-      this._fileError = ""
-      this._fileSize = 0
-      this._windowHeight = -1
-      this._windowWidth = -1
-      this._windowTitle = ""
-      this._windowX = -1
-      this._windowY = -1
-
-      let properties
+      let properties;
       if (sdk == 'v1') {
-        properties = _properties
+        properties = _properties;
       } else {
-        const properties = this._getInitProperties();
+        properties = this._getInitProperties();
       }
 
       if (properties) {
-        //
+        // Initialization logic if needed
       }
 
       if (sdk === 'v1') {
-        this._triggerAsync = this.TriggerAsync
-        this._trigger = this.Trigger
+        // @ts-expect-error TriggerAsync is only available in v1
+        this._triggerAsync = this.TriggerAsync;
+        // @ts-expect-error Trigger is only available in v1
+        this._trigger = this.Trigger;
       }
     }
 
@@ -289,15 +352,16 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
     }
 
     /**
-     * @template {(...args: any[]) => any} T
-     * @param {T} base
-     * @param {T} callback
-     * @param {T} [fallback]
-     * @param {boolean} [force]
-     * @returns T
-     */
+   * @template {(...args: any[]) => any} T
+   * @param {T} base
+   * @param {(...params: Parameters<T>) => unknown} callback
+   * @param {(...params: Parameters<T>) => unknown} [fallback]
+   * @param {boolean} [force]
+   * @returns {T}
+   */
     wrap(base, callback, fallback, force) {
-      return (...args) => {
+      // @ts-expect-error
+      return (/** @type {Parameters<T>} */ ...args) => {
         // console.log('this._isInitialized', this._isInitialized)
         // is initialized
         if (this._isInitialized) {
@@ -341,11 +405,25 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
         ws: this.ws
       }
 
+      // Fullscreen
+      // Handle through runtimz
+      this.ws.on('/window/fullscreen-state', async (/** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').FullscreenState, 'input'>} */ data) => {
+        this._fullscreenState = fullscreenPipelabStateToC3State(data.body.state)
+      })
+      // Handle antive
+      document.addEventListener('fullscreenchange', () => {
+        if (document.fullscreenElement) {
+          this._fullscreenState = 1
+        } else {
+          this._fullscreenState = 0
+        }
+      })
+
       await this.ws.connect();
 
       // console.log('this.ws', this.ws)
 
-      /** @type [import("@pipelab/core").Paths, string][] */
+      /** @type {[import("@pipelab/core").Paths, string][]} */
       const paths = [
         // app.getPath(name)
         ['home', '_homeFolder'],
@@ -385,7 +463,7 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
 
         const pathFolder = await this.ws?.sendAndWaitForResponse(orderPath)
         if (pathFolder) {
-          // console.log('pathFolder', pathFolder.body.data)
+          // @ts-expect-error
           this[name[1]] = pathFolder.body.data
         }
 
@@ -642,7 +720,17 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
       }
 
       await this.ws?.sendAndWaitForResponse(order)
-    }, this.unsupportedEngine)
+    }, (toggle) => {
+      // Do native fullscreen if in preview mode and not connected to a runtime
+      console.log('toggle', toggle)
+      if (this.runtime.platformInfo.exportType === 'preview') {
+        if (toggle === 1 ) {
+          document.documentElement.requestFullscreen()
+        } else {
+          document.exitFullscreen()
+        }
+      }
+    })
 
     _Unmaximize = this.wrap(super._Unmaximize, async () => {
       /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageWindowUnmaximize, 'input'>} */
@@ -945,18 +1033,20 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
     }, this.unsupportedEngine)
 
     /**
-     * @param {import("./sdk").IObjectClass} objectClass
-     * @return {import("./sdk").IBinaryDataInstance | null} objectClass
+     * @param {IObjectClass<this>} objectClass
+     * @return {IBinaryDataInstance | null} objectClass
      */
     __GetBinaryDataSdkInstance(objectClass) {
       // console.log('this._inst', this._inst)
       if (!objectClass)
         return null;
+      // @ts-expect-error
       const target = objectClass.getFirstPickedInstance(this._inst);
       // console.log('target', target)
       if (!target)
         return null;
       // return target.GetSdkInstance()
+      // @ts-expect-error
       return target
     }
 
@@ -1076,7 +1166,12 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
       throw new Error('"_OnPathVerification" Not implemented')
     }, () => false)
 
+    _IsFullScreen = this.wrap(super._IsFullScreen, (state) => {
+      return this._fullscreenState === state
+    }, () => false)
+
     // Exps
+
     _UserFolder = this.wrap(super._UserFolder, () => {
       // console.log('this', this)
       return this._userFolder ?? ''
@@ -1245,6 +1340,10 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
       return this._lastPathExists
     })
 
+    _FullscreenState = this.wrap(super._FullscreenState, () => {
+      return this._fullscreenState
+    })
+
     //
 
     _saveToJson() {
@@ -1253,7 +1352,7 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
       };
     }
 
-    _loadFromJson(o) {
+    _loadFromJson() {
       // load state for savegames
     }
   };

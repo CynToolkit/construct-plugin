@@ -3,11 +3,14 @@
 //<-- PLUGIN_INFO -->
 
 /** @type {'v1' | 'v2'} */
-let sdk
+let sdk = "v2"
 //<-- SDK_VERSION -->
 
 const camelCasedMap = new Map();
 
+/**
+ * @param {string} str
+ */
 function camelCasify(str) {
   // If the string is already camelCased, return it
   if (camelCasedMap.has(str)) {
