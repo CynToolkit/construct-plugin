@@ -1,6 +1,6 @@
 // @ts-ignore
 // TODO: must use a bundler to support dependencies & typescript
-function assertPath(e){if("string"!=typeof e)throw new TypeError("Path must be a string. Received "+JSON.stringify(e))}function normalizeStringPosix(e,t){for(var r,n="",a=0,i=-1,o=0,l=0;l<=e.length;++l){if(l<e.length)r=e.charCodeAt(l);else{if(47===r)break;r=47}if(47===r){if(i===l-1||1===o);else if(i!==l-1&&2===o){if(n.length<2||2!==a||46!==n.charCodeAt(n.length-1)||46!==n.charCodeAt(n.length-2))if(n.length>2){var h=n.lastIndexOf("/");if(h!==n.length-1){-1===h?(n="",a=0):a=(n=n.slice(0,h)).length-1-n.lastIndexOf("/"),i=l,o=0;continue}}else if(2===n.length||1===n.length){n="",a=0,i=l,o=0;continue}t&&(n.length>0?n+="/..":n="..",a=2)}else n.length>0?n+="/"+e.slice(i+1,l):n=e.slice(i+1,l),a=l-i-1;i=l,o=0}else 46===r&&-1!==o?++o:o=-1}return n}function _format(e,t){var r=t.dir||t.root,n=t.base||(t.name||"")+(t.ext||"");return r?r===t.root?r+n:r+e+n:n}var posixPath={resolve:function(){for(var e,t="",r=!1,n=arguments.length-1;n>=-1&&!r;n--){var a;n>=0?a=arguments[n]:(void 0===e&&(e=process.cwd()),a=e),assertPath(a),0!==a.length&&(t=a+"/"+t,r=47===a.charCodeAt(0))}return t=normalizeStringPosix(t,!r),r?t.length>0?"/"+t:"/":t.length>0?t:"."},normalize:function(e){if(assertPath(e),0===e.length)return".";var t=47===e.charCodeAt(0),r=47===e.charCodeAt(e.length-1);return 0!==(e=normalizeStringPosix(e,!t)).length||t||(e="."),e.length>0&&r&&(e+="/"),t?"/"+e:e},isAbsolute:function(e){return assertPath(e),e.length>0&&47===e.charCodeAt(0)},join:function(){if(0===arguments.length)return".";for(var e,t=0;t<arguments.length;++t){var r=arguments[t];assertPath(r),r.length>0&&(void 0===e?e=r:e+="/"+r)}return void 0===e?".":posixPath.normalize(e)},relative:function(e,t){if(assertPath(e),assertPath(t),e===t)return"";if((e=posixPath.resolve(e))===(t=posixPath.resolve(t)))return"";for(var r=1;r<e.length&&47===e.charCodeAt(r);++r);for(var n=e.length,a=n-r,i=1;i<t.length&&47===t.charCodeAt(i);++i);for(var o=t.length-i,l=a<o?a:o,h=-1,s=0;s<=l;++s){if(s===l){if(o>l){if(47===t.charCodeAt(i+s))return t.slice(i+s+1);if(0===s)return t.slice(i+s)}else a>l&&(47===e.charCodeAt(r+s)?h=s:0===s&&(h=0));break}var f=e.charCodeAt(r+s);if(f!==t.charCodeAt(i+s))break;47===f&&(h=s)}var c="";for(s=r+h+1;s<=n;++s)s!==n&&47!==e.charCodeAt(s)||(0===c.length?c+="..":c+="/..");return c.length>0?c+t.slice(i+h):(i+=h,47===t.charCodeAt(i)&&++i,t.slice(i))},_makeLong:function(e){return e},dirname:function(e){if(assertPath(e),0===e.length)return".";for(var t=e.charCodeAt(0),r=47===t,n=-1,a=!0,i=e.length-1;i>=1;--i)if(47===(t=e.charCodeAt(i))){if(!a){n=i;break}}else a=!1;return-1===n?r?"/":".":r&&1===n?"//":e.slice(0,n)},basename:function(e,t){if(void 0!==t&&"string"!=typeof t)throw new TypeError('"ext" argument must be a string');assertPath(e);var r,n=0,a=-1,i=!0;if(void 0!==t&&t.length>0&&t.length<=e.length){if(t.length===e.length&&t===e)return"";var o=t.length-1,l=-1;for(r=e.length-1;r>=0;--r){var h=e.charCodeAt(r);if(47===h){if(!i){n=r+1;break}}else-1===l&&(i=!1,l=r+1),o>=0&&(h===t.charCodeAt(o)?-1==--o&&(a=r):(o=-1,a=l))}return n===a?a=l:-1===a&&(a=e.length),e.slice(n,a)}for(r=e.length-1;r>=0;--r)if(47===e.charCodeAt(r)){if(!i){n=r+1;break}}else-1===a&&(i=!1,a=r+1);return-1===a?"":e.slice(n,a)},extname:function(e){assertPath(e);for(var t=-1,r=0,n=-1,a=!0,i=0,o=e.length-1;o>=0;--o){var l=e.charCodeAt(o);if(47!==l)-1===n&&(a=!1,n=o+1),46===l?-1===t?t=o:1!==i&&(i=1):-1!==t&&(i=-1);else if(!a){r=o+1;break}}return-1===t||-1===n||0===i||1===i&&t===n-1&&t===r+1?"":e.slice(t,n)},format:function(e){if(null===e||"object"!=typeof e)throw new TypeError('The "pathObject" argument must be of type Object. Received type '+typeof e);return _format("/",e)},parse:function(e){assertPath(e);var t={root:"",dir:"",base:"",ext:"",name:""};if(0===e.length)return t;var r,n=e.charCodeAt(0),a=47===n;a?(t.root="/",r=1):r=0;for(var i=-1,o=0,l=-1,h=!0,s=e.length-1,f=0;s>=r;--s)if(47!==(n=e.charCodeAt(s)))-1===l&&(h=!1,l=s+1),46===n?-1===i?i=s:1!==f&&(f=1):-1!==i&&(f=-1);else if(!h){o=s+1;break}return-1===i||-1===l||0===f||1===f&&i===l-1&&i===o+1?-1!==l&&(t.base=t.name=0===o&&a?e.slice(1,l):e.slice(o,l)):(0===o&&a?(t.name=e.slice(1,i),t.base=e.slice(1,l)):(t.name=e.slice(o,i),t.base=e.slice(o,l)),t.ext=e.slice(i,l)),o>0?t.dir=e.slice(0,o-1):a&&(t.dir="/"),t},sep:"/",delimiter:":",win32:null,posix:null};
+function assertPath(e) { if ("string" != typeof e) throw new TypeError("Path must be a string. Received " + JSON.stringify(e)) } function normalizeStringPosix(e, t) { for (var r, n = "", a = 0, i = -1, o = 0, l = 0; l <= e.length; ++l) { if (l < e.length) r = e.charCodeAt(l); else { if (47 === r) break; r = 47 } if (47 === r) { if (i === l - 1 || 1 === o); else if (i !== l - 1 && 2 === o) { if (n.length < 2 || 2 !== a || 46 !== n.charCodeAt(n.length - 1) || 46 !== n.charCodeAt(n.length - 2)) if (n.length > 2) { var h = n.lastIndexOf("/"); if (h !== n.length - 1) { -1 === h ? (n = "", a = 0) : a = (n = n.slice(0, h)).length - 1 - n.lastIndexOf("/"), i = l, o = 0; continue } } else if (2 === n.length || 1 === n.length) { n = "", a = 0, i = l, o = 0; continue } t && (n.length > 0 ? n += "/.." : n = "..", a = 2) } else n.length > 0 ? n += "/" + e.slice(i + 1, l) : n = e.slice(i + 1, l), a = l - i - 1; i = l, o = 0 } else 46 === r && -1 !== o ? ++o : o = -1 } return n } function _format(e, t) { var r = t.dir || t.root, n = t.base || (t.name || "") + (t.ext || ""); return r ? r === t.root ? r + n : r + e + n : n } var posixPath = { resolve: function () { for (var e, t = "", r = !1, n = arguments.length - 1; n >= -1 && !r; n--) { var a; n >= 0 ? a = arguments[n] : (void 0 === e && (e = process.cwd()), a = e), assertPath(a), 0 !== a.length && (t = a + "/" + t, r = 47 === a.charCodeAt(0)) } return t = normalizeStringPosix(t, !r), r ? t.length > 0 ? "/" + t : "/" : t.length > 0 ? t : "." }, normalize: function (e) { if (assertPath(e), 0 === e.length) return "."; var t = 47 === e.charCodeAt(0), r = 47 === e.charCodeAt(e.length - 1); return 0 !== (e = normalizeStringPosix(e, !t)).length || t || (e = "."), e.length > 0 && r && (e += "/"), t ? "/" + e : e }, isAbsolute: function (e) { return assertPath(e), e.length > 0 && 47 === e.charCodeAt(0) }, join: function () { if (0 === arguments.length) return "."; for (var e, t = 0; t < arguments.length; ++t) { var r = arguments[t]; assertPath(r), r.length > 0 && (void 0 === e ? e = r : e += "/" + r) } return void 0 === e ? "." : posixPath.normalize(e) }, relative: function (e, t) { if (assertPath(e), assertPath(t), e === t) return ""; if ((e = posixPath.resolve(e)) === (t = posixPath.resolve(t))) return ""; for (var r = 1; r < e.length && 47 === e.charCodeAt(r); ++r); for (var n = e.length, a = n - r, i = 1; i < t.length && 47 === t.charCodeAt(i); ++i); for (var o = t.length - i, l = a < o ? a : o, h = -1, s = 0; s <= l; ++s) { if (s === l) { if (o > l) { if (47 === t.charCodeAt(i + s)) return t.slice(i + s + 1); if (0 === s) return t.slice(i + s) } else a > l && (47 === e.charCodeAt(r + s) ? h = s : 0 === s && (h = 0)); break } var f = e.charCodeAt(r + s); if (f !== t.charCodeAt(i + s)) break; 47 === f && (h = s) } var c = ""; for (s = r + h + 1; s <= n; ++s)s !== n && 47 !== e.charCodeAt(s) || (0 === c.length ? c += ".." : c += "/.."); return c.length > 0 ? c + t.slice(i + h) : (i += h, 47 === t.charCodeAt(i) && ++i, t.slice(i)) }, _makeLong: function (e) { return e }, dirname: function (e) { if (assertPath(e), 0 === e.length) return "."; for (var t = e.charCodeAt(0), r = 47 === t, n = -1, a = !0, i = e.length - 1; i >= 1; --i)if (47 === (t = e.charCodeAt(i))) { if (!a) { n = i; break } } else a = !1; return -1 === n ? r ? "/" : "." : r && 1 === n ? "//" : e.slice(0, n) }, basename: function (e, t) { if (void 0 !== t && "string" != typeof t) throw new TypeError('"ext" argument must be a string'); assertPath(e); var r, n = 0, a = -1, i = !0; if (void 0 !== t && t.length > 0 && t.length <= e.length) { if (t.length === e.length && t === e) return ""; var o = t.length - 1, l = -1; for (r = e.length - 1; r >= 0; --r) { var h = e.charCodeAt(r); if (47 === h) { if (!i) { n = r + 1; break } } else -1 === l && (i = !1, l = r + 1), o >= 0 && (h === t.charCodeAt(o) ? -1 == --o && (a = r) : (o = -1, a = l)) } return n === a ? a = l : -1 === a && (a = e.length), e.slice(n, a) } for (r = e.length - 1; r >= 0; --r)if (47 === e.charCodeAt(r)) { if (!i) { n = r + 1; break } } else -1 === a && (i = !1, a = r + 1); return -1 === a ? "" : e.slice(n, a) }, extname: function (e) { assertPath(e); for (var t = -1, r = 0, n = -1, a = !0, i = 0, o = e.length - 1; o >= 0; --o) { var l = e.charCodeAt(o); if (47 !== l) -1 === n && (a = !1, n = o + 1), 46 === l ? -1 === t ? t = o : 1 !== i && (i = 1) : -1 !== t && (i = -1); else if (!a) { r = o + 1; break } } return -1 === t || -1 === n || 0 === i || 1 === i && t === n - 1 && t === r + 1 ? "" : e.slice(t, n) }, format: function (e) { if (null === e || "object" != typeof e) throw new TypeError('The "pathObject" argument must be of type Object. Received type ' + typeof e); return _format("/", e) }, parse: function (e) { assertPath(e); var t = { root: "", dir: "", base: "", ext: "", name: "" }; if (0 === e.length) return t; var r, n = e.charCodeAt(0), a = 47 === n; a ? (t.root = "/", r = 1) : r = 0; for (var i = -1, o = 0, l = -1, h = !0, s = e.length - 1, f = 0; s >= r; --s)if (47 !== (n = e.charCodeAt(s))) -1 === l && (h = !1, l = s + 1), 46 === n ? -1 === i ? i = s : 1 !== f && (f = 1) : -1 !== i && (f = -1); else if (!h) { o = s + 1; break } return -1 === i || -1 === l || 0 === f || 1 === f && i === l - 1 && i === o + 1 ? -1 !== l && (t.base = t.name = 0 === o && a ? e.slice(1, l) : e.slice(o, l)) : (0 === o && a ? (t.name = e.slice(1, i), t.base = e.slice(1, l)) : (t.name = e.slice(o, i), t.base = e.slice(o, l)), t.ext = e.slice(i, l)), o > 0 ? t.dir = e.slice(0, o - 1) : a && (t.dir = "/"), t }, sep: "/", delimiter: ":", win32: null, posix: null };
 
 /**
  * @class WebSocketClient
@@ -39,7 +39,7 @@ class WebSocketClient {
         this.isConnected = true;
         this.reconnectAttempts = 0;
         if (this.socket) {
-        return resolve(this.socket);
+          return resolve(this.socket);
         }
         return reject(new Error('WebSocket is undefined'));
       };
@@ -146,10 +146,10 @@ class WebSocketClient {
     return Math.random().toString(36).substring(2, 15);
   }
 
-/**
-   * Propagates a message to registered listeners.
-   * @param {{ url: any; }} message - The message to propagate.
-   */
+  /**
+     * Propagates a message to registered listeners.
+     * @param {{ url: any; }} message - The message to propagate.
+     */
   #propagateMessage(message) {
     console.log('this.listeners', this.listeners)
     const listeners = this.listeners.get(message.url);
@@ -158,11 +158,11 @@ class WebSocketClient {
     }
   }
 
-    /**
-   * Registers a listener for a specific event.
-   * @param {string} event - The event to listen for.
-   * @param {Function} listener - The listener function.
-   */
+  /**
+ * Registers a listener for a specific event.
+ * @param {string} event - The event to listen for.
+ * @param {Function} listener - The listener function.
+ */
   on(event, listener) {
     if (!this.listeners.has(event)) {
       this.listeners.set(event, []);
@@ -170,11 +170,11 @@ class WebSocketClient {
     this.listeners.get(event)?.push(listener);
   }
 
-    /**
-   * Unregisters a listener for a specific event.
-   * @param {string} event - The event to stop listening for.
-   * @param {Function} listener - The listener function to remove.
-   */
+  /**
+ * Unregisters a listener for a specific event.
+ * @param {string} event - The event to stop listening for.
+ * @param {Function} listener - The listener function to remove.
+ */
   off(event, listener) {
     const listeners = this.listeners.get(event);
     if (listeners) {
@@ -203,6 +203,12 @@ export const fullscreenPipelabStateToC3State = (/** @type {import('@pipelab/core
     default:
       return 0;
   }
+}
+
+const defaultSteamId = {
+  accountId: -1,
+  steamId32: '',
+  steamId64: BigInt(-1),
 }
 
 /** @type {import('./sdk.js').GetInstanceJSFn} */
@@ -315,6 +321,15 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
 
     /** @type {import("./sdk.js").IsFullScreenState} */
     _fullscreenState = 0;
+
+    /** @type {import('@pipelab/core').NamespacedFunctionReturnType<'localplayer', 'getSteamId'>} */
+    _steam_SteamId = defaultSteamId
+    /** @type {import('@pipelab/core').NamespacedFunctionReturnType<'localplayer', 'getName'>} */
+    _steam_Name = ""
+    /** @type {import('@pipelab/core').NamespacedFunctionReturnType<'localplayer', 'getLevel'>} */
+    _steam_Level = -1
+    /** @type {import('@pipelab/core').NamespacedFunctionReturnType<'localplayer', 'getIpCountry'>} */
+    _steam_IpCountry = ''
 
     /**
      * Description
@@ -449,27 +464,88 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
         ['project', '_projectFilesFolder'],
       ]
 
-      const promises = paths.map(async (name) => {
+      /** @type {(() => (Promise<unknown>))[]} */
+      const promises = []
 
-        // -----------------------------------------------------------------------
-        // Fetch user folder
-        /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessagePaths, 'input'>} */
-        const orderPath = {
-          url: '/paths',
-          body: {
-            name: name[0]
+      for (const name of paths) {
+        promises.push(async () => {
+          // -----------------------------------------------------------------------
+          // Fetch user folder
+          /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessagePaths, 'input'>} */
+          const orderPath = {
+            url: '/paths',
+            body: {
+              name: name[0]
+            }
           }
-        }
 
-        const pathFolder = await this.ws?.sendAndWaitForResponse(orderPath)
-        if (pathFolder) {
-          // @ts-expect-error
-          this[name[1]] = pathFolder.body.data
-        }
+          const pathFolder = await this.ws?.sendAndWaitForResponse(orderPath)
+          if (pathFolder) {
+            // @ts-expect-error
+            this[name[1]] = pathFolder.body.data
+          }
+        })
+      }
 
+      promises.push(async () => {
+        /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').SteamRaw<'localplayer', 'getSteamId'>, 'input'>} */
+        const order = {
+          url: '/steam/raw',
+          body: {
+            namespace: 'localplayer',
+            method: 'getSteamId',
+            args: [],
+          },
+        };
+        const response = await this.ws?.sendAndWaitForResponse(order);
+        this._steam_SteamId = response?.body.data ?? defaultSteamId
       })
 
-      await Promise.all(promises)
+      promises.push(async () => {
+        /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').SteamRaw<'localplayer', 'getName'>, 'input'>} */
+
+        const order = {
+          url: '/steam/raw',
+          body: {
+            namespace: 'localplayer',
+            method: 'getName',
+            args: [],
+          },
+        };
+        const response = await this.ws?.sendAndWaitForResponse(order);
+        this._steam_Name = response?.body.data ?? '';
+      })
+
+      promises.push(async () => {
+        /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').SteamRaw<'localplayer', 'getLevel'>, 'input'>} */
+
+        const order = {
+          url: '/steam/raw',
+          body: {
+            namespace: 'localplayer',
+            method: 'getLevel',
+            args: [],
+          },
+        };
+        const response = await this.ws?.sendAndWaitForResponse(order);
+        this._steam_Level = response?.body.data ?? -1;
+      })
+
+      promises.push(async () => {
+        /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').SteamRaw<'localplayer', 'getIpCountry'>, 'input'>} */
+        const order = {
+          url: '/steam/raw',
+          body: {
+            namespace: 'localplayer',
+            method: 'getIpCountry',
+            args: [],
+          },
+        };
+        const response = await this.ws?.sendAndWaitForResponse(order);
+        this._steam_IpCountry = response?.body.data ?? '';
+      })
+
+      await Promise.all(promises.map(x => x()))
 
       // -----------------------------------------------------------------------
       // Fetch engine
@@ -494,7 +570,7 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
       // console.log('this', this)
     }, this.unsupportedEngine, true)
 
-    _WriteTextFile = this.wrap(super._WriteTextFile, async (contents, path) => {
+    _WriteTextFile = this.wrap(super._WriteTextFile, async (path, contents) => {
       // console.log('Write text', contents, path);
 
       /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageWriteFile, 'input'>} */
@@ -510,10 +586,6 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
       await this.ws?.sendAndWaitForResponse(order)
       // console.log('this', this)
     }, this.unsupportedEngine)
-
-    _WriteText = () => {
-      //
-    }
 
     _ReadTextFile = this.wrap(super._ReadTextFile, async (path) => {
       // console.log('Read text', path);
@@ -724,7 +796,7 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
       // Do native fullscreen if in preview mode and not connected to a runtime
       console.log('toggle', toggle)
       if (this.runtime.platformInfo.exportType === 'preview') {
-        if (toggle === 1 ) {
+        if (toggle === 1) {
           document.documentElement.requestFullscreen()
         } else {
           document.exitFullscreen()
@@ -1108,6 +1180,62 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
       // console.log('answer', answer)
       this._fileSize = answer?.body.size ?? -1
     })
+
+    _ActivateAchievement = this.wrap(super._ActivateAchievement, async (achievement) => {
+      /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').SteamRaw<'achievement', 'activate'>, 'input'>} */
+      const order = {
+        url: '/steam/raw',
+        body: {
+          namespace: 'achievement',
+          method: 'activate',
+          args: [achievement],
+        },
+      };
+      await this.ws?.sendAndWaitForResponse(order);
+    }, this.unsupportedEngine)
+
+    _ClearAchievement = this.wrap(super._ClearAchievement, async (achievement) => {
+      /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').SteamRaw<'achievement', 'clear'>, 'input'>} */
+      const order = {
+        url: '/steam/raw',
+        body: {
+          namespace: 'achievement',
+          method: 'clear',
+          args: [achievement],
+        },
+      };
+      await this.ws?.sendAndWaitForResponse(order);
+    }, this.unsupportedEngine)
+
+    _CheckAchievementActivationState = this.wrap(super._CheckAchievementActivationState, async (achievement) => {
+      /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').SteamRaw<'achievement', 'isActivated'>, 'input'>} */
+      const order = {
+        url: '/steam/raw',
+        body: {
+          namespace: 'achievement',
+          method: 'isActivated',
+          args: [achievement],
+        },
+      };
+
+      const response = await this.ws?.sendAndWaitForResponse(order);
+      const data = response?.body.data
+
+      return data ?? false;
+    }, () => false)
+
+    _SetRichPresence = this.wrap(super._SetRichPresence, async (key, value) => {
+      /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').SteamRaw<'localplayer', 'setRichPresence'>, 'input'>} */
+      const order = {
+        url: '/steam/raw',
+        body: {
+          namespace: 'localplayer',
+          method: 'setRichPresence',
+          args: [key, value],
+        },
+      };
+      await this.ws?.sendAndWaitForResponse(order);
+    }, this.unsupportedEngine)
 
     // Cnds
 

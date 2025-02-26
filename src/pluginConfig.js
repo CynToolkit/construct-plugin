@@ -3,7 +3,7 @@
 import pkg from '../package.json' with { type: 'json' };
 
 /**
- * @satisfies {import('./sdk.js').Config<'general' | 'window' | 'filesystem' | 'file-dialogs' | 'command-line'>}
+ * @satisfies {import('./sdk.js').Config<'general' | 'window' | 'filesystem' | 'file-dialogs' | 'command-line' | 'steam'>}
  */
 const Config = /** @type {const} */({
   addonType: "plugin",
@@ -126,6 +126,7 @@ const Config = /** @type {const} */({
     filesystem: "File system",
     'file-dialogs': "File Dialogs",
     'command-line': "Command line",
+    'steam': "Steam",
   },
   Acts: {
     // general
@@ -961,7 +962,90 @@ const Config = /** @type {const} */({
       listName: "Set Fullscreen",
       displayText: "Set fullscreen state to \"{0}\"",
       description: "Change fullscreen state",
-    }
+    },
+
+    // steam
+    ActivateAchievement: {
+      isAsync: true,
+      category: "steam",
+      forward: "_ActivateAchievement",
+      highlight: false,
+      deprecated: false,
+      params: [
+        {
+          id: 'achievement',
+          desc: "The achievement to activate",
+          name: "Achievement",
+          type: 'string',
+          initialValue: "\"\"",
+        }
+      ],
+      listName: "Activate achievement",
+      displayText: "Activate achievement [b]{0}[/b]",
+      description: "Activate a steam achievement",
+    },
+    ClearAchievement: {
+      isAsync: true,
+      category: "steam",
+      forward: "_ClearAchievement",
+      highlight: false,
+      deprecated: false,
+      params: [
+        {
+          id: 'achievement',
+          desc: "The achievement to clear",
+          name: "Achievement",
+          type: 'string',
+          initialValue: "\"\"",
+        }
+      ],
+      listName: "Clear achievement",
+      displayText: "Clear achievement [b]{0}[/b]",
+      description: "Clear a steam achievement",
+    },
+    CheckAchievementActivationState: {
+      category: "steam",
+      forward: "_CheckAchievementActivationState",
+      highlight: false,
+      deprecated: false,
+      isAsync: true,
+      params: [
+        {
+          id: 'achievement',
+          desc: "The achievement to check",
+          name: "Achievement",
+          type: 'string',
+          initialValue: "\"\"",
+        }
+      ],
+      listName: "Check achievement activation state",
+      displayText: "Check achievement [b]{0}[/b] activation state",
+      description: "Check the activation state of a steam achievement",
+    },
+    SetRichPresence: {
+      category: "steam",
+      forward: "_SetRichPresence",
+      displayText: "Set rich presence {0} to {1}",
+      listName: "Set rich presence",
+      isAsync: true,
+      highlight: false,
+      deprecated: false,
+      params: [
+        {
+          id: 'key',
+          desc: "The key of the rich presence.",
+          name: "Key",
+          type: 'string',
+        },
+        {
+          id: 'value',
+          desc: "The value of the rich presence.",
+          name: "Value",
+          type: 'string',
+        }
+      ],
+      description: "Set the rich presence of the local player.",
+    },
   },
   Cnds: {
     IsEngine: {
@@ -1203,7 +1287,7 @@ const Config = /** @type {const} */({
       listName: "Is full screen",
       isInvertible: true,
       isTrigger: false,
-    }
+    },
   },
   Exps: {
     // command line
@@ -1561,6 +1645,16 @@ const Config = /** @type {const} */({
       deprecated: false,
       returnType: 'number',
       description: "Return the fullscreen state of the window.",
+    },
+
+    // Steam
+    LatestAchievementActivationState: {
+      category: "steam",
+      forward: "_LatestAchievementActivationState",
+      highlight: false,
+      deprecated: false,
+      returnType: 'number',
+      description: "Return the latest achievement activation state.",
     },
   },
 });

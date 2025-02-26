@@ -5,7 +5,7 @@ A plugin that integrate with Pipelab <br>
 Author: Armaldio <br>
 Website: https://github.com/CynToolkit/construct-plugin <br>
 Addon Url: https://github.com/CynToolkit/construct-plugin <br>
-Download Latest Version : [Version: 1.8.0](https://github.com/CynToolkit/construct-plugin/releases/latest) <br>
+Download Latest Version : [Version: 1.9.1](https://github.com/CynToolkit/construct-plugin/releases/latest) <br>
 <sub>Made using [c3ide2-framework](https://github.com/ConstructFund/c3ide2-framework) </sub><br>
 
 ## Table of Contents
@@ -87,6 +87,10 @@ The main files you may want to look at would be instance.js
 | Show dev tools | Show or hide the dev tools. | Show             *(combo)* <br> |
 | Unmaximize | Unmaximize the window |  |
 | Set Fullscreen | Change fullscreen state | Fullscreen             *(combo)* <br> |
+| Activate achievement | Activate a steam achievement | Achievement             *(string)* <br> |
+| Clear achievement | Clear a steam achievement | Achievement             *(string)* <br> |
+| Check achievement activation state | Check the activation state of a steam achievement | Achievement             *(string)* <br> |
+| Set rich presence | Set the rich presence of the local player. | Key             *(string)* <br>Value             *(string)* <br> |
 
 
 ---
@@ -108,6 +112,7 @@ The main files you may want to look at would be instance.js
 | On file dropped | Triggered when the user drag-and-drops a file to the window |  |
 | On file system error | Triggered when a file operation fails. |  |
 | On path verification | Triggered when a file verification result is available. | Path *(string)* <br>Tag *(string)* <br> |
+| Is full screen | Returns true if the window is in full screen mode. | State *(combo)* <br> |
 
 
 ---
@@ -152,6 +157,8 @@ The main files you may want to look at would be instance.js
 | WindowTitle | Return the title of the window. | string |  | 
 | WindowX | Return the x position of the window. | number |  | 
 | WindowY | Return the y position of the window. | number |  | 
+| FullscreenState | Return the fullscreen state of the window. | number |  | 
+| LatestAchievementActivationState | Return the latest achievement activation state. | number |  | 
 
 ## Paths
 **ProjectFilesFolder**: Direct path to your games's content
