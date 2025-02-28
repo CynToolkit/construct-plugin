@@ -43,6 +43,7 @@ async function ensureForwardScript(name, obj, aceType) {
       };
     }
   }, undefined, undefined)
+  globalThis.sdk = 'v2'
   const instance = new fileClass()
 
   if (obj.handler) {

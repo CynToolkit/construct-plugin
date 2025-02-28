@@ -1,12 +1,12 @@
 {
   "dependencies": {
-    "@pipelab/core": "1.4.5",
+    "@pipelab/core": "1.4.7",
     "adm-zip": "0.5.16",
     "c3addon": "1.0.9",
     "chokidar": "4.0.3",
     "cors": "2.8.5",
     "express": "4.21.2",
-    "inquirer": "12.4.1"
+    "inquirer": "12.4.2"
   },
   "name": "@pipelab/construct-plugin",
   "description": "Pipelab construct plugin",
@@ -31,7 +31,8 @@
   "homepage": "https://github.com/CynToolkit/construct-plugin#readme",
   "devDependencies": {
     "c3ide2-types": "1.0.1",
-    "electron": "34.0.2",
+    "electron": "34.3.0",
+    "lefthook": "1.11.2",
     "steamworks.js": "0.4.0",
     "typescript": "5.7.3"
   }

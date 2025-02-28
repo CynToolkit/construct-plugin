@@ -16,6 +16,21 @@ declare global {
     };
 }
 
+type MyAction<ACE_CATEGORIES extends string, NAME extends string, PARAMS> = import("c3ide2-types").Action<ACE_CATEGORIES> & {
+    forward: `_${NAME}`;
+    params: PARAMS
+}
+type MyCondition<ACE_CATEGORIES extends string, NAME extends string, PARAMS> = import("c3ide2-types").Condition<ACE_CATEGORIES> & {
+    forward: `_${NAME}`;
+    params: PARAMS
+}
+type MyExpression<ACE_CATEGORIES extends string, NAME extends string, PARAMS> = import("c3ide2-types").Expression<ACE_CATEGORIES> & {
+    forward: `_${NAME}`;
+    params: PARAMS
+}
+
+type Categories = 'general' | 'window' | 'filesystem' | 'file-dialogs' | 'command-line' | 'steam'
+
 type Config<T extends string> = import("c3ide2-types").Plugin<T>;
 
 // TODO:
@@ -41,6 +56,7 @@ type ActsAssoc = {
     [key in ActsKeys]: C3Plugin["Acts"][key]["forward"];
 };
 type ActsAssocReversed = Reverser<ActsAssoc>;
+// if any, a declaration is missing "_forward"
 type Acts = C3Plugin["Acts"][ActsKeys]["forward"];
 
 type CndsKeys = keyof C3Plugin["Cnds"];
@@ -48,6 +64,7 @@ type CndsAssoc = {
     [key in CndsKeys]: C3Plugin["Cnds"][key]["forward"];
 };
 type CndsAssocReversed = Reverser<CndsAssoc>;
+// if any, a declaration is missing "_forward"
 type Cnds = C3Plugin["Cnds"][CndsKeys]["forward"];
 
 type ExpsKeys = keyof C3Plugin["Exps"];
@@ -55,9 +72,12 @@ type ExpsAssoc = {
     [key in ExpsKeys]: C3Plugin["Exps"][key]["forward"];
 };
 type ExpsAssocReversed = Reverser<ExpsAssoc>;
+// if any, a declaration is missing "_forward"
 type Exps = C3Plugin["Exps"][ExpsKeys]["forward"];
 
 type Awaitable<T> = T | PromiseLike<T>;
+
+type _A = C3Plugin["Acts"][ActsAssocReversed['_RenameFile']]['params']
 
 type GetActsParams<T extends Acts> =
     C3Plugin["Acts"][ActsAssocReversed[T]] extends { params: Array<ActionParam> }
@@ -125,7 +145,7 @@ type BuildUnion<
 // ArrayUnion accepts an array type and returns the union 0 | 1 | ... | N.
 type ArrayUnion<T extends readonly unknown[]> = BuildUnion<T['length']>;
 
-type ActionParamToType<T extends ActionParam> = T["type"] extends "string"
+type ActionParamToType<T extends ActionParam> = any /* T["type"] extends "string"
     ? string
     : T["type"] extends "number"
     ? number
@@ -136,13 +156,19 @@ type ActionParamToType<T extends ActionParam> = T["type"] extends "string"
     : T["type"] extends "combo"
     ? // ? keyof UnionToIntersection<DeepWriteable<T['items'][number]>>
     ArrayUnion<T['items']>
-    : never;
+    : never; */
 
 type ReturnTypeToType<T extends "string" | "number"> = T extends "string"
     ? string
     : T extends "number"
     ? number
     : never;
+
+type A = GetActsParams<'_ShowDevTools'>
+type B = GetActsParams<'_ShowDevTools'>["0"]
+type C = ActionParamToType<GetActsParams<'_ShowDevTools'>["0"]>
+type D = ActionParamToType<GetActsParams<'_ShowDevTools'>["1"]>
+type E = ActionParamToType<GetActsParams<'_ShowDevTools'>["2"]>
 
 // support only 10 typed parametes
 // TODO: find a way to support more
@@ -219,7 +245,13 @@ type StaticMethodsParentClass = {
 type ParentClass = DynamicMethodsActsParentClass &
     DynamicMethodsCndsParentClass &
     DynamicMethodsExpsParentClass &
-    ISDKInstanceBase_;
+    ISDKInstanceBase_ &
+    // my overrides
+    {
+        _trigger(method: OpaqueCnds): void;
+        _triggerAsync(method: OpaqueCnds): Promise<void>;
+    }
+    ;
 
 interface C3 {
     Plugins: {
@@ -228,10 +260,10 @@ interface C3 {
                 [cnds in keyof C3Plugin["Cnds"]]: OpaqueCnds;
             };
             Acts: {
-                [cnds in keyof C3Plugin["Acts"]]: OpaqueActs;
+                [acts in keyof C3Plugin["Acts"]]: OpaqueActs;
             };
             Exps: {
-                [cnds in keyof C3Plugin["Exps"]]: OpaqueExps;
+                [exps in keyof C3Plugin["Exps"]]: OpaqueExps;
             };
         };
     };
@@ -244,3 +276,32 @@ export type GetInstanceJSFn = (
 ) => new (...args: any[]) => ParentClass;
 
 export type IsFullScreenState = ActionParamToType<GetCndsParams<'_IsFullScreen'>['0']>
+
+// export interface ACEGeneratorParam<NAME extends string, PARAMS extends MyAction<Categories, NAME>['params']> {
+export interface ACEGeneratorParam<NAME extends string, PARAMS> {
+    category: MyAction<Categories, NAME>['category'];
+    highlight: MyAction<Categories, NAME>['highlight'];
+    deprecated: MyAction<Categories, NAME>['deprecated'];
+    listName: MyAction<Categories, NAME>['listName'];
+    displayText: MyAction<Categories, NAME>['displayText'];
+    description: MyAction<Categories, NAME>['description'];
+    params: MyAction<Categories, NAME, PARAMS>['params'];
+}
+
+// export type ACEGeneratorResult<DATA extends { name: string }, NAME extends DATA['name']> = {
+export type ACEGeneratorResult<NAME extends string, DATA> = {
+// export type ACEGeneratorResult<NAME extends string> = {
+    actions: {
+        [index in `${NAME}Sync` | `${NAME}`]: MyAction<Categories, `${NAME}Sync` | `${NAME}`, DATA['conditions'][index]['params']>;
+    }
+    conditions: {
+        [index in `On${NAME}Success` | `OnAny${NAME}Success` | `On${NAME}Error` | `OnAny${NAME}Error`]: MyCondition<Categories, `On${NAME}Success` | `OnAny${NAME}Success` | `On${NAME}Error` | `OnAny${NAME}Error`, DATA['conditions'][index]['params']>;
+    }
+    expressions: {
+        [index in `${NAME}Error` | `${NAME}Result`]: MyExpression<Categories, `${NAME}Error` | `${NAME}Result`, DATA['conditions'][index]['params']>;
+    }
+    test: {
+        [index in `A${NAME}A`]: MyCondition<Categories, `A${NAME}A`, DATA['conditions'][index]['params']>;
+    }
+}
+export type ACEGenerator<NAME extends string> = (data: ACEGeneratorParam<NAME>) => ACEGeneratorResult<NAME>

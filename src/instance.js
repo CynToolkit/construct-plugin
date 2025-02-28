@@ -2,6 +2,8 @@
 // TODO: must use a bundler to support dependencies & typescript
 function assertPath(e) { if ("string" != typeof e) throw new TypeError("Path must be a string. Received " + JSON.stringify(e)) } function normalizeStringPosix(e, t) { for (var r, n = "", a = 0, i = -1, o = 0, l = 0; l <= e.length; ++l) { if (l < e.length) r = e.charCodeAt(l); else { if (47 === r) break; r = 47 } if (47 === r) { if (i === l - 1 || 1 === o); else if (i !== l - 1 && 2 === o) { if (n.length < 2 || 2 !== a || 46 !== n.charCodeAt(n.length - 1) || 46 !== n.charCodeAt(n.length - 2)) if (n.length > 2) { var h = n.lastIndexOf("/"); if (h !== n.length - 1) { -1 === h ? (n = "", a = 0) : a = (n = n.slice(0, h)).length - 1 - n.lastIndexOf("/"), i = l, o = 0; continue } } else if (2 === n.length || 1 === n.length) { n = "", a = 0, i = l, o = 0; continue } t && (n.length > 0 ? n += "/.." : n = "..", a = 2) } else n.length > 0 ? n += "/" + e.slice(i + 1, l) : n = e.slice(i + 1, l), a = l - i - 1; i = l, o = 0 } else 46 === r && -1 !== o ? ++o : o = -1 } return n } function _format(e, t) { var r = t.dir || t.root, n = t.base || (t.name || "") + (t.ext || ""); return r ? r === t.root ? r + n : r + e + n : n } var posixPath = { resolve: function () { for (var e, t = "", r = !1, n = arguments.length - 1; n >= -1 && !r; n--) { var a; n >= 0 ? a = arguments[n] : (void 0 === e && (e = process.cwd()), a = e), assertPath(a), 0 !== a.length && (t = a + "/" + t, r = 47 === a.charCodeAt(0)) } return t = normalizeStringPosix(t, !r), r ? t.length > 0 ? "/" + t : "/" : t.length > 0 ? t : "." }, normalize: function (e) { if (assertPath(e), 0 === e.length) return "."; var t = 47 === e.charCodeAt(0), r = 47 === e.charCodeAt(e.length - 1); return 0 !== (e = normalizeStringPosix(e, !t)).length || t || (e = "."), e.length > 0 && r && (e += "/"), t ? "/" + e : e }, isAbsolute: function (e) { return assertPath(e), e.length > 0 && 47 === e.charCodeAt(0) }, join: function () { if (0 === arguments.length) return "."; for (var e, t = 0; t < arguments.length; ++t) { var r = arguments[t]; assertPath(r), r.length > 0 && (void 0 === e ? e = r : e += "/" + r) } return void 0 === e ? "." : posixPath.normalize(e) }, relative: function (e, t) { if (assertPath(e), assertPath(t), e === t) return ""; if ((e = posixPath.resolve(e)) === (t = posixPath.resolve(t))) return ""; for (var r = 1; r < e.length && 47 === e.charCodeAt(r); ++r); for (var n = e.length, a = n - r, i = 1; i < t.length && 47 === t.charCodeAt(i); ++i); for (var o = t.length - i, l = a < o ? a : o, h = -1, s = 0; s <= l; ++s) { if (s === l) { if (o > l) { if (47 === t.charCodeAt(i + s)) return t.slice(i + s + 1); if (0 === s) return t.slice(i + s) } else a > l && (47 === e.charCodeAt(r + s) ? h = s : 0 === s && (h = 0)); break } var f = e.charCodeAt(r + s); if (f !== t.charCodeAt(i + s)) break; 47 === f && (h = s) } var c = ""; for (s = r + h + 1; s <= n; ++s)s !== n && 47 !== e.charCodeAt(s) || (0 === c.length ? c += ".." : c += "/.."); return c.length > 0 ? c + t.slice(i + h) : (i += h, 47 === t.charCodeAt(i) && ++i, t.slice(i)) }, _makeLong: function (e) { return e }, dirname: function (e) { if (assertPath(e), 0 === e.length) return "."; for (var t = e.charCodeAt(0), r = 47 === t, n = -1, a = !0, i = e.length - 1; i >= 1; --i)if (47 === (t = e.charCodeAt(i))) { if (!a) { n = i; break } } else a = !1; return -1 === n ? r ? "/" : "." : r && 1 === n ? "//" : e.slice(0, n) }, basename: function (e, t) { if (void 0 !== t && "string" != typeof t) throw new TypeError('"ext" argument must be a string'); assertPath(e); var r, n = 0, a = -1, i = !0; if (void 0 !== t && t.length > 0 && t.length <= e.length) { if (t.length === e.length && t === e) return ""; var o = t.length - 1, l = -1; for (r = e.length - 1; r >= 0; --r) { var h = e.charCodeAt(r); if (47 === h) { if (!i) { n = r + 1; break } } else -1 === l && (i = !1, l = r + 1), o >= 0 && (h === t.charCodeAt(o) ? -1 == --o && (a = r) : (o = -1, a = l)) } return n === a ? a = l : -1 === a && (a = e.length), e.slice(n, a) } for (r = e.length - 1; r >= 0; --r)if (47 === e.charCodeAt(r)) { if (!i) { n = r + 1; break } } else -1 === a && (i = !1, a = r + 1); return -1 === a ? "" : e.slice(n, a) }, extname: function (e) { assertPath(e); for (var t = -1, r = 0, n = -1, a = !0, i = 0, o = e.length - 1; o >= 0; --o) { var l = e.charCodeAt(o); if (47 !== l) -1 === n && (a = !1, n = o + 1), 46 === l ? -1 === t ? t = o : 1 !== i && (i = 1) : -1 !== t && (i = -1); else if (!a) { r = o + 1; break } } return -1 === t || -1 === n || 0 === i || 1 === i && t === n - 1 && t === r + 1 ? "" : e.slice(t, n) }, format: function (e) { if (null === e || "object" != typeof e) throw new TypeError('The "pathObject" argument must be of type Object. Received type ' + typeof e); return _format("/", e) }, parse: function (e) { assertPath(e); var t = { root: "", dir: "", base: "", ext: "", name: "" }; if (0 === e.length) return t; var r, n = e.charCodeAt(0), a = 47 === n; a ? (t.root = "/", r = 1) : r = 0; for (var i = -1, o = 0, l = -1, h = !0, s = e.length - 1, f = 0; s >= r; --s)if (47 !== (n = e.charCodeAt(s))) -1 === l && (h = !1, l = s + 1), 46 === n ? -1 === i ? i = s : 1 !== f && (f = 1) : -1 !== i && (f = -1); else if (!h) { o = s + 1; break } return -1 === i || -1 === l || 0 === f || 1 === f && i === l - 1 && i === o + 1 ? -1 !== l && (t.base = t.name = 0 === o && a ? e.slice(1, l) : e.slice(o, l)) : (0 === o && a ? (t.name = e.slice(1, i), t.base = e.slice(1, l)) : (t.name = e.slice(o, i), t.base = e.slice(o, l)), t.ext = e.slice(i, l)), o > 0 ? t.dir = e.slice(0, o - 1) : a && (t.dir = "/"), t }, sep: "/", delimiter: ":", win32: null, posix: null };
 
+// @ts-check
+
 /**
  * @class WebSocketClient
  * @classdesc A WebSocket client with reconnect functionality.
@@ -126,7 +128,13 @@ class WebSocketClient {
       this.responseResolvers.set(correlationId, resolve);
     });
     this.socket.send(JSON.stringify(message));
-    return responsePromise;
+    const result = await responsePromise;
+    if (result.body.error) {
+      throw new Error(result.body.error)
+    } else {
+      console.log('result', result)
+      return result
+    }
   }
 
   /**
@@ -211,8 +219,13 @@ const defaultSteamId = {
   steamId64: BigInt(-1),
 }
 
+/**
+ * @typedef {string | undefined} Tag
+ */
+
 /** @type {import('./sdk.js').GetInstanceJSFn} */
 export function getInstanceJs(parentClass, addonTriggers, C3) {
+  // @ts-ignore
   return class Pipelab extends parentClass {
     /** @type {SDK.IObjectInstance | undefined} */
     _inst;
@@ -283,14 +296,11 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
     /** @type {string} */
     _projectFilesFolder = '';
 
-    /** @type {string} */
+    /** @type {string} - The current tag of the trigger. Can be used for any trigger */
     _currentTag = '';
 
     /** @type {import('@pipelab/core').MessageEngine['output']['body']['engine']} */
     _engine = 'electron';
-
-    /** @type {import('@pipelab/core').FileFolder[]} */
-    _fileList = [];
 
     /** @type {boolean} */
     _isInitialized = false;
@@ -331,6 +341,16 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
     /** @type {import('@pipelab/core').NamespacedFunctionReturnType<'localplayer', 'getIpCountry'>} */
     _steam_IpCountry = ''
 
+    /** @type {string} */
+    _platform = ''
+    /** @type {string} */
+    _arch = ''
+
+    /** @type {string} */
+    _ListFilesErrorValue = ''
+    /** @type {import("@pipelab/core").FileFolder[]} */
+    _ListFilesResultValue = []
+
     /**
      * Description
      * @param {ISDKInstanceBase_} inst
@@ -355,8 +375,10 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
       }
 
       if (sdk === 'v1') {
+        /** @type {import("./sdk.js").StaticMethodsParentClass['_triggerAsync']} */
         // @ts-expect-error TriggerAsync is only available in v1
         this._triggerAsync = this.TriggerAsync;
+        /** @type {import("./sdk.js").StaticMethodsParentClass['_trigger']} */
         // @ts-expect-error Trigger is only available in v1
         this._trigger = this.Trigger;
       }
@@ -364,6 +386,24 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
 
     async unsupportedEngine() {
       console.warn(`Unable to execute action: unsupported engine`)
+    }
+
+    /**
+     * @param {Tag} tag
+     * @param {[import("./sdk.js").OpaqueCnds, import("./sdk.js").OpaqueCnds]} fns
+     */
+    async trigger(tag, fns) {
+      // fns[0] = with tag
+      // fns[!] = without tag
+      if (tag) {
+        this._currentTag = tag
+        this._trigger(fns[0])
+        this._trigger(fns[1])
+        // reset tag
+        this._currentTag = ""
+      } else {
+        await this._triggerAsync(fns[1])
+      }
     }
 
     /**
@@ -406,14 +446,17 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
 
     // Acts
 
-    _Initialize = this.wrap(super._Initialize, async () => {
+    _InitializeBase = this.wrap(super._Initialize, async (/** @type {Tag} */ tag) => {
+      console.log('tag', tag)
       // Initialize the WebSocket connection
       // console.log('on instance created');
 
-      this.ws = new WebSocketClient('ws://localhost:31753', {
-        maxReconnectAttempts: 3,
-        reconnectInterval: 5000
-      });
+      if (!this.ws) {
+        this.ws = new WebSocketClient('ws://localhost:31753', {
+          maxReconnectAttempts: 3,
+          reconnectInterval: 5000
+        });
+      }
 
       // expose websocket instance
       globalThis.pipelab = {
@@ -425,7 +468,7 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
       this.ws.on('/window/fullscreen-state', async (/** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').FullscreenState, 'input'>} */ data) => {
         this._fullscreenState = fullscreenPipelabStateToC3State(data.body.state)
       })
-      // Handle antive
+      // Handle native
       document.addEventListener('fullscreenchange', () => {
         if (document.fullscreenElement) {
           this._fullscreenState = 1
@@ -435,8 +478,6 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
       })
 
       await this.ws.connect();
-
-      // console.log('this.ws', this.ws)
 
       /** @type {[import("@pipelab/core").Paths, string][]} */
       const paths = [
@@ -487,19 +528,20 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
         })
       }
 
-      promises.push(async () => {
-        /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').SteamRaw<'localplayer', 'getSteamId'>, 'input'>} */
-        const order = {
-          url: '/steam/raw',
-          body: {
-            namespace: 'localplayer',
-            method: 'getSteamId',
-            args: [],
-          },
-        };
-        const response = await this.ws?.sendAndWaitForResponse(order);
-        this._steam_SteamId = response?.body.data ?? defaultSteamId
-      })
+      // TODO: BigInt support
+      // promises.push(async () => {
+      //   /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').SteamRaw<'localplayer', 'getSteamId'>, 'input'>} */
+      //   const order = {
+      //     url: '/steam/raw',
+      //     body: {
+      //       namespace: 'localplayer',
+      //       method: 'getSteamId',
+      //       args: [],
+      //     },
+      //   };
+      //   const response = await this.ws?.sendAndWaitForResponse(order);
+      //   this._steam_SteamId = response?.body.data ?? defaultSteamId
+      // })
 
       promises.push(async () => {
         /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').SteamRaw<'localplayer', 'getName'>, 'input'>} */
@@ -545,6 +587,17 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
         this._steam_IpCountry = response?.body.data ?? '';
       })
 
+      promises.push(async () => {
+        /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageInfos, 'input'>} */
+        const order = {
+          url: '/infos',
+          body: {},
+        };
+        const response = await this.ws?.sendAndWaitForResponse(order);
+        this._platform = response?.body.platform ?? "";
+        this._arch = response?.body.arch ?? "";
+      })
+
       await Promise.all(promises.map(x => x()))
 
       // -----------------------------------------------------------------------
@@ -567,46 +620,97 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
 
       this._isInitialized = true
 
+      await this.trigger(tag, [
+        C3.Plugins.pipelab.Cnds.OnInitializeSuccess,
+        C3.Plugins.pipelab.Cnds.OnAnyInitializeSuccess
+      ])
+
       // console.log('this', this)
     }, this.unsupportedEngine, true)
+    _Initialize = this._InitializeBase
+    _InitializeSync = this._InitializeBase
 
-    _WriteTextFile = this.wrap(super._WriteTextFile, async (path, contents) => {
-      // console.log('Write text', contents, path);
-
-      /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageWriteFile, 'input'>} */
-      const order = {
-        url: '/fs/file/write',
-        body: {
-          path,
-          contents: contents,
-          encoding: "utf8"
+    _WriteTextFileBase = this.wrap(super._WriteTextFile, async (
+      /** @type {string} */ path,
+      /** @type {string} */ contents,
+      /** @type {Tag} */ tag,
+    ) => {
+      try {
+        /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageWriteFile, 'input'>} */
+        const order = {
+          url: '/fs/file/write',
+          body: {
+            path,
+            contents: contents,
+            encoding: "utf8"
+          }
         }
-      }
 
-      await this.ws?.sendAndWaitForResponse(order)
-      // console.log('this', this)
-    }, this.unsupportedEngine)
-
-    _ReadTextFile = this.wrap(super._ReadTextFile, async (path) => {
-      // console.log('Read text', path);
-
-      /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageReadFile, 'input'>} */
-      const order = {
-        url: '/fs/file/read',
-        body: {
-          path,
-          encoding: "utf8"
+        const response = await this.ws?.sendAndWaitForResponse(order)
+        this._WriteTextFileResultValue = true
+        this._WriteTextFileErrorValue = ''
+        await this.trigger("tag", [
+          C3.Plugins.pipelab.Cnds.OnWriteTextFileSuccess,
+          C3.Plugins.pipelab.Cnds.OnAnyWriteTextFileSuccess,
+        ])
+      } catch (e) {
+        if (e instanceof Error) {
+          this._WriteTextFileErrorValue = e.message
+          this._WriteTextFileResultValue = false
+          await this.trigger(tag, [
+            C3.Plugins.pipelab.Cnds.OnWriteTextFileSuccess,
+            C3.Plugins.pipelab.Cnds.OnAnyWriteTextFileSuccess,
+          ])
         }
-      }
-
-      const answer = await this.ws?.sendAndWaitForResponse(order)
-      // console.log('this', this)
-      if (answer?.body.success === true) {
-        this._readFile = answer?.body.content
+        console.error(e)
       }
     }, this.unsupportedEngine)
+    _WriteTextFile = this._WriteTextFileBase
+    _WriteTextFileSync = this._WriteTextFileBase
+    _WriteText = this._WriteTextFileBase
+    _WriteTextSync = this._WriteTextFileBase
 
-    _CheckIfPathExist = this.wrap(super._CheckIfPathExist, async (path) => {
+    _ReadTextFileBase = this.wrap(super._ReadTextFile, async (
+      /** @type {string} */ path,
+      /** @type {Tag} */ tag,
+    ) => {
+      try {
+        /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageReadFile, 'input'>} */
+        const order = {
+          url: '/fs/file/read',
+          body: {
+            path,
+            encoding: "utf8"
+          }
+        }
+
+        const answer = await this.ws?.sendAndWaitForResponse(order)
+        // console.log('this', this)
+        if (answer?.body.success === true) {
+          this._ReadTextFileResultValue = answer?.body.content
+        }
+        this._ReadTextFileErrorValue = ''
+
+        await this.trigger(tag, [
+          C3.Plugins.pipelab.Cnds.OnReadTextFileSuccess,
+          C3.Plugins.pipelab.Cnds.OnAnyReadTextFileSuccess,
+        ])
+      } catch (e) {
+        if (e instanceof Error) {
+          this._ReadTextFileErrorValue = e.message
+          this._ReadTextFileResultValue = false
+          await this.trigger(tag, [
+            C3.Plugins.pipelab.Cnds.OnReadTextFileSuccess,
+            C3.Plugins.pipelab.Cnds.OnAnyReadTextFileSuccess,
+          ])
+        }
+        console.error(e)
+      }
+    }, this.unsupportedEngine)
+    _ReadTextFile = this._ReadTextFileBase
+    _ReadTextFileSync = this._ReadTextFileBase
+
+    _CheckIfPathExistBase = this.wrap(super._CheckIfPathExist, async (/** @type {string} */ path) => {
       // console.log('Read text', path);
 
       /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageExistFile, 'input'>} */
@@ -620,8 +724,10 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
       const answer = await this.ws?.sendAndWaitForResponse(order)
       this._lastPathExists = answer?.body.success ?? false
     }, this.unsupportedEngine)
+    _CheckIfPathExist = this._CheckIfPathExistBase
+    _CheckIfPathExistSync = this._CheckIfPathExistBase
 
-    _Maximize = this.wrap(super._Maximize, async () => {
+    _MaximizeBase = this.wrap(super._Maximize, async () => {
       /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageWindowMaximize, 'input'>} */
       const order = {
         url: '/window/maximize',
@@ -629,8 +735,10 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
 
       await this.ws?.sendAndWaitForResponse(order)
     }, this.unsupportedEngine)
+    _Maximize = this._MaximizeBase
+    _MaximizeSync = this._MaximizeBase
 
-    _Minimize = this.wrap(super._Minimize, async () => {
+    _MinimizeBase = this.wrap(super._Minimize, async () => {
       /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageWindowMinimize, 'input'>} */
       const order = {
         url: '/window/minimize',
@@ -638,8 +746,10 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
 
       await this.ws?.sendAndWaitForResponse(order)
     }, this.unsupportedEngine)
+    _Minimize = this._MinimizeBase
+    _MinimizeSync = this._MinimizeBase
 
-    _Restore = this.wrap(super._Restore, async () => {
+    _RestoreBase = this.wrap(super._Restore, async () => {
       /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageWindowRestore, 'input'>} */
       const order = {
         url: '/window/restore',
@@ -647,8 +757,10 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
 
       await this.ws?.sendAndWaitForResponse(order)
     }, this.unsupportedEngine)
+    _Restore = this._RestoreBase
+    _RestoreSync = this._RestoreBase
 
-    _RequestAttention = this.wrap(super._RequestAttention, async (mode) => {
+    _RequestAttentionBase = this.wrap(super._RequestAttention, async (/** @type {number} */ mode) => {
       // console.log('mode', mode)
       /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageRequestAttention, 'input'>} */
       const order = {
@@ -659,8 +771,10 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
 
       // TODO: support stop
     }, this.unsupportedEngine)
+    _RequestAttention = this._RequestAttentionBase
+    _RequestAttentionSync = this._RequestAttentionBase
 
-    _SetAlwaysOnTop = this.wrap(super._SetAlwaysOnTop, async (mode) => {
+    _SetAlwaysOnTopBase = this.wrap(super._SetAlwaysOnTop, async (/** @type {number} */ mode) => {
       /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageSetAlwaysOnTop, 'input'>} */
       const order = {
         url: '/window/set-always-on-top',
@@ -671,8 +785,10 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
 
       await this.ws?.sendAndWaitForResponse(order)
     }, this.unsupportedEngine)
+    _SetAlwaysOnTop = this._SetAlwaysOnTopBase
+    _SetAlwaysOnTopSync = this._SetAlwaysOnTopBase
 
-    _SetHeight = this.wrap(super._SetHeight, async (height) => {
+    _SetHeightBase = this.wrap(super._SetHeight, async (/** @type {number} */ height) => {
       /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageSetHeight, 'input'>} */
       const order = {
         url: '/window/set-height',
@@ -683,8 +799,10 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
 
       await this.ws?.sendAndWaitForResponse(order)
     }, this.unsupportedEngine)
+    _SetHeight = this._SetHeightBase
+    _SetHeightSync = this._SetHeightBase
 
-    _SetMaximumSize = this.wrap(super._SetMaximumSize, async (width, height) => {
+    _SetMaximumSizeBase = this.wrap(super._SetMaximumSize, async (/** @type {number} */ width, /** @type {number} */ height) => {
       /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageSetMaximumSize, 'input'>} */
       const order = {
         url: '/window/set-maximum-size',
@@ -696,8 +814,10 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
 
       await this.ws?.sendAndWaitForResponse(order)
     }, this.unsupportedEngine)
+    _SetMaximumSize = this._SetMaximumSizeBase
+    _SetMaximumSizeSync = this._SetMaximumSizeBase
 
-    _SetMinimumSize = this.wrap(super._SetMinimumSize, async (width, height) => {
+    _SetMinimumSizeBase = this.wrap(super._SetMinimumSize, async (/** @type {number} */ width, /** @type {number} */ height) => {
       /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageSetMinimumSize, 'input'>} */
       const order = {
         url: '/window/set-minimum-size',
@@ -709,8 +829,10 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
 
       await this.ws?.sendAndWaitForResponse(order)
     }, this.unsupportedEngine)
+    _SetMinimumSize = this._SetMinimumSizeBase
+    _SetMinimumSizeSync = this._SetMinimumSizeBase
 
-    _SetResizable = this.wrap(super._SetResizable, async (resizable) => {
+    _SetResizableBase = this.wrap(super._SetResizable, async (/** @type {number} */ resizable) => {
       /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageSetResizable, 'input'>} */
       const order = {
         url: '/window/set-resizable',
@@ -721,8 +843,10 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
 
       await this.ws?.sendAndWaitForResponse(order)
     }, this.unsupportedEngine)
+    _SetResizable = this._SetResizableBase
+    _SetResizableSync = this._SetResizableBase
 
-    _SetTitle = this.wrap(super._SetTitle, async (title) => {
+    _SetTitleBase = this.wrap(super._SetTitle, async (/** @type {string} */ title) => {
       /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageSetTitle, 'input'>} */
       const order = {
         url: '/window/set-title',
@@ -733,8 +857,10 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
 
       await this.ws?.sendAndWaitForResponse(order)
     }, this.unsupportedEngine)
+    _SetTitle = this._SetTitleBase
+    _SetTitleSync = this._SetTitleBase
 
-    _SetWidth = this.wrap(super._SetWidth, async (width) => {
+    _SetWidthBase = this.wrap(super._SetWidth, async (/** @type {number} */ width) => {
       /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageSetWidth, 'input'>} */
       const order = {
         url: '/window/set-width',
@@ -745,8 +871,10 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
 
       await this.ws?.sendAndWaitForResponse(order)
     }, this.unsupportedEngine)
+    _SetWidth = this._SetWidthBase
+    _SetWidthSync = this._SetWidthBase
 
-    _SetX = this.wrap(super._SetX, async (x) => {
+    _SetXBase = this.wrap(super._SetX, async (/** @type {number} */ x) => {
       /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageSetX, 'input'>} */
       const order = {
         url: '/window/set-x',
@@ -757,8 +885,10 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
 
       await this.ws?.sendAndWaitForResponse(order)
     }, this.unsupportedEngine)
+    _SetX = this._SetXBase
+    _SetXSync = this._SetXBase
 
-    _SetY = this.wrap(super._SetY, async (y) => {
+    _SetYBase = this.wrap(super._SetY, async (/** @type {number} */ y) => {
       /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageSetY, 'input'>} */
       const order = {
         url: '/window/set-y',
@@ -769,8 +899,10 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
 
       await this.ws?.sendAndWaitForResponse(order)
     }, this.unsupportedEngine)
+    _SetY = this._SetYBase
+    _SetYSync = this._SetYBase
 
-    _ShowDevTools = this.wrap(super._ShowDevTools, async (toggle) => {
+    _ShowDevToolsBase = this.wrap(super._ShowDevTools, async (/** @type {number} */ toggle) => {
       /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageShowDevTools, 'input'>} */
       const order = {
         url: '/window/show-dev-tools',
@@ -781,8 +913,10 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
 
       await this.ws?.sendAndWaitForResponse(order)
     }, this.unsupportedEngine)
+    _ShowDevTools = this._ShowDevToolsBase
+    _ShowDevToolsSync = this._ShowDevToolsBase
 
-    _SetFullscreen = this.wrap(super._SetFullscreen, async (toggle) => {
+    _SetFullscreenBase = this.wrap(super._SetFullscreen, async (/** @type {number} */ toggle) => {
       /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageSetFullscreen, 'input'>} */
       const order = {
         url: '/window/set-fullscreen',
@@ -803,8 +937,10 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
         }
       }
     })
+    _SetFullscreen = this._SetFullscreenBase
+    _SetFullscreenSync = this._SetFullscreenBase
 
-    _Unmaximize = this.wrap(super._Unmaximize, async () => {
+    _UnmaximizeBase = this.wrap(super._Unmaximize, async () => {
       /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageWindowUnmaximize, 'input'>} */
       const order = {
         url: '/window/unmaximize',
@@ -812,8 +948,10 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
 
       await this.ws?.sendAndWaitForResponse(order)
     }, this.unsupportedEngine)
+    _Unmaximize = this._UnmaximizeBase
+    _UnmaximizeSync = this._UnmaximizeBase
 
-    _ShowFolderDialog = this.wrap(super._ShowFolderDialog, async () => {
+    _ShowFolderDialogBase = this.wrap(super._ShowFolderDialog, async () => {
       /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageShowFolderDialog, 'input'>} */
       const order = {
         url: '/dialog/folder',
@@ -840,8 +978,10 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
       }
 
     }, this.unsupportedEngine)
+    _ShowFolderDialog = this._ShowFolderDialogBase
+    _ShowFolderDialogSync = this._ShowFolderDialogBase
 
-    _ShowOpenDialog = this.wrap(super._ShowOpenDialog, async (accept) => {
+    _ShowOpenDialogBase = this.wrap(super._ShowOpenDialog, async (/** @type {string} */ accept) => {
       // console.log('accept', accept)
       /**
        * @type {import('@pipelab/core').FileFilter[]}
@@ -885,8 +1025,10 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
         await this._triggerAsync(C3.Plugins.pipelab.Cnds.OnOpenDialogOk)
       }
     }, this.unsupportedEngine)
+    _ShowOpenDialog = this._ShowOpenDialogBase
+    _ShowOpenDialogSync = this._ShowOpenDialogBase
 
-    _ShowSaveDialog = this.wrap(super._ShowSaveDialog, async (accept) => {
+    _ShowSaveDialogBase = this.wrap(super._ShowSaveDialog, async (/** @type {string} */ accept) => {
       /**
        * @type {import('@pipelab/core').FileFilter[]}
        */
@@ -927,8 +1069,10 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
         await this._triggerAsync(C3.Plugins.pipelab.Cnds.OnSaveDialogOk)
       }
     }, this.unsupportedEngine)
+    _ShowSaveDialog = this._ShowSaveDialogBase
+    _ShowSaveDialogSync = this._ShowSaveDialogBase
 
-    _AppendFile = this.wrap(super._AppendFile, async (path, contents) => {
+    _AppendFileBase = this.wrap(super._AppendFile, async (/** @type {string} */ path, /** @type {string} */ contents) => {
       /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageWriteFile, 'input'>} */
       const order = {
         url: '/fs/file/write',
@@ -941,8 +1085,10 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
       }
       const result = await this.ws?.sendAndWaitForResponse(order)
     }, this.unsupportedEngine)
+    _AppendFile = this._AppendFileBase
+    _AppendFileSync = this._AppendFileBase
 
-    _CopyFile = this.wrap(super._CopyFile, async (source, destination, overwrite) => {
+    _CopyFileBase = this.wrap(super._CopyFile, async (/** @type {string} */ source, /** @type {string} */ destination, /** @type {boolean} */ overwrite) => {
       /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageCopyFile, 'input'>} */
       const order = {
         url: '/fs/copy',
@@ -954,8 +1100,10 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
       }
       const result = await this.ws?.sendAndWaitForResponse(order)
     }, this.unsupportedEngine)
+    _CopyFile = this._CopyFileBase
+    _CopyFileSync = this._CopyFileBase
 
-    _CreateFolder = this.wrap(super._CreateFolder, async (path) => {
+    _CreateFolderBase = this.wrap(super._CreateFolder, async (/** @type {string} */ path) => {
       /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageCreateFolder, 'input'>} */
       const order = {
         url: '/fs/folder/create',
@@ -969,8 +1117,10 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
       //   this.Trigger(C3.Plugins.pipelab.Cnds.OnAnyBinaryFileRead)
       // }
     }, this.unsupportedEngine)
+    _CreateFolder = this._CreateFolderBase
+    _CreateFolderSync = this._CreateFolderBase
 
-    _DeleteFile = this.wrap(super._DeleteFile, async (path, recursive) => {
+    _DeleteFileBase = this.wrap(super._DeleteFile, async (/** @type {string} */ path, /** @type {boolean} */ recursive) => {
       /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageDelete, 'input'>} */
       const order = {
         url: '/fs/delete',
@@ -981,25 +1131,49 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
       }
       const result = await this.ws?.sendAndWaitForResponse(order)
     }, this.unsupportedEngine)
+    _DeleteFile = this._DeleteFileBase
+    _DeleteFileSync = this._DeleteFileBase
 
-    _ListFiles = this.wrap(super._ListFiles, async (path, recursive) => {
-      /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageListFiles, 'input'>} */
-      const order = {
-        url: '/fs/list',
-        body: {
-          path,
-          recursive,
+    _ListFilesBase = this.wrap(super._ListFiles, async (
+      /** @type {string} */ path,
+      /** @type {boolean} */ recursive,
+      /** @type {Tag} */ tag
+    ) => {
+      try {
+        /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageListFiles, 'input'>} */
+        const order = {
+          url: '/fs/list',
+          body: {
+            path,
+            recursive,
+          }
         }
-      }
-      const files = await this.ws?.sendAndWaitForResponse(order)
+        const files = await this.ws?.sendAndWaitForResponse(order)
 
-      if (files) {
-        this._fileList = files.body.list
-        // console.log('this._fileList', this._fileList)
+        if (files) {
+          this._ListFilesResultValue = files.body.list
+          this._ListFilesErrorValue = ''
+        }
+        this.trigger(tag, [
+          C3.Plugins.pipelab.Cnds.OnListFilesSuccess,
+          C3.Plugins.pipelab.Cnds.OnAnyListFilesSuccess,
+        ])
+      } catch (e) {
+        if (e instanceof Error) {
+          this._ListFilesErrorValue = e.message
+          this._ListFilesResultValue = []
+          this.trigger(tag, [
+            C3.Plugins.pipelab.Cnds.OnListFilesError,
+            C3.Plugins.pipelab.Cnds.OnAnyListFilesError,
+          ])
+        }
+        console.error(e)
       }
     }, this.unsupportedEngine)
+    _ListFiles = this._ListFilesBase
+    _ListFilesSync = this._ListFilesBase
 
-    _MoveFile = this.wrap(super._MoveFile, async (source, destination, overwrite) => {
+    _MoveFileBase = this.wrap(super._MoveFile, async (/** @type {string} */ source, /** @type {string} */ destination, /** @type {boolean} */ overwrite) => {
       /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageMove, 'input'>} */
       const order = {
         url: '/fs/move',
@@ -1011,12 +1185,20 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
       }
       const result = await this.ws?.sendAndWaitForResponse(order)
     }, this.unsupportedEngine)
+    _MoveFile = this._MoveFileBase
+    _MoveFileSync = this._MoveFileBase
 
-    _OpenBrowser = this.wrap(super._OpenBrowser, async () => {
+    _OpenBrowserBase = this.wrap(super._OpenBrowser, async () => {
       throw new Error('"_OpenBrowser" Not implemented')
     }, this.unsupportedEngine)
+    _OpenBrowser = this._OpenBrowserBase
+    _OpenBrowserSync = this._OpenBrowserBase
 
-    _ReadBinaryFile = this.wrap(super._ReadBinaryFile, async (tag, path, destination) => {
+    _ReadBinaryFileBase = this.wrap(super._ReadBinaryFile, async (
+      /** @type {string} */ path,
+      /** @type {IObjectClass<IInstance>} */ destination,
+      /** @type {Tag} */ tag,
+    ) => {
       // console.log('Read text', path);
 
       /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageReadFileBinary, 'input'>} */
@@ -1044,14 +1226,18 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
       // console.log('addonTriggers', addonTriggers)
       // console.log('this', this)
 
-      this._currentTag = tag;
+      if (tag) {
+        this._currentTag = tag;
+      }
       await this._triggerAsync(C3.Plugins.pipelab.Cnds.OnAnyBinaryFileRead)
       await this._triggerAsync(C3.Plugins.pipelab.Cnds.OnBinaryFileRead)
       this._currentTag = ''
 
     }, this.unsupportedEngine)
+    _ReadBinaryFile = this._ReadBinaryFileBase
+    _ReadBinaryFileSync = this._ReadBinaryFileBase
 
-    _RenameFile = this.wrap(super._RenameFile, async (source, newFileName, overwrite) => {
+    _RenameFileBase = this.wrap(super._RenameFile, async (/** @type {string} */ source, /** @type {string} */ newFileName, /** @type {boolean} */ overwrite) => {
       const directory = posixPath.dirname(source);
       const newPath = posixPath.join(directory, newFileName);
 
@@ -1066,8 +1252,10 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
       }
       const result = await this.ws?.sendAndWaitForResponse(order)
     }, this.unsupportedEngine)
+    _RenameFile = this._RenameFileBase
+    _RenameFileSync = this._RenameFileBase
 
-    _RunFile = this.wrap(super._RunFile, async (command) => {
+    _RunFileBase = this.wrap(super._RunFile, async (/** @type {string} */ command) => {
       /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageRun, 'input'>} */
       const order = {
         url: '/run',
@@ -1079,8 +1267,10 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
 
       const answer = await this.ws?.sendAndWaitForResponse(order)
     }, this.unsupportedEngine)
+    _RunFile = this._RunFileBase
+    _RunFileSync = this._RunFileBase
 
-    _ShellOpen = this.wrap(super._ShellOpen, async (path) => {
+    _ShellOpenBase = this.wrap(super._ShellOpen, async (/** @type {string} */ path) => {
       /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageOpen, 'input'>} */
       const order = {
         url: '/open',
@@ -1091,8 +1281,10 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
 
       const answer = await this.ws?.sendAndWaitForResponse(order)
     }, this.unsupportedEngine)
+    _ShellOpen = this._ShellOpenBase
+    _ShellOpenSync = this._ShellOpenBase
 
-    _ExplorerOpen = this.wrap(super._ExplorerOpen, async (path) => {
+    _ExplorerOpenBase = this.wrap(super._ExplorerOpen, async (/** @type {string} */ path) => {
       /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageExplorerOpen, 'input'>} */
       const order = {
         url: '/show-in-explorer',
@@ -1103,9 +1295,11 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
 
       const answer = await this.ws?.sendAndWaitForResponse(order)
     }, this.unsupportedEngine)
+    _ExplorerOpen = this._ExplorerOpenBase
+    _ExplorerOpenSync = this._ExplorerOpenBase
 
     /**
-     * @param {IObjectClass<this>} objectClass
+     * @param {IObjectClass<IInstance>} objectClass
      * @return {IBinaryDataInstance | null} objectClass
      */
     __GetBinaryDataSdkInstance(objectClass) {
@@ -1122,7 +1316,7 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
       return target
     }
 
-    _WriteBinaryFile = this.wrap(super._WriteBinaryFile, async (tag, path, source) => {
+    _WriteBinaryFileBase = this.wrap(super._WriteBinaryFile, async (/** @type {string} */ path, /** @type {string} */ source) => {
       throw new Error('not supported')
       // console.log('tag', tag)
       // console.log('path', path)
@@ -1162,8 +1356,10 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
       //   this._currentTag = ''
       // }
     }, this.unsupportedEngine)
+    _WriteBinaryFile = this._WriteBinaryFileBase
+    _WriteBinaryFileSync = this._WriteBinaryFileBase
 
-    _FetchFileSize = this.wrap(super._FetchFileSize, async (path) => {
+    _FetchFileSizeBase = this.wrap(super._FetchFileSize, async (/** @type {string} */ path) => {
       /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageFileSize, 'input'>} */
       const order = {
         url: '/fs/file/size',
@@ -1180,21 +1376,37 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
       // console.log('answer', answer)
       this._fileSize = answer?.body.size ?? -1
     })
+    _FetchFileSize = this._FetchFileSizeBase
+    _FetchFileSizeSync = this._FetchFileSizeBase
 
-    _ActivateAchievement = this.wrap(super._ActivateAchievement, async (achievement) => {
-      /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').SteamRaw<'achievement', 'activate'>, 'input'>} */
-      const order = {
-        url: '/steam/raw',
-        body: {
-          namespace: 'achievement',
-          method: 'activate',
-          args: [achievement],
-        },
-      };
-      await this.ws?.sendAndWaitForResponse(order);
+    _ActivateAchievementBase = this.wrap(super._ActivateAchievement, async (/** @type {string} */ achievement, /** @type {Tag} */ tag) => {
+      console.log('tag', tag)
+      try {
+        /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').SteamRaw<'achievement', 'activate'>, 'input'>} */
+        const order = {
+          url: '/steam/raw',
+          body: {
+            namespace: 'achievement',
+            method: 'activate',
+            args: [achievement],
+          },
+        };
+        await this.ws?.sendAndWaitForResponse(order);
+        await this.trigger(tag, [
+          C3.Plugins.pipelab.Cnds.OnActivateAchievementSuccess,
+          C3.Plugins.pipelab.Cnds.OnAnyActivateAchievementSuccess
+        ])
+      } catch (e) {
+        await this.trigger(tag, [
+          C3.Plugins.pipelab.Cnds.OnActivateAchievementError,
+          C3.Plugins.pipelab.Cnds.OnAnyActivateAchievementError
+        ])
+      }
     }, this.unsupportedEngine)
+    _ActivateAchievement = this._ActivateAchievementBase
+    _ActivateAchievementSync = this._ActivateAchievementBase
 
-    _ClearAchievement = this.wrap(super._ClearAchievement, async (achievement) => {
+    _ClearAchievementBase = this.wrap(super._ClearAchievement, async (/** @type {string} */ achievement) => {
       /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').SteamRaw<'achievement', 'clear'>, 'input'>} */
       const order = {
         url: '/steam/raw',
@@ -1206,8 +1418,10 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
       };
       await this.ws?.sendAndWaitForResponse(order);
     }, this.unsupportedEngine)
+    _ClearAchievement = this._ClearAchievementBase
+    _ClearAchievementSync = this._ClearAchievementBase
 
-    _CheckAchievementActivationState = this.wrap(super._CheckAchievementActivationState, async (achievement) => {
+    _CheckAchievementActivationStateBase = this.wrap(super._CheckAchievementActivationState, async (/** @type {string} */ achievement) => {
       /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').SteamRaw<'achievement', 'isActivated'>, 'input'>} */
       const order = {
         url: '/steam/raw',
@@ -1223,8 +1437,10 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
 
       return data ?? false;
     }, () => false)
+    _CheckAchievementActivationState = this._CheckAchievementActivationStateBase
+    _CheckAchievementActivationStateSync = this._CheckAchievementActivationStateBase
 
-    _SetRichPresence = this.wrap(super._SetRichPresence, async (key, value) => {
+    _SetRichPresenceBase = this.wrap(super._SetRichPresence, async (/** @type {string} */ key, /** @type {string} */ value) => {
       /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').SteamRaw<'localplayer', 'setRichPresence'>, 'input'>} */
       const order = {
         url: '/steam/raw',
@@ -1236,8 +1452,510 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
       };
       await this.ws?.sendAndWaitForResponse(order);
     }, this.unsupportedEngine)
+    _SetRichPresence = this._SetRichPresenceBase
+    _SetRichPresenceSync = this._SetRichPresenceBase
 
-    // Cnds
+    // #region Cnds
+    _OnInitializeSuccess = this.wrap(super._OnInitializeSuccess, () => {
+      return true
+    })
+    _OnAnyInitializeSuccess = this.wrap(super._OnAnyInitializeSuccess, () => {
+      return true
+    })
+    _OnInitializeError = this.wrap(super._OnInitializeError, () => {
+      return true
+    })
+    _OnAnyInitializeError = this.wrap(super._OnAnyInitializeError, () => {
+      return true
+    })
+    _OnAppendFileSuccess = this.wrap(super._OnAppendFileSuccess, () => {
+      return true
+    })
+    _OnAnyAppendFileSuccess = this.wrap(super._OnAnyAppendFileSuccess, () => {
+      return true
+    })
+    _OnAppendFileError = this.wrap(super._OnAppendFileError, () => {
+      return true
+    })
+    _OnAnyAppendFileError = this.wrap(super._OnAnyAppendFileError, () => {
+      return true
+    })
+    _OnCopyFileSuccess = this.wrap(super._OnCopyFileSuccess, () => {
+      return true
+    })
+    _OnAnyCopyFileSuccess = this.wrap(super._OnAnyCopyFileSuccess, () => {
+      return true
+    })
+    _OnCopyFileError = this.wrap(super._OnCopyFileError, () => {
+      return true
+    })
+    _OnAnyCopyFileError = this.wrap(super._OnAnyCopyFileError, () => {
+      return true
+    })
+    _OnFetchFileSizeSuccess = this.wrap(super._OnFetchFileSizeSuccess, () => {
+      return true
+    })
+    _OnAnyFetchFileSizeSuccess = this.wrap(super._OnAnyFetchFileSizeSuccess, () => {
+      return true
+    })
+    _OnFetchFileSizeError = this.wrap(super._OnFetchFileSizeError, () => {
+      return true
+    })
+    _OnAnyFetchFileSizeError = this.wrap(super._OnAnyFetchFileSizeError, () => {
+      return true
+    })
+    _OnCreateFolderSuccess = this.wrap(super._OnCreateFolderSuccess, () => {
+      return true
+    })
+    _OnAnyCreateFolderSuccess = this.wrap(super._OnAnyCreateFolderSuccess, () => {
+      return true
+    })
+    _OnCreateFolderError = this.wrap(super._OnCreateFolderError, () => {
+      return true
+    })
+    _OnAnyCreateFolderError = this.wrap(super._OnAnyCreateFolderError, () => {
+      return true
+    })
+    _OnDeleteFileSuccess = this.wrap(super._OnDeleteFileSuccess, () => {
+      return true
+    })
+    _OnAnyDeleteFileSuccess = this.wrap(super._OnAnyDeleteFileSuccess, () => {
+      return true
+    })
+    _OnDeleteFileError = this.wrap(super._OnDeleteFileError, () => {
+      return true
+    })
+    _OnAnyDeleteFileError = this.wrap(super._OnAnyDeleteFileError, () => {
+      return true
+    })
+    _OnListFilesSuccess = this.wrap(super._OnListFilesSuccess, () => {
+      return true
+    })
+    _OnAnyListFilesSuccess = this.wrap(super._OnAnyListFilesSuccess, () => {
+      return true
+    })
+    _OnListFilesError = this.wrap(super._OnListFilesError, () => {
+      return true
+    })
+    _OnAnyListFilesError = this.wrap(super._OnAnyListFilesError, () => {
+      return true
+    })
+    _OnMoveFileSuccess = this.wrap(super._OnMoveFileSuccess, () => {
+      return true
+    })
+    _OnAnyMoveFileSuccess = this.wrap(super._OnAnyMoveFileSuccess, () => {
+      return true
+    })
+    _OnMoveFileError = this.wrap(super._OnMoveFileError, () => {
+      return true
+    })
+    _OnAnyMoveFileError = this.wrap(super._OnAnyMoveFileError, () => {
+      return true
+    })
+    _OnOpenBrowserSuccess = this.wrap(super._OnOpenBrowserSuccess, () => {
+      return true
+    })
+    _OnAnyOpenBrowserSuccess = this.wrap(super._OnAnyOpenBrowserSuccess, () => {
+      return true
+    })
+    _OnOpenBrowserError = this.wrap(super._OnOpenBrowserError, () => {
+      return true
+    })
+    _OnAnyOpenBrowserError = this.wrap(super._OnAnyOpenBrowserError, () => {
+      return true
+    })
+    _OnReadBinaryFileSuccess = this.wrap(super._OnReadBinaryFileSuccess, () => {
+      return true
+    })
+    _OnAnyReadBinaryFileSuccess = this.wrap(super._OnAnyReadBinaryFileSuccess, () => {
+      return true
+    })
+    _OnReadBinaryFileError = this.wrap(super._OnReadBinaryFileError, () => {
+      return true
+    })
+    _OnAnyReadBinaryFileError = this.wrap(super._OnAnyReadBinaryFileError, () => {
+      return true
+    })
+    _OnRenameFileSuccess = this.wrap(super._OnRenameFileSuccess, () => {
+      return true
+    })
+    _OnAnyRenameFileSuccess = this.wrap(super._OnAnyRenameFileSuccess, () => {
+      return true
+    })
+    _OnRenameFileError = this.wrap(super._OnRenameFileError, () => {
+      return true
+    })
+    _OnAnyRenameFileError = this.wrap(super._OnAnyRenameFileError, () => {
+      return true
+    })
+    _OnRunFileSuccess = this.wrap(super._OnRunFileSuccess, () => {
+      return true
+    })
+    _OnAnyRunFileSuccess = this.wrap(super._OnAnyRunFileSuccess, () => {
+      return true
+    })
+    _OnRunFileError = this.wrap(super._OnRunFileError, () => {
+      return true
+    })
+    _OnAnyRunFileError = this.wrap(super._OnAnyRunFileError, () => {
+      return true
+    })
+    _OnShellOpenSuccess = this.wrap(super._OnShellOpenSuccess, () => {
+      return true
+    })
+    _OnAnyShellOpenSuccess = this.wrap(super._OnAnyShellOpenSuccess, () => {
+      return true
+    })
+    _OnShellOpenError = this.wrap(super._OnShellOpenError, () => {
+      return true
+    })
+    _OnAnyShellOpenError = this.wrap(super._OnAnyShellOpenError, () => {
+      return true
+    })
+    _OnExplorerOpenSuccess = this.wrap(super._OnExplorerOpenSuccess, () => {
+      return true
+    })
+    _OnAnyExplorerOpenSuccess = this.wrap(super._OnAnyExplorerOpenSuccess, () => {
+      return true
+    })
+    _OnExplorerOpenError = this.wrap(super._OnExplorerOpenError, () => {
+      return true
+    })
+    _OnAnyExplorerOpenError = this.wrap(super._OnAnyExplorerOpenError, () => {
+      return true
+    })
+    _OnWriteBinaryFileSuccess = this.wrap(super._OnWriteBinaryFileSuccess, () => {
+      return true
+    })
+    _OnAnyWriteBinaryFileSuccess = this.wrap(super._OnAnyWriteBinaryFileSuccess, () => {
+      return true
+    })
+    _OnWriteBinaryFileError = this.wrap(super._OnWriteBinaryFileError, () => {
+      return true
+    })
+    _OnAnyWriteBinaryFileError = this.wrap(super._OnAnyWriteBinaryFileError, () => {
+      return true
+    })
+    _OnWriteTextFileSuccess = this.wrap(super._OnWriteTextFileSuccess, () => {
+      return true
+    })
+    _OnAnyWriteTextFileSuccess = this.wrap(super._OnAnyWriteTextFileSuccess, () => {
+      return true
+    })
+    _OnWriteTextFileError = this.wrap(super._OnWriteTextFileError, () => {
+      return true
+    })
+    _OnAnyWriteTextFileError = this.wrap(super._OnAnyWriteTextFileError, () => {
+      return true
+    })
+    _OnWriteTextSuccess = this.wrap(super._OnWriteTextSuccess, () => {
+      return true
+    })
+    _OnAnyWriteTextSuccess = this.wrap(super._OnAnyWriteTextSuccess, () => {
+      return true
+    })
+    _OnWriteTextError = this.wrap(super._OnWriteTextError, () => {
+      return true
+    })
+    _OnAnyWriteTextError = this.wrap(super._OnAnyWriteTextError, () => {
+      return true
+    })
+    _OnReadTextFileSuccess = this.wrap(super._OnReadTextFileSuccess, () => {
+      return true
+    })
+    _OnAnyReadTextFileSuccess = this.wrap(super._OnAnyReadTextFileSuccess, () => {
+      return true
+    })
+    _OnReadTextFileError = this.wrap(super._OnReadTextFileError, () => {
+      return true
+    })
+    _OnAnyReadTextFileError = this.wrap(super._OnAnyReadTextFileError, () => {
+      return true
+    })
+    _OnCheckIfPathExistSuccess = this.wrap(super._OnCheckIfPathExistSuccess, () => {
+      return true
+    })
+    _OnAnyCheckIfPathExistSuccess = this.wrap(super._OnAnyCheckIfPathExistSuccess, () => {
+      return true
+    })
+    _OnCheckIfPathExistError = this.wrap(super._OnCheckIfPathExistError, () => {
+      return true
+    })
+    _OnAnyCheckIfPathExistError = this.wrap(super._OnAnyCheckIfPathExistError, () => {
+      return true
+    })
+    _OnShowFolderDialogSuccess = this.wrap(super._OnShowFolderDialogSuccess, () => {
+      return true
+    })
+    _OnAnyShowFolderDialogSuccess = this.wrap(super._OnAnyShowFolderDialogSuccess, () => {
+      return true
+    })
+    _OnShowFolderDialogError = this.wrap(super._OnShowFolderDialogError, () => {
+      return true
+    })
+    _OnAnyShowFolderDialogError = this.wrap(super._OnAnyShowFolderDialogError, () => {
+      return true
+    })
+    _OnShowOpenDialogSuccess = this.wrap(super._OnShowOpenDialogSuccess, () => {
+      return true
+    })
+    _OnAnyShowOpenDialogSuccess = this.wrap(super._OnAnyShowOpenDialogSuccess, () => {
+      return true
+    })
+    _OnShowOpenDialogError = this.wrap(super._OnShowOpenDialogError, () => {
+      return true
+    })
+    _OnAnyShowOpenDialogError = this.wrap(super._OnAnyShowOpenDialogError, () => {
+      return true
+    })
+    _OnShowSaveDialogSuccess = this.wrap(super._OnShowSaveDialogSuccess, () => {
+      return true
+    })
+    _OnAnyShowSaveDialogSuccess = this.wrap(super._OnAnyShowSaveDialogSuccess, () => {
+      return true
+    })
+    _OnShowSaveDialogError = this.wrap(super._OnShowSaveDialogError, () => {
+      return true
+    })
+    _OnAnyShowSaveDialogError = this.wrap(super._OnAnyShowSaveDialogError, () => {
+      return true
+    })
+    _OnMaximizeSuccess = this.wrap(super._OnMaximizeSuccess, () => {
+      return true
+    })
+    _OnAnyMaximizeSuccess = this.wrap(super._OnAnyMaximizeSuccess, () => {
+      return true
+    })
+    _OnMaximizeError = this.wrap(super._OnMaximizeError, () => {
+      return true
+    })
+    _OnAnyMaximizeError = this.wrap(super._OnAnyMaximizeError, () => {
+      return true
+    })
+    _OnMinimizeSuccess = this.wrap(super._OnMinimizeSuccess, () => {
+      return true
+    })
+    _OnAnyMinimizeSuccess = this.wrap(super._OnAnyMinimizeSuccess, () => {
+      return true
+    })
+    _OnMinimizeError = this.wrap(super._OnMinimizeError, () => {
+      return true
+    })
+    _OnAnyMinimizeError = this.wrap(super._OnAnyMinimizeError, () => {
+      return true
+    })
+    _OnRestoreSuccess = this.wrap(super._OnRestoreSuccess, () => {
+      return true
+    })
+    _OnAnyRestoreSuccess = this.wrap(super._OnAnyRestoreSuccess, () => {
+      return true
+    })
+    _OnRestoreError = this.wrap(super._OnRestoreError, () => {
+      return true
+    })
+    _OnAnyRestoreError = this.wrap(super._OnAnyRestoreError, () => {
+      return true
+    })
+    _OnRequestAttentionSuccess = this.wrap(super._OnRequestAttentionSuccess, () => {
+      return true
+    })
+    _OnAnyRequestAttentionSuccess = this.wrap(super._OnAnyRequestAttentionSuccess, () => {
+      return true
+    })
+    _OnRequestAttentionError = this.wrap(super._OnRequestAttentionError, () => {
+      return true
+    })
+    _OnAnyRequestAttentionError = this.wrap(super._OnAnyRequestAttentionError, () => {
+      return true
+    })
+    _OnSetAlwaysOnTopSuccess = this.wrap(super._OnSetAlwaysOnTopSuccess, () => {
+      return true
+    })
+    _OnAnySetAlwaysOnTopSuccess = this.wrap(super._OnAnySetAlwaysOnTopSuccess, () => {
+      return true
+    })
+    _OnSetAlwaysOnTopError = this.wrap(super._OnSetAlwaysOnTopError, () => {
+      return true
+    })
+    _OnAnySetAlwaysOnTopError = this.wrap(super._OnAnySetAlwaysOnTopError, () => {
+      return true
+    })
+    _OnSetHeightSuccess = this.wrap(super._OnSetHeightSuccess, () => {
+      return true
+    })
+    _OnAnySetHeightSuccess = this.wrap(super._OnAnySetHeightSuccess, () => {
+      return true
+    })
+    _OnSetHeightError = this.wrap(super._OnSetHeightError, () => {
+      return true
+    })
+    _OnAnySetHeightError = this.wrap(super._OnAnySetHeightError, () => {
+      return true
+    })
+    _OnSetMaximumSizeSuccess = this.wrap(super._OnSetMaximumSizeSuccess, () => {
+      return true
+    })
+    _OnAnySetMaximumSizeSuccess = this.wrap(super._OnAnySetMaximumSizeSuccess, () => {
+      return true
+    })
+    _OnSetMaximumSizeError = this.wrap(super._OnSetMaximumSizeError, () => {
+      return true
+    })
+    _OnAnySetMaximumSizeError = this.wrap(super._OnAnySetMaximumSizeError, () => {
+      return true
+    })
+    _OnSetMinimumSizeSuccess = this.wrap(super._OnSetMinimumSizeSuccess, () => {
+      return true
+    })
+    _OnAnySetMinimumSizeSuccess = this.wrap(super._OnAnySetMinimumSizeSuccess, () => {
+      return true
+    })
+    _OnSetMinimumSizeError = this.wrap(super._OnSetMinimumSizeError, () => {
+      return true
+    })
+    _OnAnySetMinimumSizeError = this.wrap(super._OnAnySetMinimumSizeError, () => {
+      return true
+    })
+    _OnSetResizableSuccess = this.wrap(super._OnSetResizableSuccess, () => {
+      return true
+    })
+    _OnAnySetResizableSuccess = this.wrap(super._OnAnySetResizableSuccess, () => {
+      return true
+    })
+    _OnSetResizableError = this.wrap(super._OnSetResizableError, () => {
+      return true
+    })
+    _OnAnySetResizableError = this.wrap(super._OnAnySetResizableError, () => {
+      return true
+    })
+    _OnSetTitleSuccess = this.wrap(super._OnSetTitleSuccess, () => {
+      return true
+    })
+    _OnAnySetTitleSuccess = this.wrap(super._OnAnySetTitleSuccess, () => {
+      return true
+    })
+    _OnSetTitleError = this.wrap(super._OnSetTitleError, () => {
+      return true
+    })
+    _OnAnySetTitleError = this.wrap(super._OnAnySetTitleError, () => {
+      return true
+    })
+    _OnSetWidthSuccess = this.wrap(super._OnSetWidthSuccess, () => {
+      return true
+    })
+    _OnAnySetWidthSuccess = this.wrap(super._OnAnySetWidthSuccess, () => {
+      return true
+    })
+    _OnSetWidthError = this.wrap(super._OnSetWidthError, () => {
+      return true
+    })
+    _OnAnySetWidthError = this.wrap(super._OnAnySetWidthError, () => {
+      return true
+    })
+    _OnSetXSuccess = this.wrap(super._OnSetXSuccess, () => {
+      return true
+    })
+    _OnAnySetXSuccess = this.wrap(super._OnAnySetXSuccess, () => {
+      return true
+    })
+    _OnSetXError = this.wrap(super._OnSetXError, () => {
+      return true
+    })
+    _OnAnySetXError = this.wrap(super._OnAnySetXError, () => {
+      return true
+    })
+    _OnSetYSuccess = this.wrap(super._OnSetYSuccess, () => {
+      return true
+    })
+    _OnAnySetYSuccess = this.wrap(super._OnAnySetYSuccess, () => {
+      return true
+    })
+    _OnSetYError = this.wrap(super._OnSetYError, () => {
+      return true
+    })
+    _OnAnySetYError = this.wrap(super._OnAnySetYError, () => {
+      return true
+    })
+    _OnShowDevToolsSuccess = this.wrap(super._OnShowDevToolsSuccess, () => {
+      return true
+    })
+    _OnAnyShowDevToolsSuccess = this.wrap(super._OnAnyShowDevToolsSuccess, () => {
+      return true
+    })
+    _OnShowDevToolsError = this.wrap(super._OnShowDevToolsError, () => {
+      return true
+    })
+    _OnAnyShowDevToolsError = this.wrap(super._OnAnyShowDevToolsError, () => {
+      return true
+    })
+    _OnUnmaximizeSuccess = this.wrap(super._OnUnmaximizeSuccess, () => {
+      return true
+    })
+    _OnAnyUnmaximizeSuccess = this.wrap(super._OnAnyUnmaximizeSuccess, () => {
+      return true
+    })
+    _OnUnmaximizeError = this.wrap(super._OnUnmaximizeError, () => {
+      return true
+    })
+    _OnAnyUnmaximizeError = this.wrap(super._OnAnyUnmaximizeError, () => {
+      return true
+    })
+    _OnSetFullscreenSuccess = this.wrap(super._OnSetFullscreenSuccess, () => {
+      return true
+    })
+    _OnAnySetFullscreenSuccess = this.wrap(super._OnAnySetFullscreenSuccess, () => {
+      return true
+    })
+    _OnSetFullscreenError = this.wrap(super._OnSetFullscreenError, () => {
+      return true
+    })
+    _OnAnySetFullscreenError = this.wrap(super._OnAnySetFullscreenError, () => {
+      return true
+    })
+
+    _OnActivateAchievementSuccess = this.wrap(super._OnActivateAchievementSuccess, (/** @type {Tag} */ tag) => this._currentTag === tag)
+    _OnAnyActivateAchievementSuccess = this.wrap(super._OnAnyActivateAchievementSuccess, () => true)
+    _OnActivateAchievementError = this.wrap(super._OnActivateAchievementError, (/** @type {Tag} */ tag) => this._currentTag === tag)
+    _OnAnyActivateAchievementError = this.wrap(super._OnAnyActivateAchievementError, () => true)
+
+    _OnClearAchievementSuccess = this.wrap(super._OnClearAchievementSuccess, () => {
+      return true
+    })
+    _OnAnyClearAchievementSuccess = this.wrap(super._OnAnyClearAchievementSuccess, () => {
+      return true
+    })
+    _OnClearAchievementError = this.wrap(super._OnClearAchievementError, () => {
+      return true
+    })
+    _OnAnyClearAchievementError = this.wrap(super._OnAnyClearAchievementError, () => {
+      return true
+    })
+    _OnCheckAchievementActivationStateSuccess = this.wrap(super._OnCheckAchievementActivationStateSuccess, () => {
+      return true
+    })
+    _OnAnyCheckAchievementActivationStateSuccess = this.wrap(super._OnAnyCheckAchievementActivationStateSuccess, () => {
+      return true
+    })
+    _OnCheckAchievementActivationStateError = this.wrap(super._OnCheckAchievementActivationStateError, () => {
+      return true
+    })
+    _OnAnyCheckAchievementActivationStateError = this.wrap(super._OnAnyCheckAchievementActivationStateError, () => {
+      return true
+    })
+    _OnSetRichPresenceSuccess = this.wrap(super._OnSetRichPresenceSuccess, () => {
+      return true
+    })
+    _OnAnySetRichPresenceSuccess = this.wrap(super._OnAnySetRichPresenceSuccess, () => {
+      return true
+    })
+    _OnSetRichPresenceError = this.wrap(super._OnSetRichPresenceError, () => {
+      return true
+    })
+    _OnAnySetRichPresenceError = this.wrap(super._OnAnySetRichPresenceError, () => {
+      return true
+    })
+
+    // #region deprecated
 
     _OnFolderDialogCancel = this.wrap(super._OnFolderDialogCancel, () => {
       return true
@@ -1297,8 +2015,9 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
     _IsFullScreen = this.wrap(super._IsFullScreen, (state) => {
       return this._fullscreenState === state
     }, () => false)
+    // #endregion
 
-    // Exps
+    // #region Exps
 
     _UserFolder = this.wrap(super._UserFolder, () => {
       // console.log('this', this)
@@ -1419,11 +2138,11 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
     })
 
     _ListAt = this.wrap(super._ListAt, (index) => {
-      return this._fileList[index]?.path ?? ''
+      return this._ListFilesResultValue[index]?.path ?? ''
     })
 
     _ListCount = this.wrap(super._ListCount, () => {
-      return this._fileList.length
+      return this._ListFilesResultValue.length
     })
 
     _ProjectFilesFolder = this.wrap(super._ProjectFilesFolder, () => {
@@ -1435,7 +2154,7 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
     })
 
     _ReadFile = this.wrap(super._ReadFile, () => {
-      return this._readFile ?? ''
+      return this._ReadTextFileResultValue ?? ''
     })
 
     _WindowHeight = this.wrap(super._WindowHeight, () => {
@@ -1470,6 +2189,284 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
 
     _FullscreenState = this.wrap(super._FullscreenState, () => {
       return this._fullscreenState
+    })
+
+    _CurrentPlatform = this.wrap(super._CurrentPlatform, () => {
+      return this._platform
+    })
+    _CurrentArchitecture = this.wrap(super._CurrentArchitecture, () => {
+      return this._arch
+    })
+    _SteamAccountId = this.wrap(super._SteamAccountId, () => {
+      return this._steam_SteamId.accountId
+    })
+    _SteamId32 = this.wrap(super._SteamId32, () => {
+      return this._steam_SteamId.steamId32
+    })
+    _SteamId64 = this.wrap(super._SteamId64, () => {
+      return this._steam_SteamId.steamId64
+    })
+    _SteamUsername = this.wrap(super._SteamUsername, () => {
+      return this._steam_Name
+    })
+    _SteamLevel = this.wrap(super._SteamLevel, () => {
+      return this._steam_Level
+    })
+    _SteamIpCountry = this.wrap(super._SteamIpCountry, () => {
+      return this._steam_IpCountry
+    })
+
+    _InitializeError = this.wrap(super._InitializeError, () => {
+      return this._InitializeErrorValue
+    })
+    _InitializeResult = this.wrap(super._InitializeResult, () => {
+      return this._InitializeResultValue
+    })
+    _AppendFileError = this.wrap(super._AppendFileError, () => {
+      return this._AppendFileErrorValue
+    })
+    _AppendFileResult = this.wrap(super._AppendFileResult, () => {
+      return this._AppendFileResultValue
+    })
+    _CopyFileError = this.wrap(super._CopyFileError, () => {
+      return this._CopyFileErrorValue
+    })
+    _CopyFileResult = this.wrap(super._CopyFileResult, () => {
+      return this._CopyFileResultValue
+    })
+    _FetchFileSizeError = this.wrap(super._FetchFileSizeError, () => {
+      return this._FetchFileSizeErrorValue
+    })
+    _FetchFileSizeResult = this.wrap(super._FetchFileSizeResult, () => {
+      return this._FetchFileSizeResultValue
+    })
+    _CreateFolderError = this.wrap(super._CreateFolderError, () => {
+      return this._CreateFolderErrorValue
+    })
+    _CreateFolderResult = this.wrap(super._CreateFolderResult, () => {
+      return this._CreateFolderResultValue
+    })
+    _DeleteFileError = this.wrap(super._DeleteFileError, () => {
+      return this._DeleteFileErrorValue
+    })
+    _DeleteFileResult = this.wrap(super._DeleteFileResult, () => {
+      return this._DeleteFileResultValue
+    })
+    _ListFilesError = this.wrap(super._ListFilesError, () => {
+      return this._ListFilesErrorValue
+    })
+    _ListFilesResult = this.wrap(super._ListFilesResult, () => {
+      return this._ListFilesResultValue
+    })
+    _MoveFileError = this.wrap(super._MoveFileError, () => {
+      return this._MoveFileErrorValue
+    })
+    _MoveFileResult = this.wrap(super._MoveFileResult, () => {
+      return this._MoveFileResultValue
+    })
+    _OpenBrowserError = this.wrap(super._OpenBrowserError, () => {
+      return this._OpenBrowserErrorValue
+    })
+    _OpenBrowserResult = this.wrap(super._OpenBrowserResult, () => {
+      return this._OpenBrowserResultValue
+    })
+    _ReadBinaryFileError = this.wrap(super._ReadBinaryFileError, () => {
+      return this._ReadBinaryFileErrorValue
+    })
+    _ReadBinaryFileResult = this.wrap(super._ReadBinaryFileResult, () => {
+      return this._ReadBinaryFileResultValue
+    })
+    _RenameFileError = this.wrap(super._RenameFileError, () => {
+      return this._RenameFileErrorValue
+    })
+    _RenameFileResult = this.wrap(super._RenameFileResult, () => {
+      return this._RenameFileResultValue
+    })
+    _RunFileError = this.wrap(super._RunFileError, () => {
+      return this._RunFileErrorValue
+    })
+    _RunFileResult = this.wrap(super._RunFileResult, () => {
+      return this._RunFileResultValue
+    })
+    _ShellOpenError = this.wrap(super._ShellOpenError, () => {
+      return this._ShellOpenErrorValue
+    })
+    _ShellOpenResult = this.wrap(super._ShellOpenResult, () => {
+      return this._ShellOpenResultValue
+    })
+    _ExplorerOpenError = this.wrap(super._ExplorerOpenError, () => {
+      return this._ExplorerOpenErrorValue
+    })
+    _ExplorerOpenResult = this.wrap(super._ExplorerOpenResult, () => {
+      return this._ExplorerOpenResultValue
+    })
+    _WriteBinaryFileError = this.wrap(super._WriteBinaryFileError, () => {
+      return this._WriteBinaryFileErrorValue
+    })
+    _WriteBinaryFileResult = this.wrap(super._WriteBinaryFileResult, () => {
+      return this._WriteBinaryFileResultValue
+    })
+    _WriteTextFileError = this.wrap(super._WriteTextFileError, () => {
+      return this._WriteTextFileErrorValue
+    })
+    _WriteTextFileResult = this.wrap(super._WriteTextFileResult, () => {
+      return this._WriteTextFileResultValue
+    })
+    _WriteTextError = this.wrap(super._WriteTextError, () => {
+      return this._WriteTextErrorValue
+    })
+    _WriteTextResult = this.wrap(super._WriteTextResult, () => {
+      return this._WriteTextResultValue
+    })
+    _ReadTextFileError = this.wrap(super._ReadTextFileError, () => {
+      return this._ReadTextFileErrorValue
+    })
+    _ReadTextFileResult = this.wrap(super._ReadTextFileResult, () => {
+      return this._ReadTextFileResultValue
+    })
+    _CheckIfPathExistError = this.wrap(super._CheckIfPathExistError, () => {
+      return this._CheckIfPathExistErrorValue
+    })
+    _CheckIfPathExistResult = this.wrap(super._CheckIfPathExistResult, () => {
+      return this._CheckIfPathExistResultValue
+    })
+    _ShowFolderDialogError = this.wrap(super._ShowFolderDialogError, () => {
+      return this._ShowFolderDialogErrorValue
+    })
+    _ShowFolderDialogResult = this.wrap(super._ShowFolderDialogResult, () => {
+      return this._ShowFolderDialogResultValue
+    })
+    _ShowOpenDialogError = this.wrap(super._ShowOpenDialogError, () => {
+      return this._ShowOpenDialogErrorValue
+    })
+    _ShowOpenDialogResult = this.wrap(super._ShowOpenDialogResult, () => {
+      return this._ShowOpenDialogResultValue
+    })
+    _ShowSaveDialogError = this.wrap(super._ShowSaveDialogError, () => {
+      return this._ShowSaveDialogErrorValue
+    })
+    _ShowSaveDialogResult = this.wrap(super._ShowSaveDialogResult, () => {
+      return this._ShowSaveDialogResultValue
+    })
+    _MaximizeError = this.wrap(super._MaximizeError, () => {
+      return this._MaximizeErrorValue
+    })
+    _MaximizeResult = this.wrap(super._MaximizeResult, () => {
+      return this._MaximizeResultValue
+    })
+    _MinimizeError = this.wrap(super._MinimizeError, () => {
+      return this._MinimizeErrorValue
+    })
+    _MinimizeResult = this.wrap(super._MinimizeResult, () => {
+      return this._MinimizeResultValue
+    })
+    _RestoreError = this.wrap(super._RestoreError, () => {
+      return this._RestoreErrorValue
+    })
+    _RestoreResult = this.wrap(super._RestoreResult, () => {
+      return this._RestoreResultValue
+    })
+    _RequestAttentionError = this.wrap(super._RequestAttentionError, () => {
+      return this._RequestAttentionErrorValue
+    })
+    _RequestAttentionResult = this.wrap(super._RequestAttentionResult, () => {
+      return this._RequestAttentionResultValue
+    })
+    _SetAlwaysOnTopError = this.wrap(super._SetAlwaysOnTopError, () => {
+      return this._SetAlwaysOnTopErrorValue
+    })
+    _SetAlwaysOnTopResult = this.wrap(super._SetAlwaysOnTopResult, () => {
+      return this._SetAlwaysOnTopResultValue
+    })
+    _SetHeightError = this.wrap(super._SetHeightError, () => {
+      return this._SetHeightErrorValue
+    })
+    _SetHeightResult = this.wrap(super._SetHeightResult, () => {
+      return this._SetHeightResultValue
+    })
+    _SetMaximumSizeError = this.wrap(super._SetMaximumSizeError, () => {
+      return this._SetMaximumSizeErrorValue
+    })
+    _SetMaximumSizeResult = this.wrap(super._SetMaximumSizeResult, () => {
+      return this._SetMaximumSizeResultValue
+    })
+    _SetMinimumSizeError = this.wrap(super._SetMinimumSizeError, () => {
+      return this._SetMinimumSizeErrorValue
+    })
+    _SetMinimumSizeResult = this.wrap(super._SetMinimumSizeResult, () => {
+      return this._SetMinimumSizeResultValue
+    })
+    _SetResizableError = this.wrap(super._SetResizableError, () => {
+      return this._SetResizableErrorValue
+    })
+    _SetResizableResult = this.wrap(super._SetResizableResult, () => {
+      return this._SetResizableResultValue
+    })
+    _SetTitleError = this.wrap(super._SetTitleError, () => {
+      return this._SetTitleErrorValue
+    })
+    _SetTitleResult = this.wrap(super._SetTitleResult, () => {
+      return this._SetTitleResultValue
+    })
+    _SetWidthError = this.wrap(super._SetWidthError, () => {
+      return this._SetWidthErrorValue
+    })
+    _SetWidthResult = this.wrap(super._SetWidthResult, () => {
+      return this._SetWidthResultValue
+    })
+    _SetXError = this.wrap(super._SetXError, () => {
+      return this._SetXErrorValue
+    })
+    _SetXResult = this.wrap(super._SetXResult, () => {
+      return this._SetXResultValue
+    })
+    _SetYError = this.wrap(super._SetYError, () => {
+      return this._SetYErrorValue
+    })
+    _SetYResult = this.wrap(super._SetYResult, () => {
+      return this._SetYResultValue
+    })
+    _ShowDevToolsError = this.wrap(super._ShowDevToolsError, () => {
+      return this._ShowDevToolsErrorValue
+    })
+    _ShowDevToolsResult = this.wrap(super._ShowDevToolsResult, () => {
+      return this._ShowDevToolsResultValue
+    })
+    _UnmaximizeError = this.wrap(super._UnmaximizeError, () => {
+      return this._UnmaximizeErrorValue
+    })
+    _UnmaximizeResult = this.wrap(super._UnmaximizeResult, () => {
+      return this._UnmaximizeResultValue
+    })
+    _SetFullscreenError = this.wrap(super._SetFullscreenError, () => {
+      return this._SetFullscreenErrorValue
+    })
+    _SetFullscreenResult = this.wrap(super._SetFullscreenResult, () => {
+      return this._SetFullscreenResultValue
+    })
+    _ActivateAchievementError = this.wrap(super._ActivateAchievementError, () => {
+      return this._ActivateAchievementErrorValue
+    })
+    _ActivateAchievementResult = this.wrap(super._ActivateAchievementResult, () => {
+      return this._ActivateAchievementResultValue
+    })
+    _ClearAchievementError = this.wrap(super._ClearAchievementError, () => {
+      return this._ClearAchievementErrorValue
+    })
+    _ClearAchievementResult = this.wrap(super._ClearAchievementResult, () => {
+      return this._ClearAchievementResultValue
+    })
+    _CheckAchievementActivationStateError = this.wrap(super._CheckAchievementActivationStateError, () => {
+      return this._CheckAchievementActivationStateErrorValue
+    })
+    _CheckAchievementActivationStateResult = this.wrap(super._CheckAchievementActivationStateResult, () => {
+      return this._CheckAchievementActivationStateResultValue
+    })
+    _SetRichPresenceError = this.wrap(super._SetRichPresenceError, () => {
+      return this._SetRichPresenceErrorValue
+    })
+    _SetRichPresenceResult = this.wrap(super._SetRichPresenceResult, () => {
+      return this._SetRichPresenceResultValue
     })
 
     //
