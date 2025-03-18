@@ -5,7 +5,7 @@ A plugin that integrate with Pipelab <br>
 Author: Armaldio <br>
 Website: https://github.com/CynToolkit/construct-plugin <br>
 Addon Url: https://github.com/CynToolkit/construct-plugin <br>
-Download Latest Version : [Version: 1.9.1](https://github.com/CynToolkit/construct-plugin/releases/latest) <br>
+Download Latest Version : [Version: 2.0.0](https://github.com/CynToolkit/construct-plugin/releases/latest) <br>
 <sub>Made using [c3ide2-framework](https://github.com/ConstructFund/c3ide2-framework) </sub><br>
 
 ## Table of Contents
@@ -309,20 +309,7 @@ The main files you may want to look at would be instance.js
 | On any "SetRichPresence" error | Trigger when any of the "SetRichPresence" failed to execute. |  |
 | Is engine | Return true if the engine running the app is the one selected | Engine *(combo)* <br> |
 | Is full screen | Returns true if the window is in full screen mode. | State *(combo)* <br> |
-| Last checked path exists | Return 'true' if the last checked path exists. 'false' otherwise |  |
-| On folder dialog cancel | Triggered when the folder dialog is canceled |  |
-| On folder dialog ok | Triggered after a folder chosen from a folder dialog |  |
-| On open dialog cancel | Triggered when the open dialog is canceled |  |
-| On open dialog ok | Triggered after a file chosen from a open dialog |  |
-| On save dialog cancel | Triggered when the save dialog is canceled |  |
-| On save dialog ok | Triggered after a file chosen from a save dialog |  |
-| On any binary file read | Triggered when any binary file read completes. The 'FileTag' expression identifies the action. |  |
-| On any binary file written | Triggered when any binary file write completes. The 'FileTag' expression identifies the action. |  |
-| On binary file read | Triggered when binary file read completes. The data is then available in the Binary Data object. | Tag *(string)* <br> |
-| On binary file written | Triggered when a binary file write completes. | Tag *(string)* <br> |
-| On file dropped | Triggered when the user drag-and-drops a file to the window |  |
-| On file system error | Triggered when a file operation fails. |  |
-| On path verification | Triggered when a file verification result is available. | Path *(string)* <br>Tag *(string)* <br> |
+| Last checked path exists | Returns true if the last checked path exists. |  |
 
 
 ---
@@ -415,12 +402,8 @@ The main files you may want to look at would be instance.js
 | SetRichPresenceResult | The result of the "SetRichPresence last call" | string |  | 
 | ArgumentAt | Get the argument at the given index. | string | Index *(number)* <br> | 
 | ArgumentCount | Get the number of arguments. | number |  | 
-| ChosenPath | Return the chosen path after a file dialog. | string |  | 
 | AppFolderURL | Return the URL of the folder of the current app. | string |  | 
 | DroppedFile | Return the dropped file after a file drop. | string |  | 
-| FileError | Return the error message after a file operation fails. | string |  | 
-| FileSize | Return the size of the file. | number |  | 
-| FileTag | Return the tag of the action. | string |  | 
 | ListAt | Get the file at the given index. | string | Index *(number)* <br> | 
 | ListCount | Get the number of files in the folder. | number |  | 
 | ProjectFilesFolder | Return the folder of the project files. | string |  | 

@@ -1,7 +1,0 @@
-{
-    "i18n-ally.localesPaths": [
-        "export/lang",
-        "export-sdk1/lang",
-        "export-sdk2/lang"
-    ]
-}
