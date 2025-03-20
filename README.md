@@ -133,6 +133,8 @@ The main files you may want to look at would be instance.js
 | Check achievement activation state | Check the activation state of a steam achievement | Achievement             *(string)* <br> |
 | Set rich presence (synchronous) | Set the rich presence of the local player. (synchronous) | Key             *(string)* <br>Value             *(string)* <br>Tag             *(string)* <br> |
 | Set rich presence | Set the rich presence of the local player. | Key             *(string)* <br>Value             *(string)* <br> |
+| Set activity (synchronous) | Set the discord activity (aka Rich presence). (synchronous) | Details             *(string)* <br>State             *(string)* <br>Start Timestamp             *(string)* <br>Large image key             *(string)* <br>Large image text             *(string)* <br>Small image key             *(string)* <br>Small image text             *(string)* <br>Tag             *(string)* <br> |
+| Set activity | Set the discord activity (aka Rich presence). | Details             *(string)* <br>State             *(string)* <br>Start Timestamp             *(string)* <br>Large image key             *(string)* <br>Large image text             *(string)* <br>Small image key             *(string)* <br>Small image text             *(string)* <br> |
 
 
 ---
@@ -307,6 +309,10 @@ The main files you may want to look at would be instance.js
 | On any "SetRichPresence" success | Trigger when any of the "SetRichPresence" are executed with success. |  |
 | On "SetRichPresence" error | Trigger when the "SetRichPresence" failed to execute. | Tag *(string)* <br> |
 | On any "SetRichPresence" error | Trigger when any of the "SetRichPresence" failed to execute. |  |
+| On "DiscordSetActivity" success | Trigger when the "DiscordSetActivity" is executed with success. | Tag *(string)* <br> |
+| On any "DiscordSetActivity" success | Trigger when any of the "DiscordSetActivity" are executed with success. |  |
+| On "DiscordSetActivity" error | Trigger when the "DiscordSetActivity" failed to execute. | Tag *(string)* <br> |
+| On any "DiscordSetActivity" error | Trigger when any of the "DiscordSetActivity" failed to execute. |  |
 | Is engine | Return true if the engine running the app is the one selected | Engine *(combo)* <br> |
 | Is full screen | Returns true if the window is in full screen mode. | State *(combo)* <br> |
 | Last checked path exists | Returns true if the last checked path exists. |  |
@@ -400,6 +406,8 @@ The main files you may want to look at would be instance.js
 | CheckAchievementActivationStateResult | The result of the "CheckAchievementActivationState last call" | string |  | 
 | SetRichPresenceError | The error of the "SetRichPresence last call" | string |  | 
 | SetRichPresenceResult | The result of the "SetRichPresence last call" | string |  | 
+| DiscordSetActivityError | The error of the "DiscordSetActivity last call" | string |  | 
+| DiscordSetActivityResult | The result of the "DiscordSetActivity last call" | string |  | 
 | ArgumentAt | Get the argument at the given index. | string | Index *(number)* <br> | 
 | ArgumentCount | Get the number of arguments. | number |  | 
 | AppFolderURL | Return the URL of the folder of the current app. | string |  | 

@@ -9,14 +9,14 @@ importers:
   .:
     dependencies:
       '@pipelab/core':
-        specifier: 1.4.7
-        version: 1.4.7
+        specifier: 1.4.9
+        version: 1.4.9
       adm-zip:
         specifier: 0.5.16
         version: 0.5.16
       c3addon:
         specifier: 1.0.9
-        version: 1.0.9(typescript@5.7.3)
+        version: 1.0.9(typescript@5.8.2)
       chokidar:
         specifier: 4.0.3
         version: 4.0.3
@@ -28,23 +28,23 @@ importers:
         version: 4.21.2
       inquirer:
         specifier: 12.4.2
-        version: 12.4.2(@types/node@22.7.0)
+        version: 12.4.2(@types/node@22.13.10)
     devDependencies:
       c3ide2-types:
         specifier: 1.0.1
         version: 1.0.1
       electron:
-        specifier: 34.3.0
-        version: 34.3.0
+        specifier: 35.0.3
+        version: 35.0.3
       lefthook:
-        specifier: 1.11.2
-        version: 1.11.2
+        specifier: 1.11.3
+        version: 1.11.3
       steamworks.js:
         specifier: 0.4.0
         version: 0.4.0
       typescript:
-        specifier: 5.7.3
-        version: 5.7.3
+        specifier: 5.8.2
+        version: 5.8.2
 
 packages:
 
@@ -181,8 +181,8 @@ packages:
       '@types/node':
         optional: true
 
-  '@pipelab/core@1.4.7':
-    resolution: {integrity: sha512-J6PumPgpPzxlkTj3zrKtrb8Yn7H0IiTxVpHRfYyXEQJItatrhElW9LVucQcQ+Z1dq/hbQcZWs7075ZRU9zYr1g==}
+  '@pipelab/core@1.4.9':
+    resolution: {integrity: sha512-eHz2UNZrDeaTUHS5BL4Mc6c2yBWt7N7xQ2hT0gu2UnAHsWO2QL/j2SVyyaYwGY9m6Ht6jXPXBwD0cngVWVy5vQ==}
 
   '@puppeteer/browsers@2.7.1':
     resolution: {integrity: sha512-MK7rtm8JjaxPN7Mf1JdZIZKPD2Z+W7osvrC1vjpvfOX1K0awDIHYbNi89f7eotp7eMUn2shWnt03HwVbriXtKQ==}
@@ -209,8 +209,8 @@ packages:
   '@types/keyv@3.1.4':
     resolution: {integrity: sha512-BQ5aZNSCpj7D6K2ksrRCTmKRLEpnPvWDiLPfoGyhZ++8YtiK9d/3DBKPJgry359X/P1PfruyYwvnvwFjuEiEIg==}
 
-  '@types/node@20.16.7':
-    resolution: {integrity: sha512-QkDQjAY3gkvJNcZOWwzy3BN34RweT0OQ9zJyvLCU0kSK22dO2QYh/NHGfbEAYylPYzRB1/iXcojS79wOg5gFSw==}
+  '@types/node@22.13.10':
+    resolution: {integrity: sha512-I6LPUvlRH+O6VRUqYOcMudhaIdUVWfsjnZavnsraHvpBwaEyMN29ry+0UVJhImYL16xsscu0aske3yA+uPOWfw==}
 
   '@types/node@22.7.0':
     resolution: {integrity: sha512-MOdOibwBs6KW1vfqz2uKMlxq5xAfAZ98SZjO8e3XnAbFnTJtAspqhWk7hrdSAs9/Y14ZWMiy7/MxMUzAOadYEw==}
@@ -452,8 +452,8 @@ packages:
   ee-first@1.1.1:
     resolution: {integrity: sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==}
 
-  electron@34.3.0:
-    resolution: {integrity: sha512-I238qRnYTAsuwJ/rS7HGaFNY4NNKAcjX8nlj7mnNmj1TK3z4HvNoD1r7Zud81DYDFx8AITuLd76EPrEnnfF9Bg==}
+  electron@35.0.3:
+    resolution: {integrity: sha512-kjQAYEWXSr2TyK19IZoF85dzFIBaYuX7Yp/C+34b5Y/jmI2z270CGie+RjmEGMMitsy0G8YJKftukhYMuWlK6g==}
     engines: {node: '>= 12.20.55'}
     hasBin: true
 
@@ -692,58 +692,58 @@ packages:
     resolution: {integrity: sha512-eTIzlVOSUR+JxdDFepEYcBMtZ9Qqdef+rnzWdRZuMbOywu5tO2w2N7rqjoANZ5k9vywhL6Br1VRjUIgTQx4E8w==}
     engines: {node: '>=6'}
 
-  lefthook-darwin-arm64@1.11.2:
-    resolution: {integrity: sha512-8DpvrybtWdt6UmfZk+hA8daYXr6zkpJVogZ8M49BQx6ISSKUaC03xzO1m4MrAsoKok77ka4JAidYhOa2gCu15A==}
+  lefthook-darwin-arm64@1.11.3:
+    resolution: {integrity: sha512-IYzAOf8Qwqk7q+LoRyy7kSk9vzpUZ5wb/vLzEAH/F86Vay9AUaWe1f2pzeLwFg18qEc1QNklT69h9p/uLQMojA==}
     cpu: [arm64]
     os: [darwin]
 
-  lefthook-darwin-x64@1.11.2:
-    resolution: {integrity: sha512-DrL1SOT8lJksjudRu6fTZTp3M0EbpCP2RQ22MDT71clS8BMrFL8x3h9Ziw+uNH76j9zA241tW5zMxWMSv+foAA==}
+  lefthook-darwin-x64@1.11.3:
+    resolution: {integrity: sha512-z/Wp7UMjE1Vyl+x9sjN3NvN6qKdwgHl+cDf98MKKDg/WyPE5XnzqLm9rLLJgImjyClfH7ptTfZxEyhTG3M3XvQ==}
     cpu: [x64]
     os: [darwin]
 
-  lefthook-freebsd-arm64@1.11.2:
-    resolution: {integrity: sha512-AliG4Wi8BNC27hCSnuFBeUXh/eA3fppnUbQQPISy/G94yfwRkzyml9MZzvb7HKmUpw1LT0sq9RQ6FQPxBZ2DYA==}
+  lefthook-freebsd-arm64@1.11.3:
+    resolution: {integrity: sha512-QevwQ7lrv5wBCkk7LLTzT5KR3Bk/5nttSxT1UH2o0EsgirS/c2K5xSgQmV6m3CiZYuCe2Pja4BSIwN3zt17SMw==}
     cpu: [arm64]
     os: [freebsd]
 
-  lefthook-freebsd-x64@1.11.2:
-    resolution: {integrity: sha512-V6cgRCoi5+jcq6XBIdRYraeEOK1UhBrtL/XZlNypAIkhPoBtfTP9u2wSprGMDzZvJCRriLXZxV/d0v94laKXzA==}
+  lefthook-freebsd-x64@1.11.3:
+    resolution: {integrity: sha512-PYbcyNgdJJ4J2pEO9Ss4oYo5yq4vmQGTKm3RTYbRx4viSWR65hvKCP0C4LnIqspMvmR05SJi2bqe7UBP2t60EA==}
     cpu: [x64]
     os: [freebsd]
 
-  lefthook-linux-arm64@1.11.2:
-    resolution: {integrity: sha512-VKcK7sjIK8UpXX/qK6Fxa0Lnwr4gzRtlXDS17jzxThcyFk8iGBpQ+9ZnPLv2yAaEIzmGhJUG9sDgOb9IQ5kpBQ==}
+  lefthook-linux-arm64@1.11.3:
+    resolution: {integrity: sha512-0pBMBAoafOAEg345eOPozsmRjWR0zCr6k+m5ZxwRBZbZx1bQFDqBakQ3TpFCphhcykmgFyaa1KeZJZUOrEsezA==}
     cpu: [arm64]
     os: [linux]
 
-  lefthook-linux-x64@1.11.2:
-    resolution: {integrity: sha512-aGa2Krph14YwSW7KF0PrlCBK9P7V/Z4oFklonmz3r2Fjm8EdhA750y7OQvA9KerXRleIb5SaUH/cz1azG/izeQ==}
+  lefthook-linux-x64@1.11.3:
+    resolution: {integrity: sha512-eiezheZ/bisBCMB2Ur0mctug/RDFyu39B5wzoE8y4z0W1yw6jHGrWMJ4Y8+5qKZ7fmdZg+7YPuMHZ2eFxOnhQA==}
     cpu: [x64]
     os: [linux]
 
-  lefthook-openbsd-arm64@1.11.2:
-    resolution: {integrity: sha512-f7owNQ9Ki6Y07KBgdXdH28EYO0eBdZuGTpIggMeHNhYFVDavxuINP2BjmbXtzpUu8K5BX6exGx0umtWhRhXbvQ==}
+  lefthook-openbsd-arm64@1.11.3:
+    resolution: {integrity: sha512-DRLTzXdtCj/TizpLcGSqXcnrqvgxeXgn/6nqzclIGqNdKCsNXDzpI0D3sP13Vwwmyoqv2etoTak2IHqZiXZDqg==}
     cpu: [arm64]
     os: [openbsd]
 
-  lefthook-openbsd-x64@1.11.2:
-    resolution: {integrity: sha512-HKv6PV64vOjqPrlxAqo07N9+Z34jdPDBfeExqi0ldR7vACFaBJFIdhWCLLP+3uQUrNKc8GXlikqplZn8MgRSQw==}
+  lefthook-openbsd-x64@1.11.3:
+    resolution: {integrity: sha512-l7om+ZjWpYrVZyDuElwnucZhEqa7YfwlRaKBenkBxEh2zMje8O6Zodeuma1KmyDbSFvnvEjARo/Ejiot4gLXEw==}
     cpu: [x64]
     os: [openbsd]
 
-  lefthook-windows-arm64@1.11.2:
-    resolution: {integrity: sha512-042jCKZ/H+lS6XYoMIf2FWMP2hxXqfAT52UW6lYObIOvQ5xu/epUXFjtmXRyYxCv57No3JYYMg1Yr06xdzTKkQ==}
+  lefthook-windows-arm64@1.11.3:
+    resolution: {integrity: sha512-X0iTrql2gfPAkU2dzRwuHWgW5RcqCPbzJtKQ41X6Y/F7iQacRknmuYUGyC81funSvzGAsvlusMVLUvaFjIKnbA==}
     cpu: [arm64]
     os: [win32]
 
-  lefthook-windows-x64@1.11.2:
-    resolution: {integrity: sha512-1Map6Ck2AyfY6ptN9T19N41HFKFqRTzmILtGaRGJABEzHiE4+gSWcq5YT1R6cCtkVlewD3Lx+J/80D/Kb/cVtw==}
+  lefthook-windows-x64@1.11.3:
+    resolution: {integrity: sha512-F+ORMn6YJXoS0EXU5LtN1FgV4QX9rC9LucZEkRmK6sKmS7hcb9IHpyb7siRGytArYzJvXVjPbxPBNSBdN4egZQ==}
     cpu: [x64]
     os: [win32]
 
-  lefthook@1.11.2:
-    resolution: {integrity: sha512-/5royc/WbL2KTfFJ54wEdvxUZOBXwc54v/fW2Bz4LMOkAA3LWIxnoUiybSiauu+nhdTG98qERxH1YHwF2wZlAA==}
+  lefthook@1.11.3:
+    resolution: {integrity: sha512-HJp37y62j3j8qzAOODWuUJl4ysLwsDvCTBV6odr3jIRHR/a5e+tI14VQGIBcpK9ysqC3pGWyW5Rp9Jv1YDubyw==}
     hasBin: true
 
   lines-and-columns@1.2.4:
@@ -1075,13 +1075,16 @@ packages:
   typed-query-selector@2.12.0:
     resolution: {integrity: sha512-SbklCd1F0EiZOyPiW192rrHZzZ5sBijB6xM+cpmrwDqObvdtunOHHIk9fCGsoK5JVIYXoyEp4iEdE3upFH3PAg==}
 
-  typescript@5.7.3:
-    resolution: {integrity: sha512-84MVSjMEHP+FQRPy3pX9sTVV/INIex71s9TL2Gm5FG/WG1SqXeKyZ0k7/blY/4FdOzI12CBy1vGc4og/eus0fw==}
+  typescript@5.8.2:
+    resolution: {integrity: sha512-aJn6wq13/afZp/jT9QZmwEjDqqvSGp1VT5GVg+f/t6/oVyrgXM6BY1h9BRh/O5p3PlUPAe+WuiEZOmb/49RqoQ==}
     engines: {node: '>=14.17'}
     hasBin: true
 
   undici-types@6.19.8:
     resolution: {integrity: sha512-ve2KP6f/JnbPBFyobGHuerC9g1FYGn/F8n1LWTwNxCEzd6IfqTwUQcNXgEtmmQ6DlRrC1hrSrBnCZPokRrDHjw==}
+
+  undici-types@6.20.0:
+    resolution: {integrity: sha512-Ny6QZ2Nju20vw1SRHe3d9jVu6gJ+4e3+MMpqu7pqE5HT6WsTSlce++GQmK5UXS8mzV8DSYHrQH+Xrf2jVcuKNg==}
 
   universalify@0.1.2:
     resolution: {integrity: sha512-rBJeI5CXAlmy1pV+617WB9J63U6XcazHHF2f2dbJix4XzpUF0RS3Zbj0FGIOCAva5P/d/GBOYaACQ1w+0azUkg==}
@@ -1179,27 +1182,27 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@inquirer/checkbox@4.1.2(@types/node@22.7.0)':
+  '@inquirer/checkbox@4.1.2(@types/node@22.13.10)':
     dependencies:
-      '@inquirer/core': 10.1.7(@types/node@22.7.0)
+      '@inquirer/core': 10.1.7(@types/node@22.13.10)
       '@inquirer/figures': 1.0.10
-      '@inquirer/type': 3.0.4(@types/node@22.7.0)
+      '@inquirer/type': 3.0.4(@types/node@22.13.10)
       ansi-escapes: 4.3.2
       yoctocolors-cjs: 2.1.2
     optionalDependencies:
-      '@types/node': 22.7.0
+      '@types/node': 22.13.10
 
-  '@inquirer/confirm@5.1.6(@types/node@22.7.0)':
+  '@inquirer/confirm@5.1.6(@types/node@22.13.10)':
     dependencies:
-      '@inquirer/core': 10.1.7(@types/node@22.7.0)
-      '@inquirer/type': 3.0.4(@types/node@22.7.0)
+      '@inquirer/core': 10.1.7(@types/node@22.13.10)
+      '@inquirer/type': 3.0.4(@types/node@22.13.10)
     optionalDependencies:
-      '@types/node': 22.7.0
+      '@types/node': 22.13.10
 
-  '@inquirer/core@10.1.7(@types/node@22.7.0)':
+  '@inquirer/core@10.1.7(@types/node@22.13.10)':
     dependencies:
       '@inquirer/figures': 1.0.10
-      '@inquirer/type': 3.0.4(@types/node@22.7.0)
+      '@inquirer/type': 3.0.4(@types/node@22.13.10)
       ansi-escapes: 4.3.2
       cli-width: 4.1.0
       mute-stream: 2.0.0
@@ -1207,95 +1210,95 @@ snapshots:
       wrap-ansi: 6.2.0
       yoctocolors-cjs: 2.1.2
     optionalDependencies:
-      '@types/node': 22.7.0
+      '@types/node': 22.13.10
 
-  '@inquirer/editor@4.2.7(@types/node@22.7.0)':
+  '@inquirer/editor@4.2.7(@types/node@22.13.10)':
     dependencies:
-      '@inquirer/core': 10.1.7(@types/node@22.7.0)
-      '@inquirer/type': 3.0.4(@types/node@22.7.0)
+      '@inquirer/core': 10.1.7(@types/node@22.13.10)
+      '@inquirer/type': 3.0.4(@types/node@22.13.10)
       external-editor: 3.1.0
     optionalDependencies:
-      '@types/node': 22.7.0
+      '@types/node': 22.13.10
 
-  '@inquirer/expand@4.0.9(@types/node@22.7.0)':
+  '@inquirer/expand@4.0.9(@types/node@22.13.10)':
     dependencies:
-      '@inquirer/core': 10.1.7(@types/node@22.7.0)
-      '@inquirer/type': 3.0.4(@types/node@22.7.0)
+      '@inquirer/core': 10.1.7(@types/node@22.13.10)
+      '@inquirer/type': 3.0.4(@types/node@22.13.10)
       yoctocolors-cjs: 2.1.2
     optionalDependencies:
-      '@types/node': 22.7.0
+      '@types/node': 22.13.10
 
   '@inquirer/figures@1.0.10': {}
 
-  '@inquirer/input@4.1.6(@types/node@22.7.0)':
+  '@inquirer/input@4.1.6(@types/node@22.13.10)':
     dependencies:
-      '@inquirer/core': 10.1.7(@types/node@22.7.0)
-      '@inquirer/type': 3.0.4(@types/node@22.7.0)
+      '@inquirer/core': 10.1.7(@types/node@22.13.10)
+      '@inquirer/type': 3.0.4(@types/node@22.13.10)
     optionalDependencies:
-      '@types/node': 22.7.0
+      '@types/node': 22.13.10
 
-  '@inquirer/number@3.0.9(@types/node@22.7.0)':
+  '@inquirer/number@3.0.9(@types/node@22.13.10)':
     dependencies:
-      '@inquirer/core': 10.1.7(@types/node@22.7.0)
-      '@inquirer/type': 3.0.4(@types/node@22.7.0)
+      '@inquirer/core': 10.1.7(@types/node@22.13.10)
+      '@inquirer/type': 3.0.4(@types/node@22.13.10)
     optionalDependencies:
-      '@types/node': 22.7.0
+      '@types/node': 22.13.10
 
-  '@inquirer/password@4.0.9(@types/node@22.7.0)':
+  '@inquirer/password@4.0.9(@types/node@22.13.10)':
     dependencies:
-      '@inquirer/core': 10.1.7(@types/node@22.7.0)
-      '@inquirer/type': 3.0.4(@types/node@22.7.0)
+      '@inquirer/core': 10.1.7(@types/node@22.13.10)
+      '@inquirer/type': 3.0.4(@types/node@22.13.10)
       ansi-escapes: 4.3.2
     optionalDependencies:
-      '@types/node': 22.7.0
+      '@types/node': 22.13.10
 
-  '@inquirer/prompts@7.3.2(@types/node@22.7.0)':
+  '@inquirer/prompts@7.3.2(@types/node@22.13.10)':
     dependencies:
-      '@inquirer/checkbox': 4.1.2(@types/node@22.7.0)
-      '@inquirer/confirm': 5.1.6(@types/node@22.7.0)
-      '@inquirer/editor': 4.2.7(@types/node@22.7.0)
-      '@inquirer/expand': 4.0.9(@types/node@22.7.0)
-      '@inquirer/input': 4.1.6(@types/node@22.7.0)
-      '@inquirer/number': 3.0.9(@types/node@22.7.0)
-      '@inquirer/password': 4.0.9(@types/node@22.7.0)
-      '@inquirer/rawlist': 4.0.9(@types/node@22.7.0)
-      '@inquirer/search': 3.0.9(@types/node@22.7.0)
-      '@inquirer/select': 4.0.9(@types/node@22.7.0)
+      '@inquirer/checkbox': 4.1.2(@types/node@22.13.10)
+      '@inquirer/confirm': 5.1.6(@types/node@22.13.10)
+      '@inquirer/editor': 4.2.7(@types/node@22.13.10)
+      '@inquirer/expand': 4.0.9(@types/node@22.13.10)
+      '@inquirer/input': 4.1.6(@types/node@22.13.10)
+      '@inquirer/number': 3.0.9(@types/node@22.13.10)
+      '@inquirer/password': 4.0.9(@types/node@22.13.10)
+      '@inquirer/rawlist': 4.0.9(@types/node@22.13.10)
+      '@inquirer/search': 3.0.9(@types/node@22.13.10)
+      '@inquirer/select': 4.0.9(@types/node@22.13.10)
     optionalDependencies:
-      '@types/node': 22.7.0
+      '@types/node': 22.13.10
 
-  '@inquirer/rawlist@4.0.9(@types/node@22.7.0)':
+  '@inquirer/rawlist@4.0.9(@types/node@22.13.10)':
     dependencies:
-      '@inquirer/core': 10.1.7(@types/node@22.7.0)
-      '@inquirer/type': 3.0.4(@types/node@22.7.0)
+      '@inquirer/core': 10.1.7(@types/node@22.13.10)
+      '@inquirer/type': 3.0.4(@types/node@22.13.10)
       yoctocolors-cjs: 2.1.2
     optionalDependencies:
-      '@types/node': 22.7.0
+      '@types/node': 22.13.10
 
-  '@inquirer/search@3.0.9(@types/node@22.7.0)':
+  '@inquirer/search@3.0.9(@types/node@22.13.10)':
     dependencies:
-      '@inquirer/core': 10.1.7(@types/node@22.7.0)
+      '@inquirer/core': 10.1.7(@types/node@22.13.10)
       '@inquirer/figures': 1.0.10
-      '@inquirer/type': 3.0.4(@types/node@22.7.0)
+      '@inquirer/type': 3.0.4(@types/node@22.13.10)
       yoctocolors-cjs: 2.1.2
     optionalDependencies:
-      '@types/node': 22.7.0
+      '@types/node': 22.13.10
 
-  '@inquirer/select@4.0.9(@types/node@22.7.0)':
+  '@inquirer/select@4.0.9(@types/node@22.13.10)':
     dependencies:
-      '@inquirer/core': 10.1.7(@types/node@22.7.0)
+      '@inquirer/core': 10.1.7(@types/node@22.13.10)
       '@inquirer/figures': 1.0.10
-      '@inquirer/type': 3.0.4(@types/node@22.7.0)
+      '@inquirer/type': 3.0.4(@types/node@22.13.10)
       ansi-escapes: 4.3.2
       yoctocolors-cjs: 2.1.2
     optionalDependencies:
-      '@types/node': 22.7.0
+      '@types/node': 22.13.10
 
-  '@inquirer/type@3.0.4(@types/node@22.7.0)':
+  '@inquirer/type@3.0.4(@types/node@22.13.10)':
     optionalDependencies:
-      '@types/node': 22.7.0
+      '@types/node': 22.13.10
 
-  '@pipelab/core@1.4.7': {}
+  '@pipelab/core@1.4.9': {}
 
   '@puppeteer/browsers@2.7.1':
     dependencies:
@@ -1322,18 +1325,18 @@ snapshots:
     dependencies:
       '@types/http-cache-semantics': 4.0.4
       '@types/keyv': 3.1.4
-      '@types/node': 22.7.0
+      '@types/node': 22.13.10
       '@types/responselike': 1.0.3
 
   '@types/http-cache-semantics@4.0.4': {}
 
   '@types/keyv@3.1.4':
     dependencies:
-      '@types/node': 22.7.0
+      '@types/node': 22.13.10
 
-  '@types/node@20.16.7':
+  '@types/node@22.13.10':
     dependencies:
-      undici-types: 6.19.8
+      undici-types: 6.20.0
 
   '@types/node@22.7.0':
     dependencies:
@@ -1346,11 +1349,11 @@ snapshots:
 
   '@types/responselike@1.0.3':
     dependencies:
-      '@types/node': 22.7.0
+      '@types/node': 22.13.10
 
   '@types/yauzl@2.10.3':
     dependencies:
-      '@types/node': 22.7.0
+      '@types/node': 22.13.10
     optional: true
 
   accepts@1.3.8:
@@ -1437,12 +1440,12 @@ snapshots:
 
   bytes@3.1.2: {}
 
-  c3addon@1.0.9(typescript@5.7.3):
+  c3addon@1.0.9(typescript@5.8.2):
     dependencies:
       '@types/prompts': 2.4.9
       commander: 13.1.0
       prompts: 2.4.2
-      puppeteer: 24.3.0(typescript@5.7.3)
+      puppeteer: 24.3.0(typescript@5.8.2)
       zip-lib: 1.0.5
     transitivePeerDependencies:
       - bare-buffer
@@ -1522,14 +1525,14 @@ snapshots:
       object-assign: 4.1.1
       vary: 1.1.2
 
-  cosmiconfig@9.0.0(typescript@5.7.3):
+  cosmiconfig@9.0.0(typescript@5.8.2):
     dependencies:
       env-paths: 2.2.1
       import-fresh: 3.3.1
       js-yaml: 4.1.0
       parse-json: 5.2.0
     optionalDependencies:
-      typescript: 5.7.3
+      typescript: 5.8.2
 
   data-uri-to-buffer@6.0.2: {}
 
@@ -1577,10 +1580,10 @@ snapshots:
 
   ee-first@1.1.1: {}
 
-  electron@34.3.0:
+  electron@35.0.3:
     dependencies:
       '@electron/get': 2.0.3
-      '@types/node': 20.16.7
+      '@types/node': 22.13.10
       extract-zip: 2.0.1
     transitivePeerDependencies:
       - supports-color
@@ -1825,17 +1828,17 @@ snapshots:
 
   inherits@2.0.4: {}
 
-  inquirer@12.4.2(@types/node@22.7.0):
+  inquirer@12.4.2(@types/node@22.13.10):
     dependencies:
-      '@inquirer/core': 10.1.7(@types/node@22.7.0)
-      '@inquirer/prompts': 7.3.2(@types/node@22.7.0)
-      '@inquirer/type': 3.0.4(@types/node@22.7.0)
+      '@inquirer/core': 10.1.7(@types/node@22.13.10)
+      '@inquirer/prompts': 7.3.2(@types/node@22.13.10)
+      '@inquirer/type': 3.0.4(@types/node@22.13.10)
       ansi-escapes: 4.3.2
       mute-stream: 2.0.0
       run-async: 3.0.0
       rxjs: 7.8.1
     optionalDependencies:
-      '@types/node': 22.7.0
+      '@types/node': 22.13.10
 
   ip-address@9.0.5:
     dependencies:
@@ -1873,48 +1876,48 @@ snapshots:
 
   kleur@3.0.3: {}
 
-  lefthook-darwin-arm64@1.11.2:
+  lefthook-darwin-arm64@1.11.3:
     optional: true
 
-  lefthook-darwin-x64@1.11.2:
+  lefthook-darwin-x64@1.11.3:
     optional: true
 
-  lefthook-freebsd-arm64@1.11.2:
+  lefthook-freebsd-arm64@1.11.3:
     optional: true
 
-  lefthook-freebsd-x64@1.11.2:
+  lefthook-freebsd-x64@1.11.3:
     optional: true
 
-  lefthook-linux-arm64@1.11.2:
+  lefthook-linux-arm64@1.11.3:
     optional: true
 
-  lefthook-linux-x64@1.11.2:
+  lefthook-linux-x64@1.11.3:
     optional: true
 
-  lefthook-openbsd-arm64@1.11.2:
+  lefthook-openbsd-arm64@1.11.3:
     optional: true
 
-  lefthook-openbsd-x64@1.11.2:
+  lefthook-openbsd-x64@1.11.3:
     optional: true
 
-  lefthook-windows-arm64@1.11.2:
+  lefthook-windows-arm64@1.11.3:
     optional: true
 
-  lefthook-windows-x64@1.11.2:
+  lefthook-windows-x64@1.11.3:
     optional: true
 
-  lefthook@1.11.2:
+  lefthook@1.11.3:
     optionalDependencies:
-      lefthook-darwin-arm64: 1.11.2
-      lefthook-darwin-x64: 1.11.2
-      lefthook-freebsd-arm64: 1.11.2
-      lefthook-freebsd-x64: 1.11.2
-      lefthook-linux-arm64: 1.11.2
-      lefthook-linux-x64: 1.11.2
-      lefthook-openbsd-arm64: 1.11.2
-      lefthook-openbsd-x64: 1.11.2
-      lefthook-windows-arm64: 1.11.2
-      lefthook-windows-x64: 1.11.2
+      lefthook-darwin-arm64: 1.11.3
+      lefthook-darwin-x64: 1.11.3
+      lefthook-freebsd-arm64: 1.11.3
+      lefthook-freebsd-x64: 1.11.3
+      lefthook-linux-arm64: 1.11.3
+      lefthook-linux-x64: 1.11.3
+      lefthook-openbsd-arm64: 1.11.3
+      lefthook-openbsd-x64: 1.11.3
+      lefthook-windows-arm64: 1.11.3
+      lefthook-windows-x64: 1.11.3
 
   lines-and-columns@1.2.4: {}
 
@@ -2061,11 +2064,11 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  puppeteer@24.3.0(typescript@5.7.3):
+  puppeteer@24.3.0(typescript@5.8.2):
     dependencies:
       '@puppeteer/browsers': 2.7.1
       chromium-bidi: 2.0.0(devtools-protocol@0.0.1402036)
-      cosmiconfig: 9.0.0(typescript@5.7.3)
+      cosmiconfig: 9.0.0(typescript@5.8.2)
       devtools-protocol: 0.0.1402036
       puppeteer-core: 24.3.0
       typed-query-selector: 2.12.0
@@ -2273,9 +2276,11 @@ snapshots:
 
   typed-query-selector@2.12.0: {}
 
-  typescript@5.7.3: {}
+  typescript@5.8.2: {}
 
   undici-types@6.19.8: {}
+
+  undici-types@6.20.0: {}
 
   universalify@0.1.2: {}
 

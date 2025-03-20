@@ -966,6 +966,59 @@ const SetRichPresence = ACEGenerator("SetRichPresence", /** @type {const} */ ({
   description: "Set the rich presence of the local player.",
 }))
 
+const DiscordSetActivity = ACEGenerator("DiscordSetActivity", /** @type {const} */ ({
+  category: "discord",
+  displayText: "Set activity {0} to {1} ({2}, {3}, {4}, {5}, {6})",
+  listName: "Set activity",
+  highlight: false,
+  deprecated: false,
+  params: [
+    {
+      id: 'details',
+      desc: "Activity details",
+      name: "Details",
+      type: 'string',
+    },
+    {
+      id: 'state',
+      desc: "The state of the activity (ex: in a party).",
+      name: "State",
+      type: 'string',
+    },
+    {
+      id: 'startTimestamp',
+      desc: "The timestamp the activity started (ex: 1742458171).",
+      name: "Start Timestamp",
+      type: 'string',
+    },
+    {
+      id: 'largeImageKey',
+      desc: "The key of the large image to display (ex: c3-large).",
+      name: "Large image key",
+      type: 'string',
+    },
+    {
+      id: 'largeImageText',
+      desc: "The text displayed when hovering the large image.",
+      name: "Large image text",
+      type: 'string',
+    },
+    {
+      id: 'smallImageKey',
+      desc: "The key of the small image to display (ex: c3-small).",
+      name: "Small image key",
+      type: 'string',
+    },
+    {
+      id: 'smallImageText',
+      desc: "The text displayed when hovering the small image.",
+      name: "Small image text",
+      type: 'string',
+    }
+  ],
+  description: "Set the discord activity (aka Rich presence).",
+}))
+
 /**
  * @satisfies {import('./sdk.js').Config<import('./sdk.js').Categories>}
  */
@@ -1091,6 +1144,7 @@ const Config = /** @type {const} */({
     'file-dialogs': "File Dialogs",
     'command-line': "Command line",
     'steam': "Steam",
+    'discord': "Discord"
   },
   Acts: /** @type {const} */ {
     // general
@@ -1138,6 +1192,7 @@ const Config = /** @type {const} */({
     ...ClearAchievement.actions,
     ...CheckAchievementActivationState.actions,
     ...SetRichPresence.actions,
+    ...DiscordSetActivity.actions,
   },
   Cnds: {
     ...Initialize.conditions,
@@ -1182,6 +1237,7 @@ const Config = /** @type {const} */({
     ...ClearAchievement.conditions,
     ...CheckAchievementActivationState.conditions,
     ...SetRichPresence.conditions,
+    ...DiscordSetActivity.conditions,
     IsEngine: {
       category: "general",
       forward: "_IsEngine",
@@ -1284,6 +1340,7 @@ const Config = /** @type {const} */({
     ...ClearAchievement.expressions,
     ...CheckAchievementActivationState.expressions,
     ...SetRichPresence.expressions,
+    ...DiscordSetActivity.expressions,
 
     // command line
     ArgumentAt: {

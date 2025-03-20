@@ -1849,6 +1849,55 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
     _SetRichPresence = this._SetRichPresenceBase
     _SetRichPresenceSync = this._SetRichPresenceBase
 
+    _DiscordSetActivityBase = this.wrap(super._SetRichPresence, async (
+      /** @type {string} */ details,
+      /** @type {string} */ state,
+      /** @type {string} */ startTimestamp,
+      /** @type {string} */ largeImageKey,
+      /** @type {string} */ largeImageText,
+      /** @type {string} */ smallImageKey,
+      /** @type {string} */ smallImageText,
+      /** @type {Tag} */ tag
+    ) => {
+      try {
+        /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').DiscordSetActivity, 'input'>} */
+        const order = {
+          url: '/discord/set-activity',
+          body: {
+            details,
+            state,
+            startTimestamp,
+            largeImageKey,
+            largeImageText,
+            smallImageKey,
+            smallImageText,
+          },
+        };
+        const answer = await this.ws?.sendAndWaitForResponse(order);
+        if (answer?.body.success === false) {
+          throw new Error('Failed')
+        }
+        this._DiscordSetActivityResultValue = answer?.body.success
+        this._DiscordSetActivityErrorValue = ''
+
+        await this.trigger(tag, [
+          C3.Plugins.pipelabv2.Cnds.OnDiscordSetActivitySuccess,
+          C3.Plugins.pipelabv2.Cnds.OnAnyDiscordSetActivitySuccess
+        ])
+      } catch (e) {
+        if (e instanceof Error) {
+          this._DiscordSetActivityErrorValue = e.message
+          this._DiscordSetActivityResultValue = false
+          await this.trigger(tag, [
+            C3.Plugins.pipelabv2.Cnds.OnDiscordSetActivityError,
+            C3.Plugins.pipelabv2.Cnds.OnAnyDiscordSetActivityError
+          ])
+        }
+      }
+    }, this.unsupportedEngine)
+    _DiscordSetActivitySync = this._DiscordSetActivityBase
+    _DiscordSetActivity = this._DiscordSetActivityBase
+
     // #region Cnds
     _OnInitializeSuccess = this.wrap(super._OnInitializeSuccess, (/** @type {Tag} */ tag) => this._currentTag === tag)
     _OnAnyInitializeSuccess = this.wrap(super._OnAnyInitializeSuccess, () => {
@@ -2176,12 +2225,22 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
     _OnAnyCheckAchievementActivationStateError = this.wrap(super._OnAnyCheckAchievementActivationStateError, () => {
       return true
     })
+
     _OnSetRichPresenceSuccess = this.wrap(super._OnSetRichPresenceSuccess, (/** @type {Tag} */ tag) => this._currentTag === tag)
     _OnAnySetRichPresenceSuccess = this.wrap(super._OnAnySetRichPresenceSuccess, () => {
       return true
     })
     _OnSetRichPresenceError = this.wrap(super._OnSetRichPresenceError, (/** @type {Tag} */ tag) => this._currentTag === tag)
     _OnAnySetRichPresenceError = this.wrap(super._OnAnySetRichPresenceError, () => {
+      return true
+    })
+
+    _OnDiscordSetActivitySuccess = this.wrap(super._OnDiscordSetActivitySuccess, (/** @type {Tag} */ tag) => this._currentTag === tag)
+    _OnAnyDiscordSetActivitySuccess = this.wrap(super._OnAnyDiscordSetActivitySuccess, () => {
+      return true
+    })
+    _OnDiscordSetActivityError = this.wrap(super._OnDiscordSetActivityError, (/** @type {Tag} */ tag) => this._currentTag === tag)
+    _OnAnyDiscordSetActivityError = this.wrap(super._OnAnyDiscordSetActivityError, () => {
       return true
     })
 
@@ -2608,6 +2667,13 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
     })
     _SetRichPresenceResult = this.exprs(super._SetRichPresenceResult, () => {
       return this._SetRichPresenceResultValue
+    })
+
+    _DiscordSetActivityError = this.exprs(super._DiscordSetActivityError, () => {
+      return this._DiscordSetActivityErrorValue
+    })
+    _DiscordSetActivityResult = this.exprs(super._DiscordSetActivityResult, () => {
+      return this._DiscordSetActivityResultValue
     })
 
     //

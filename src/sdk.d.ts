@@ -29,7 +29,7 @@ type MyExpression<ACE_CATEGORIES extends string, NAME extends string, PARAMS> = 
     params: PARAMS
 }
 
-type Categories = 'general' | 'window' | 'filesystem' | 'file-dialogs' | 'command-line' | 'steam'
+type Categories = 'general' | 'window' | 'filesystem' | 'file-dialogs' | 'command-line' | 'steam' | 'discord'
 
 type Config<T extends string> = import("c3ide2-types").Plugin<T>;
 

@@ -7,5 +7,6 @@ publish({
   filename: `dist/pipelabv2-${version}-sdk-v2.c3addon`,
   username: process.env.CONSTRUCT_USERNAME,
   password: process.env.CONSTRUCT_PASSWORD,
-  releaseNotes: `See release notes at https://github.com/CynToolkit/construct-plugin/releases/tag/v${version}. You can also download SDK V1 there`,
+  releaseNotes: `See release notes at https://github.com/CynToolkit/construct-plugin/releases/tag/v${version}
+You can also download SDK V1 there`,
 });
