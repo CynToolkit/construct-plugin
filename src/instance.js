@@ -955,7 +955,9 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
         if (toggle === 1) {
           document.documentElement.requestFullscreen()
         } else {
-          document.exitFullscreen()
+          if (document.fullscreenEnabled) {
+            document.exitFullscreen()
+          }
         }
       }
     })
