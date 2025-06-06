@@ -209,7 +209,7 @@ export const fullscreenPipelabStateToC3State = (/** @type {import('@pipelab/core
 const defaultSteamId = {
   accountId: -1,
   steamId32: '',
-  steamId64: BigInt(-1),
+  steamId64: '',
 }
 
 /**
@@ -319,7 +319,7 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
     /** @type {import("./sdk.js").IsFullScreenState} */
     _fullscreenState = 0;
 
-    /** @type {import('@pipelab/core').NamespacedFunctionReturnType<'localplayer', 'getSteamId'>} */
+    /** @type {{accountId: number, steamId32: string, steamId64: string}} */
     _steam_SteamId = defaultSteamId
     /** @type {import('@pipelab/core').NamespacedFunctionReturnType<'localplayer', 'getName'>} */
     _steam_Name = ""
@@ -327,6 +327,8 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
     _steam_Level = -1
     /** @type {import('@pipelab/core').NamespacedFunctionReturnType<'localplayer', 'getIpCountry'>} */
     _steam_IpCountry = ''
+    /** @type {import('@pipelab/core').NamespacedFunctionReturnType<'utils', 'isSteamRunningOnSteamDeck'>} */
+    _steam_IsRunningOnSteamDeck = false
 
     /** @type {string} */
     _platform = ''
@@ -522,19 +524,19 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
         }
 
         // TODO: BigInt support
-        // promises.push(async () => {
-        //   /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').SteamRaw<'localplayer', 'getSteamId'>, 'input'>} */
-        //   const order = {
-        //     url: '/steam/raw',
-        //     body: {
-        //       namespace: 'localplayer',
-        //       method: 'getSteamId',
-        //       args: [],
-        //     },
-        //   };
-        //   const response = await this.ws?.sendAndWaitForResponse(order);
-        //   this._steam_SteamId = response?.body.data ?? defaultSteamId
-        // })
+        promises.push(async () => {
+          /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').SteamRaw<'localplayer', 'getSteamId'>, 'input'>} */
+          const order = {
+            url: '/steam/raw',
+            body: {
+              namespace: 'localplayer',
+              method: 'getSteamId',
+              args: [],
+            },
+          };
+          const response = await this.ws?.sendAndWaitForResponse(order);
+          this._steam_SteamId = response?.body.data ?? defaultSteamId
+        })
 
         promises.push(async () => {
           /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').SteamRaw<'localplayer', 'getName'>, 'input'>} */
@@ -578,6 +580,20 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
           };
           const response = await this.ws?.sendAndWaitForResponse(order);
           this._steam_IpCountry = response?.body.data ?? '';
+        })
+
+        promises.push(async () => {
+          /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').SteamRaw<'utils', 'isSteamRunningOnSteamDeck'>, 'input'>} */
+          const order = {
+            url: '/steam/raw',
+            body: {
+              namespace: 'utils',
+              method: 'isSteamRunningOnSteamDeck',
+              args: [],
+            },
+          };
+          const response = await this.ws?.sendAndWaitForResponse(order);
+          this._steam_IsRunningOnSteamDeck = response?.body.data ?? false;
         })
 
         promises.push(async () => {
@@ -2416,6 +2432,9 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
     })
     _SteamIpCountry = this.exprs(super._SteamIpCountry, () => {
       return this._steam_IpCountry
+    })
+    _SteamIsRunningOnSteamDeck = this.exprs(super._SteamIsRunningOnSteamDeck, () => {
+      return this._steam_IsRunningOnSteamDeck ? 1 : 0
     })
 
     _InitializeError = this.exprs(super._InitializeError, () => {

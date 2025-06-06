@@ -1666,7 +1666,6 @@ const Config = /** @type {const} */({
       description: "Return the fullscreen state of the window.",
     },
 
-    // Steam
     CurrentPlatform: {
       category: "general",
       forward: "_CurrentPlatform",
@@ -1683,6 +1682,7 @@ const Config = /** @type {const} */({
       returnType: 'string',
       description: "Get the current architecture (e.g., 'x64', 'arm64').",
     },
+    // Steam
     SteamAccountId: {
       category: "steam",
       forward: "_SteamAccountId",
@@ -1730,6 +1730,14 @@ const Config = /** @type {const} */({
       deprecated: false,
       returnType: 'string',
       description: "Get the Steam IP country.",
+    },
+    SteamIsRunningOnSteamDeck: {
+      category: "steam",
+      forward: "_SteamIsRunningOnSteamDeck",
+      highlight: false,
+      deprecated: false,
+      returnType: 'number',
+      description: "Return true if the app is running on a Steam Deck.",
     },
   },
 });

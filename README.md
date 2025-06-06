@@ -5,7 +5,7 @@ A plugin that integrate with Pipelab <br>
 Author: Armaldio <br>
 Website: https://github.com/CynToolkit/construct-plugin <br>
 Addon Url: https://github.com/CynToolkit/construct-plugin <br>
-Download Latest Version : [Version: 2.1.0](https://github.com/CynToolkit/construct-plugin/releases/latest) <br>
+Download Latest Version : [Version: 2.1.1](https://github.com/CynToolkit/construct-plugin/releases/latest) <br>
 <sub>Made using [c3ide2-framework](https://github.com/ConstructFund/c3ide2-framework) </sub><br>
 
 ## Table of Contents
@@ -451,6 +451,7 @@ The main files you may want to look at would be instance.js
 | SteamUsername | Get the Steam username. | string |  | 
 | SteamLevel | Get the Steam level. | number |  | 
 | SteamIpCountry | Get the Steam IP country. | string |  | 
+| SteamIsRunningOnSteamDeck | Return true if the app is running on a Steam Deck. | number |  | 
 
 ## Paths
 **ProjectFilesFolder**: Direct path to your games's content
