@@ -305,3 +305,7 @@ export type ACEGeneratorResult<NAME extends string, DATA> = {
     }
 }
 export type ACEGenerator<NAME extends string> = (data: ACEGeneratorParam<NAME>) => ACEGeneratorResult<NAME>
+
+export interface PostFullscreenState {
+    state: 0 | 1
+}

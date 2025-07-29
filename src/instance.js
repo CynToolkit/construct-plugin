@@ -212,6 +212,9 @@ const defaultSteamId = {
   steamId64: '',
 }
 
+let DOM_COMPONENT_ID = ''
+//<-- DOM_COMPONENT_ID -->
+
 /**
  * @typedef {string | undefined} Tag
  */
@@ -349,8 +352,12 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
       let dummyInst = undefined
       if (sdk === 'v1') {
         dummyInst = inst
+      } else {
+        dummyInst = {
+          domComponentId: DOM_COMPONENT_ID
+        }
       }
-      super(inst);
+      super(dummyInst);
 
       let properties;
       if (sdk == 'v1') {
@@ -371,6 +378,20 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
         // @ts-expect-error Trigger is only available in v1
         this._trigger = this.Trigger;
       }
+
+      this.runtime.sdk.addLoadPromise(
+        this._postToDOMAsync("get-fullscreen-state")
+        .then(
+          /** @type {import("./sdk.js").PostFullscreenState} */
+          data =>
+        {
+          this._fullscreenState = data.state
+        })
+      );
+
+      this._addDOMMessageHandler('fullscreen-state-changed', (data) => {
+        this._fullscreenState = data.state
+      })
     }
 
     async unsupportedEngine() {
@@ -459,17 +480,9 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
         }
 
         // Fullscreen
-        // Handle through runtimz
+        // Handle through runtime
         this.ws.on('/window/fullscreen-state', async (/** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').FullscreenState, 'input'>} */ data) => {
           this._fullscreenState = fullscreenPipelabStateToC3State(data.body.state)
-        })
-        // Handle native
-        document.addEventListener('fullscreenchange', () => {
-          if (document.fullscreenElement) {
-            this._fullscreenState = 1
-          } else {
-            this._fullscreenState = 0
-          }
         })
 
         await this.ws.connect();
@@ -966,15 +979,13 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
 
       await this.ws?.sendAndWaitForResponse(order)
     }, (toggle) => {
-      // Do native fullscreen if in preview mode and not connected to a runtime
+      // Use DOM handler for fullscreen operations
       if (this.runtime.platformInfo.exportType === 'preview') {
-        if (toggle === 1) {
-          document.documentElement.requestFullscreen()
-        } else {
-          if (document.fullscreenEnabled) {
-            document.exitFullscreen()
-          }
+        /** @type {import('./sdk.js').PostFullscreenState} */
+        const state = {
+          state: toggle === 0 ? 0 : 1
         }
+        this._postToDOM('set-fullscreen', state)
       }
     })
     _SetFullscreen = this._SetFullscreenBase

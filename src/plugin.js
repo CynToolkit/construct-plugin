@@ -71,7 +71,7 @@ let WorldInstanceVar = sdk === 'v1'
 let DOMInstanceVar = sdk === 'v1'
   ? self.IDOMInstance
   : globalThis.IDOMInstance
-
+  
 const parentClass = {
   object: {
     scripting: InstanceVar,

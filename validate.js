@@ -35,26 +35,39 @@ function validateDisplayText(name, obj, aceType) {
  * @returns
  */
 async function ensureForwardScript(name, obj, aceType) {
-  const file = await import('./src/instance.js')
-  const fileClass = file.getInstanceJs(class {
-    _getInitProperties() {
-      return {
-        // data to be saved for savegames
+  const file = await import("./src/instance.js");
+  const fileClass = file.getInstanceJs(
+    class {
+      _getInitProperties() {
+        return {
+          // data to be saved for savegames
+        };
+      }
+      runtime = {
+        sdk: {
+          addLoadPromise: () => {},
+        },
       };
-    }
-  }, undefined, undefined)
-  globalThis.sdk = 'v2'
-  const instance = new fileClass()
+      _postToDOMAsync = () => new Promise(() => {})
+      _addDOMMessageHandler = () => {}
+    },
+    undefined,
+    undefined
+  );
+  globalThis.sdk = "v2";
+  const instance = new fileClass();
 
   if (obj.handler) {
-    return true
+    return true;
   }
 
   if (!(obj.forward in instance)) {
-    console.error(`Missing ${obj.forward} ${aceType} in "instance.js" file for ${name}`)
-    return false
+    console.error(
+      `Missing ${obj.forward} ${aceType} in "instance.js" file for ${name}`
+    );
+    return false;
   }
-  return true
+  return true;
 }
 
 const validationPipeline = [validateDisplayText, ensureForwardScript];
@@ -68,7 +81,7 @@ async function valiatePlugin(pluginConfig) {
   Object.keys(pluginConfig.Acts).forEach((key) => {
     const action = pluginConfig.Acts[key];
     validationPipeline.forEach((validationFunction) => {
-      validations.push(() => validationFunction(key, action, 'action'));
+      validations.push(() => validationFunction(key, action, "action"));
     });
   });
 
@@ -76,7 +89,7 @@ async function valiatePlugin(pluginConfig) {
   Object.keys(pluginConfig.Cnds).forEach((key) => {
     const condition = pluginConfig.Cnds[key];
     validationPipeline.forEach((validationFunction) => {
-      validations.push(() => validationFunction(key, condition, 'condition'));
+      validations.push(() => validationFunction(key, condition, "condition"));
     });
   });
 
@@ -84,20 +97,20 @@ async function valiatePlugin(pluginConfig) {
   Object.keys(pluginConfig.Exps).forEach((key) => {
     const expression = pluginConfig.Exps[key];
     validationPipeline.forEach((validationFunction) => {
-      validations.push(() => validationFunction(key, expression, 'expression'));
+      validations.push(() => validationFunction(key, expression, "expression"));
     });
   });
 
   // check if any validation failed
   let isValid = [];
   for (const validation of validations) {
-    const result = await validation()
+    const result = await validation();
     isValid.push(result);
   }
   return isValid.every((value) => value === true);
 }
 
-const validationResult = await valiatePlugin(config)
+const validationResult = await valiatePlugin(config);
 
 // check if the file is valid
 if (validationResult) {

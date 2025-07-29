@@ -1036,6 +1036,9 @@ const Config = /** @type {const} */({
   githubUrl: "https://github.com/CynToolkit/construct-plugin", // displays latest release version in auto-generated docs
   icon: "icon.png", // defaults to "icon.svg" if omitted
   type: "object", // world, object, dom
+  domSideScripts: [
+    "dom.js"
+  ],
   fileDependencies: [
     /*
     {
