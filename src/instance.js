@@ -32,6 +32,18 @@ class WebSocketClient {
    * @returns {Promise<WebSocket>} A promise that resolves with the WebSocket instance when connected.
    */
   async connect() {
+    const httpUrl = this.url.replace('ws://', 'http://');
+    const errorMessage = 'Server not reachable. Make sure to export or preview with Pipelab.'
+    try {
+      const response = await fetch(httpUrl);
+      if (!response.ok) {
+        throw new Error(`${errorMessage}, status: ${response.status}`);
+      }
+    } catch (error) {
+      console.error('error', error)
+      throw new Error(errorMessage);
+    }
+
     return new Promise((resolve, reject) => {
       this.socket = new WebSocket(this.url);
 
@@ -184,7 +196,7 @@ class WebSocketClient {
   }
 }
 
-export const fullscreenC3StateToPipelabState = (/** @type {import("./sdk.js").IsFullScreenState} */ state) => {
+const fullscreenC3StateToPipelabState = (/** @type {import("./sdk.js").IsFullScreenState} */ state) => {
   switch (state) {
     case 0:
       return 'normal';
@@ -195,7 +207,7 @@ export const fullscreenC3StateToPipelabState = (/** @type {import("./sdk.js").Is
   }
 };
 
-export const fullscreenPipelabStateToC3State = (/** @type {import('@pipelab/core').FullscreenStates} */ state) => {
+const fullscreenPipelabStateToC3State = (/** @type {import('@pipelab/core').FullscreenStates} */ state) => {
   switch (state) {
     case 'normal':
       return 0;
@@ -224,7 +236,7 @@ let config = {}
  */
 
 /** @type {import('./sdk.js').GetInstanceJSFn} */
-export function getInstanceJs(parentClass, addonTriggers, C3) {
+function getInstanceJs(parentClass, addonTriggers, C3) {
   // @ts-ignore
   return class Pipelab extends parentClass {
     _additionalLoadPromises = []
@@ -434,7 +446,11 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
     }
 
     async unsupportedEngine() {
-      console.warn(`Unable to execute action: unsupported engine`)
+      console.warn(`Unable to execute action:
+- unsupported engine
+- server not reachable
+- plugin not initialized
+`)
     }
 
     /**
@@ -461,12 +477,13 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
      * @param {(...params: Parameters<T>) => unknown} callback
      * @param {(...params: Parameters<T>) => unknown} [fallback]
      * @param {boolean} [force]
+     * @param {boolean} [isInitialize]
      * @returns {T}
      */
-    wrap(base, callback, fallback, force) {
+    wrap(base, callback, fallback, force, isInitialize) {
       // @ts-expect-error
       return (/** @type {Parameters<T>} */ ...args) => {
-        if (!this._isInitialized) {
+        if (!this._isInitialized && !isInitialize) {
           console.warn("Plugin has no been initialized. Please use the according action at the start of layout")
         }
 
@@ -697,7 +714,7 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
         ])
       }
 
-    }, this.unsupportedEngine, true)
+    }, this.unsupportedEngine, true, true)
     _Initialize = this._InitializeBase
     _InitializeSync = this._InitializeBase
 
@@ -2764,3 +2781,9 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
     }
   };
 }
+
+/* REMOVE START */
+export {
+  getInstanceJs
+}
+/* REMOVE END */
