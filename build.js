@@ -573,6 +573,7 @@ try {
     const pluginWithPluginInfo = plugin
       .replaceAll("//<-- PLUGIN_INFO -->", pluginPluginInfo)
       .replaceAll("//<-- INSTANCE -->", instance)
+      .replaceAll("//<-- CONFIG -->", `config = ${JSON.stringify(config, undefined, 2)}`)
       .replaceAll("//<-- DOM_COMPONENT_ID -->", `DOM_COMPONENT_ID = "${config.id}";`)
       .replaceAll("//<-- C3_INSTANCE -->", `const C3 = ${sdk === 'v1' ? 'self' : 'globalThis'}.C3;`)
       .replaceAll("//<-- SDK_VERSION -->", `sdk = "${sdk}"`)

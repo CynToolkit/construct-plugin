@@ -215,6 +215,10 @@ const defaultSteamId = {
 let DOM_COMPONENT_ID = ''
 //<-- DOM_COMPONENT_ID -->
 
+let config = {}
+//<-- CONFIG -->
+
+
 /**
  * @typedef {string | undefined} Tag
  */
@@ -223,6 +227,8 @@ let DOM_COMPONENT_ID = ''
 export function getInstanceJs(parentClass, addonTriggers, C3) {
   // @ts-ignore
   return class Pipelab extends parentClass {
+    _additionalLoadPromises = []
+
     /** @type {SDK.IObjectInstance | undefined} */
     _inst;
 
@@ -349,6 +355,9 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
      * @param {any} _properties
      */
     constructor(inst, _properties) {
+      console.info('Pipelab v' + config.version)
+      console.info('SDK ' + sdk)
+
       let dummyInst = undefined
       if (sdk === 'v1') {
         dummyInst = inst
@@ -379,8 +388,38 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
         this._trigger = this.Trigger;
       }
 
-      this.runtime.sdk.addLoadPromise(
-        this._postToDOMAsync("get-fullscreen-state")
+      if (sdk === "v1") {
+        this.c3runtime = this._runtime
+      } else {
+        this.c3runtime = this.runtime
+      }
+
+      if (sdk === "v1") {
+        this.addLoadPromise = this.c3runtime.AddLoadPromise
+      } else {
+        this.addLoadPromise = this.c3runtime.sdk.addLoadPromise
+      }
+
+      if (sdk === "v1") {
+        this.postToDOMAsync = this.PostToDOMAsync
+      } else {
+        this.postToDOMAsync = this._postToDOMAsync
+      }
+
+      if (sdk === "v1") {
+        this.postToDOM = this.PostToDOM
+      } else {
+        this.postToDOM = this._postToDOM
+      }
+
+      if (sdk === "v1") {
+        this.addDOMMessageHandler = this.AddDOMMessageHandler
+      } else {
+        this.addDOMMessageHandler = this._addDOMMessageHandler
+      }
+
+      this?.addLoadPromise?.(
+        this.postToDOMAsync("get-fullscreen-state")
         .then(
           /** @type {import("./sdk.js").PostFullscreenState} */
           data =>
@@ -389,7 +428,7 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
         })
       );
 
-      this._addDOMMessageHandler('fullscreen-state-changed', (data) => {
+      this.addDOMMessageHandler('fullscreen-state-changed', (data) => {
         this._fullscreenState = data.state
       })
     }
@@ -427,6 +466,10 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
     wrap(base, callback, fallback, force) {
       // @ts-expect-error
       return (/** @type {Parameters<T>} */ ...args) => {
+        if (!this._isInitialized) {
+          console.warn("Plugin has no been initialized. Please use the according action at the start of layout")
+        }
+
         // is initialized
         if (this._isInitialized) {
           // and is connected to an engine
@@ -980,12 +1023,12 @@ export function getInstanceJs(parentClass, addonTriggers, C3) {
       await this.ws?.sendAndWaitForResponse(order)
     }, (toggle) => {
       // Use DOM handler for fullscreen operations
-      if (this.runtime.platformInfo.exportType === 'preview') {
+      if (this.c3runtime.platformInfo.exportType === 'preview') {
         /** @type {import('./sdk.js').PostFullscreenState} */
         const state = {
           state: toggle === 0 ? 0 : 1
         }
-        this._postToDOM('set-fullscreen', state)
+        this.postToDOM('set-fullscreen', state)
       }
     })
     _SetFullscreen = this._SetFullscreenBase
