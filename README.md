@@ -135,6 +135,16 @@ The main files you may want to look at would be instance.js
 | Set rich presence | Set the rich presence of the local player. | Key             *(string)* <br>Value             *(string)* <br> |
 | Set activity (synchronous) | Set the discord activity (aka Rich presence). (synchronous) | Details             *(string)* <br>State             *(string)* <br>Start Timestamp             *(string)* <br>Large image key             *(string)* <br>Large image text             *(string)* <br>Small image key             *(string)* <br>Small image text             *(string)* <br>Tag             *(string)* <br> |
 | Set activity | Set the discord activity (aka Rich presence). | Details             *(string)* <br>State             *(string)* <br>Start Timestamp             *(string)* <br>Large image key             *(string)* <br>Large image text             *(string)* <br>Small image key             *(string)* <br>Small image text             *(string)* <br> |
+| Upload score (synchronous) | Upload a score to a leaderboard (synchronous) | Leaderboard             *(string)* <br>Score             *(number)* <br>Upload type             *(combo)* <br>Tag             *(string)* <br> |
+| Upload score | Upload a score to a leaderboard | Leaderboard             *(string)* <br>Score             *(number)* <br>Upload type             *(combo)* <br> |
+| Upload score with metadata (synchronous) | Upload a score to a leaderboard with metadata (synchronous) | Leaderboard             *(string)* <br>Score             *(number)* <br>Metadata             *(object)* <br>Upload type             *(combo)* <br>Tag             *(string)* <br> |
+| Upload score with metadata | Upload a score to a leaderboard with metadata | Leaderboard             *(string)* <br>Score             *(number)* <br>Metadata             *(object)* <br>Upload type             *(combo)* <br> |
+| Download scores (synchronous) | Download scores from a leaderboard
+When Download type is Regular, offset are absolute.
+When Download type is Around the user, the offsets are the amount of entries around the user to fetch. (synchronous) | Leaderboard             *(string)* <br>Download type             *(combo)* <br>Start             *(number)* <br>End             *(number)* <br>Output             *(object)* <br>Tag             *(string)* <br> |
+| Download scores | Download scores from a leaderboard
+When Download type is Regular, offset are absolute.
+When Download type is Around the user, the offsets are the amount of entries around the user to fetch. | Leaderboard             *(string)* <br>Download type             *(combo)* <br>Start             *(number)* <br>End             *(number)* <br>Output             *(object)* <br> |
 
 
 ---
@@ -313,6 +323,18 @@ The main files you may want to look at would be instance.js
 | On any "DiscordSetActivity" success | Trigger when any of the "DiscordSetActivity" are executed with success. |  |
 | On "DiscordSetActivity" error | Trigger when the "DiscordSetActivity" failed to execute. | Tag *(string)* <br> |
 | On any "DiscordSetActivity" error | Trigger when any of the "DiscordSetActivity" failed to execute. |  |
+| On "LeaderboardUploadScore" success | Trigger when the "LeaderboardUploadScore" is executed with success. | Tag *(string)* <br> |
+| On any "LeaderboardUploadScore" success | Trigger when any of the "LeaderboardUploadScore" are executed with success. |  |
+| On "LeaderboardUploadScore" error | Trigger when the "LeaderboardUploadScore" failed to execute. | Tag *(string)* <br> |
+| On any "LeaderboardUploadScore" error | Trigger when any of the "LeaderboardUploadScore" failed to execute. |  |
+| On "LeaderboardUploadScoreWithMetadata" success | Trigger when the "LeaderboardUploadScoreWithMetadata" is executed with success. | Tag *(string)* <br> |
+| On any "LeaderboardUploadScoreWithMetadata" success | Trigger when any of the "LeaderboardUploadScoreWithMetadata" are executed with success. |  |
+| On "LeaderboardUploadScoreWithMetadata" error | Trigger when the "LeaderboardUploadScoreWithMetadata" failed to execute. | Tag *(string)* <br> |
+| On any "LeaderboardUploadScoreWithMetadata" error | Trigger when any of the "LeaderboardUploadScoreWithMetadata" failed to execute. |  |
+| On "LeaderboardDownloadScore" success | Trigger when the "LeaderboardDownloadScore" is executed with success. | Tag *(string)* <br> |
+| On any "LeaderboardDownloadScore" success | Trigger when any of the "LeaderboardDownloadScore" are executed with success. |  |
+| On "LeaderboardDownloadScore" error | Trigger when the "LeaderboardDownloadScore" failed to execute. | Tag *(string)* <br> |
+| On any "LeaderboardDownloadScore" error | Trigger when any of the "LeaderboardDownloadScore" failed to execute. |  |
 | Is engine | Return true if the engine running the app is the one selected | Engine *(combo)* <br> |
 | Is full screen | Returns true if the window is in full screen mode. | State *(combo)* <br> |
 | Last checked path exists | Returns true if the last checked path exists. |  |
@@ -408,6 +430,12 @@ The main files you may want to look at would be instance.js
 | SetRichPresenceResult | The result of the "SetRichPresence last call" | string |  | 
 | DiscordSetActivityError | The error of the "DiscordSetActivity last call" | string |  | 
 | DiscordSetActivityResult | The result of the "DiscordSetActivity last call" | string |  | 
+| LeaderboardUploadScoreError | The error of the "LeaderboardUploadScore last call" | string |  | 
+| LeaderboardUploadScoreResult | The result of the "LeaderboardUploadScore last call" | string |  | 
+| LeaderboardUploadScoreWithMetadataError | The error of the "LeaderboardUploadScoreWithMetadata last call" | string |  | 
+| LeaderboardUploadScoreWithMetadataResult | The result of the "LeaderboardUploadScoreWithMetadata last call" | string |  | 
+| LeaderboardDownloadScoreError | The error of the "LeaderboardDownloadScore last call" | string |  | 
+| LeaderboardDownloadScoreResult | The result of the "LeaderboardDownloadScore last call" | string |  | 
 | ArgumentAt | Get the argument at the given index. | string | Index *(number)* <br> | 
 | ArgumentCount | Get the number of arguments. | number |  | 
 | AppFolderURL | Return the URL of the folder of the current app. | string |  | 

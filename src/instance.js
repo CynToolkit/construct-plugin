@@ -395,7 +395,6 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         /** @type {import("./sdk.js").StaticMethodsParentClass['_trigger']} */
         // @ts-expect-error Trigger is only available in v1
         this._trigger = (...args) => {
-          console.log('triggering sdk v1', args)
           return this.Trigger(...args);
         };
       }
@@ -462,16 +461,10 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
       // fns[1] = without tag
       if (tag) {
         this._currentTag = tag
-        console.log('this._currentTag', this._currentTag)
-        console.log('this._trigger', this._trigger)
-        console.log('fns', fns)
-        console.log('this._trigger(fns[0])', this._trigger(fns[0]))
         this._trigger(fns[0])
         this._trigger(fns[1])
-        console.log('trigger done')
         // reset tag
         this._currentTag = ""
-        console.log('this._currentTag', this._currentTag)
       } else {
         await this._triggerAsync(fns[1])
       }
@@ -708,8 +701,6 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         }
 
         this._isInitialized = true
-
-        console.log('C3', C3)
 
         await this.trigger(tag, [
           C3.Plugins.pipelabv2.Cnds.OnInitializeSuccess,
@@ -1914,11 +1905,6 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
       /** @type {string} */ type,
       /** @type {Tag} */ tag
     ) => {
-      console.log('name', name)
-      console.log('score', score)
-      console.log('type', type)
-      console.log('tag', tag)
-
       try {
         /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').SteamRaw<'leaderboards', 'uploadScore'>, 'input'>} */
         const order = {
@@ -1962,12 +1948,6 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
       /** @type {string} */ type,
       /** @type {Tag} */ tag
     ) => {
-      console.log('name', name)
-      console.log('score', score)
-      console.log('metadata', metadata)
-      console.log('type', type)
-      console.log('tag', tag)
-
       const target = metadata.getFirstPickedInstance();
       let result = []
       if (target) {
@@ -1982,8 +1962,6 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
           console.warn("Array must be a 1 dimentional array. Skipping metadata")
         }
       }
-
-      console.log('result', result)
 
       try {
         /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').SteamRaw<'leaderboards', 'uploadScore'>, 'input'>} */
@@ -2029,11 +2007,6 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
       /** @type {IObjectType<IJSONInstance>} */ jsonObject,
       /** @type {Tag} */ tag
     ) => {
-      console.log('leaderboard', leaderboard)
-      console.log('downloadType', downloadType)
-      console.log('start', start)
-      console.log('end', end)
-      console.log('tag', tag)
 
       try {
         /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').SteamRaw<'leaderboards', 'downloadScore'>, 'input'>} */
@@ -2052,8 +2025,6 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         }
         this._LeaderboardDownloadScoreResultValue = answer?.body.success
         this._LeaderboardDownloadScoreErrorValue = ''
-
-        console.log('answer?.body', answer?.body.data)
 
         const jsonInstance = jsonObject.getFirstInstance()
         jsonInstance?.setJsonDataCopy(answer?.body.data)
@@ -2167,8 +2138,6 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
 
     // #region Cnds
     _OnInitializeSuccess = this.wrap(super._OnInitializeSuccess, (/** @type {Tag} */ tag) => {
-      console.log('tag', tag)
-      console.log('this._currentTag', this._currentTag)
       return this._currentTag === tag;
     })
     _OnAnyInitializeSuccess = this.wrap(super._OnAnyInitializeSuccess, () => {
