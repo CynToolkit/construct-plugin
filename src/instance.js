@@ -1,6 +1,5 @@
 // @ts-ignore
 // TODO: must use a bundler to support dependencies & typescript
-function assertPath(e) { if ("string" != typeof e) throw new TypeError("Path must be a string. Received " + JSON.stringify(e)) } function normalizeStringPosix(e, t) { for (var r, n = "", a = 0, i = -1, o = 0, l = 0; l <= e.length; ++l) { if (l < e.length) r = e.charCodeAt(l); else { if (47 === r) break; r = 47 } if (47 === r) { if (i === l - 1 || 1 === o); else if (i !== l - 1 && 2 === o) { if (n.length < 2 || 2 !== a || 46 !== n.charCodeAt(n.length - 1) || 46 !== n.charCodeAt(n.length - 2)) if (n.length > 2) { var h = n.lastIndexOf("/"); if (h !== n.length - 1) { -1 === h ? (n = "", a = 0) : a = (n = n.slice(0, h)).length - 1 - n.lastIndexOf("/"), i = l, o = 0; continue } } else if (2 === n.length || 1 === n.length) { n = "", a = 0, i = l, o = 0; continue } t && (n.length > 0 ? n += "/.." : n = "..", a = 2) } else n.length > 0 ? n += "/" + e.slice(i + 1, l) : n = e.slice(i + 1, l), a = l - i - 1; i = l, o = 0 } else 46 === r && -1 !== o ? ++o : o = -1 } return n } function _format(e, t) { var r = t.dir || t.root, n = t.base || (t.name || "") + (t.ext || ""); return r ? r === t.root ? r + n : r + e + n : n } var posixPath = { resolve: function () { for (var e, t = "", r = !1, n = arguments.length - 1; n >= -1 && !r; n--) { var a; n >= 0 ? a = arguments[n] : (void 0 === e && (e = process.cwd()), a = e), assertPath(a), 0 !== a.length && (t = a + "/" + t, r = 47 === a.charCodeAt(0)) } return t = normalizeStringPosix(t, !r), r ? t.length > 0 ? "/" + t : "/" : t.length > 0 ? t : "." }, normalize: function (e) { if (assertPath(e), 0 === e.length) return "."; var t = 47 === e.charCodeAt(0), r = 47 === e.charCodeAt(e.length - 1); return 0 !== (e = normalizeStringPosix(e, !t)).length || t || (e = "."), e.length > 0 && r && (e += "/"), t ? "/" + e : e }, isAbsolute: function (e) { return assertPath(e), e.length > 0 && 47 === e.charCodeAt(0) }, join: function () { if (0 === arguments.length) return "."; for (var e, t = 0; t < arguments.length; ++t) { var r = arguments[t]; assertPath(r), r.length > 0 && (void 0 === e ? e = r : e += "/" + r) } return void 0 === e ? "." : posixPath.normalize(e) }, relative: function (e, t) { if (assertPath(e), assertPath(t), e === t) return ""; if ((e = posixPath.resolve(e)) === (t = posixPath.resolve(t))) return ""; for (var r = 1; r < e.length && 47 === e.charCodeAt(r); ++r); for (var n = e.length, a = n - r, i = 1; i < t.length && 47 === t.charCodeAt(i); ++i); for (var o = t.length - i, l = a < o ? a : o, h = -1, s = 0; s <= l; ++s) { if (s === l) { if (o > l) { if (47 === t.charCodeAt(i + s)) return t.slice(i + s + 1); if (0 === s) return t.slice(i + s) } else a > l && (47 === e.charCodeAt(r + s) ? h = s : 0 === s && (h = 0)); break } var f = e.charCodeAt(r + s); if (f !== t.charCodeAt(i + s)) break; 47 === f && (h = s) } var c = ""; for (s = r + h + 1; s <= n; ++s)s !== n && 47 !== e.charCodeAt(s) || (0 === c.length ? c += ".." : c += "/.."); return c.length > 0 ? c + t.slice(i + h) : (i += h, 47 === t.charCodeAt(i) && ++i, t.slice(i)) }, _makeLong: function (e) { return e }, dirname: function (e) { if (assertPath(e), 0 === e.length) return "."; for (var t = e.charCodeAt(0), r = 47 === t, n = -1, a = !0, i = e.length - 1; i >= 1; --i)if (47 === (t = e.charCodeAt(i))) { if (!a) { n = i; break } } else a = !1; return -1 === n ? r ? "/" : "." : r && 1 === n ? "//" : e.slice(0, n) }, basename: function (e, t) { if (void 0 !== t && "string" != typeof t) throw new TypeError('"ext" argument must be a string'); assertPath(e); var r, n = 0, a = -1, i = !0; if (void 0 !== t && t.length > 0 && t.length <= e.length) { if (t.length === e.length && t === e) return ""; var o = t.length - 1, l = -1; for (r = e.length - 1; r >= 0; --r) { var h = e.charCodeAt(r); if (47 === h) { if (!i) { n = r + 1; break } } else -1 === l && (i = !1, l = r + 1), o >= 0 && (h === t.charCodeAt(o) ? -1 == --o && (a = r) : (o = -1, a = l)) } return n === a ? a = l : -1 === a && (a = e.length), e.slice(n, a) } for (r = e.length - 1; r >= 0; --r)if (47 === e.charCodeAt(r)) { if (!i) { n = r + 1; break } } else -1 === a && (i = !1, a = r + 1); return -1 === a ? "" : e.slice(n, a) }, extname: function (e) { assertPath(e); for (var t = -1, r = 0, n = -1, a = !0, i = 0, o = e.length - 1; o >= 0; --o) { var l = e.charCodeAt(o); if (47 !== l) -1 === n && (a = !1, n = o + 1), 46 === l ? -1 === t ? t = o : 1 !== i && (i = 1) : -1 !== t && (i = -1); else if (!a) { r = o + 1; break } } return -1 === t || -1 === n || 0 === i || 1 === i && t === n - 1 && t === r + 1 ? "" : e.slice(t, n) }, format: function (e) { if (null === e || "object" != typeof e) throw new TypeError('The "pathObject" argument must be of type Object. Received type ' + typeof e); return _format("/", e) }, parse: function (e) { assertPath(e); var t = { root: "", dir: "", base: "", ext: "", name: "" }; if (0 === e.length) return t; var r, n = e.charCodeAt(0), a = 47 === n; a ? (t.root = "/", r = 1) : r = 0; for (var i = -1, o = 0, l = -1, h = !0, s = e.length - 1, f = 0; s >= r; --s)if (47 !== (n = e.charCodeAt(s))) -1 === l && (h = !1, l = s + 1), 46 === n ? -1 === i ? i = s : 1 !== f && (f = 1) : -1 !== i && (f = -1); else if (!h) { o = s + 1; break } return -1 === i || -1 === l || 0 === f || 1 === f && i === l - 1 && i === o + 1 ? -1 !== l && (t.base = t.name = 0 === o && a ? e.slice(1, l) : e.slice(o, l)) : (0 === o && a ? (t.name = e.slice(1, i), t.base = e.slice(1, l)) : (t.name = e.slice(o, i), t.base = e.slice(o, l)), t.ext = e.slice(i, l)), o > 0 ? t.dir = e.slice(0, o - 1) : a && (t.dir = "/"), t }, sep: "/", delimiter: ":", win32: null, posix: null };
 
 // @ts-check
 
@@ -367,8 +366,6 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
      * @param {any} _properties
      */
     constructor(inst, _properties) {
-      console.info('Pipelab v' + config.version)
-      console.info('SDK ' + sdk)
 
       let dummyInst = undefined
       if (sdk === 'v1') {
@@ -397,7 +394,10 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         this._triggerAsync = this.TriggerAsync;
         /** @type {import("./sdk.js").StaticMethodsParentClass['_trigger']} */
         // @ts-expect-error Trigger is only available in v1
-        this._trigger = this.Trigger;
+        this._trigger = (...args) => {
+          console.log('triggering sdk v1', args)
+          return this.Trigger(...args);
+        };
       }
 
       if (sdk === "v1") {
@@ -459,13 +459,19 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
      */
     async trigger(tag, fns) {
       // fns[0] = with tag
-      // fns[!] = without tag
+      // fns[1] = without tag
       if (tag) {
         this._currentTag = tag
+        console.log('this._currentTag', this._currentTag)
+        console.log('this._trigger', this._trigger)
+        console.log('fns', fns)
+        console.log('this._trigger(fns[0])', this._trigger(fns[0]))
         this._trigger(fns[0])
         this._trigger(fns[1])
+        console.log('trigger done')
         // reset tag
         this._currentTag = ""
+        console.log('this._currentTag', this._currentTag)
       } else {
         await this._triggerAsync(fns[1])
       }
@@ -525,6 +531,8 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     // Acts
 
     _InitializeBase = this.wrap(super._Initialize, async (/** @type {Tag} */ tag) => {
+      console.info('Pipelab v' + config.version)
+      console.info('SDK ' + sdk)
       try {
         // Initialize the WebSocket connection
         if (!this.ws) {
@@ -700,6 +708,8 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         }
 
         this._isInitialized = true
+
+        console.log('C3', C3)
 
         await this.trigger(tag, [
           C3.Plugins.pipelabv2.Cnds.OnInitializeSuccess,
@@ -1401,7 +1411,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
 
         this._ListFilesResultValue = files?.body.list ?? []
         this._ListFilesErrorValue = ''
-        this.trigger(tag, [
+        await this.trigger(tag, [
           C3.Plugins.pipelabv2.Cnds.OnListFilesSuccess,
           C3.Plugins.pipelabv2.Cnds.OnAnyListFilesSuccess,
         ])
@@ -1409,7 +1419,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         if (e instanceof Error) {
           this._ListFilesErrorValue = e.message
           this._ListFilesResultValue = []
-          this.trigger(tag, [
+          await this.trigger(tag, [
             C3.Plugins.pipelabv2.Cnds.OnListFilesError,
             C3.Plugins.pipelabv2.Cnds.OnAnyListFilesError,
           ])
@@ -1898,6 +1908,174 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     _CheckAchievementActivationState = this._CheckAchievementActivationStateBase
     _CheckAchievementActivationStateSync = this._CheckAchievementActivationStateBase
 
+    _LeaderboardUploadScoreBase = this.wrap(super._LeaderboardUploadScore, async (
+      /** @type {string} */ name,
+      /** @type {number} */ score,
+      /** @type {string} */ type,
+      /** @type {Tag} */ tag
+    ) => {
+      console.log('name', name)
+      console.log('score', score)
+      console.log('type', type)
+      console.log('tag', tag)
+
+      try {
+        /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').SteamRaw<'leaderboards', 'uploadScore'>, 'input'>} */
+        const order = {
+          url: '/steam/leaderboard/upload-score',
+          body: {
+            name,
+            score,
+            type,
+            metadata: [],
+          },
+        };
+        const answer = await this.ws?.sendAndWaitForResponse(order);
+        if (answer?.body.success === false) {
+          throw new Error('Failed')
+        }
+        this._LeaderboardUploadScoreResultValue = answer?.body.success
+        this._LeaderboardUploadScoreErrorValue = ''
+
+        await this.trigger(tag, [
+          C3.Plugins.pipelabv2.Cnds.OnLeaderboardUploadScoreSuccess,
+          C3.Plugins.pipelabv2.Cnds.OnAnyLeaderboardUploadScoreSuccess
+        ])
+      } catch (e) {
+        if (e instanceof Error) {
+          this._LeaderboardUploadScoreErrorValue = e.message
+          this._LeaderboardUploadScoreResultValue = -1
+          await this.trigger(tag, [
+            C3.Plugins.pipelabv2.Cnds.OnLeaderboardUploadScoreError,
+            C3.Plugins.pipelabv2.Cnds.OnAnyLeaderboardUploadScoreError
+          ])
+        }
+      }
+    }, this.unsupportedEngine)
+    _LeaderboardUploadScore = this._LeaderboardUploadScoreBase
+    _LeaderboardUploadScoreSync = this._LeaderboardUploadScoreBase
+
+    _LeaderboardUploadScoreWithMetadataBase = this.wrap(super._LeaderboardUploadScoreWithMetadata, async (
+      /** @type {string} */ name,
+      /** @type {number} */ score,
+      /** @type {IObjectType<IArrayInstance>} */ metadata,
+      /** @type {string} */ type,
+      /** @type {Tag} */ tag
+    ) => {
+      console.log('name', name)
+      console.log('score', score)
+      console.log('metadata', metadata)
+      console.log('type', type)
+      console.log('tag', tag)
+
+      const target = metadata.getFirstPickedInstance();
+      let result = []
+      if (target) {
+        if (target.height === 1) {
+          const  { width } = target;
+          for (let i = 0; i < width; i++) {
+            const value = target.getAt(i)
+
+            result.push(typeof value === 'string' ? parseInt(value, 10) : value)
+          }
+        } else {
+          console.warn("Array must be a 1 dimentional array. Skipping metadata")
+        }
+      }
+
+      console.log('result', result)
+
+      try {
+        /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').SteamRaw<'leaderboards', 'uploadScore'>, 'input'>} */
+        const order = {
+          url: '/steam/leaderboard/upload-score',
+          body: {
+            name,
+            score,
+            type,
+            metadata: result,
+          },
+        };
+        const answer = await this.ws?.sendAndWaitForResponse(order);
+        if (answer?.body.success === false) {
+          throw new Error('Failed')
+        }
+        this._LeaderboardUploadScoreWithMetadataResultValue = answer?.body.success
+        this._LeaderboardUploadScoreWithMetadataErrorValue = ''
+
+        await this.trigger(tag, [
+          C3.Plugins.pipelabv2.Cnds.OnLeaderboardUploadScoreWithMetadataSuccess,
+          C3.Plugins.pipelabv2.Cnds.OnAnyLeaderboardUploadScoreWithMetadataSuccess
+        ])
+      } catch (e) {
+        if (e instanceof Error) {
+          this._LeaderboardUploadScoreWithMetadataErrorValue = e.message
+          this._LeaderboardUploadScoreWithMetadataResultValue = -1
+          await this.trigger(tag, [
+            C3.Plugins.pipelabv2.Cnds.OnLeaderboardUploadScoreWithMetadataError,
+            C3.Plugins.pipelabv2.Cnds.OnAnyLeaderboardUploadScoreWithMetadataError
+          ])
+        }
+      }
+    }, this.unsupportedEngine)
+    _LeaderboardUploadScoreWithMetadata = this._LeaderboardUploadScoreWithMetadataBase
+    _LeaderboardUploadScoreWithMetadataSync = this._LeaderboardUploadScoreWithMetadataBase
+
+    _LeaderboardDownloadScoreBase = this.wrap(super._LeaderboardDownloadScore, async (
+      /** @type {string} */ leaderboard,
+      /** @type {number} */ downloadType,
+      /** @type {number} */ start,
+      /** @type {number} */ end,
+      /** @type {IObjectType<IJSONInstance>} */ jsonObject,
+      /** @type {Tag} */ tag
+    ) => {
+      console.log('leaderboard', leaderboard)
+      console.log('downloadType', downloadType)
+      console.log('start', start)
+      console.log('end', end)
+      console.log('tag', tag)
+
+      try {
+        /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').SteamRaw<'leaderboards', 'downloadScore'>, 'input'>} */
+        const order = {
+          url: '/steam/leaderboard/download-score',
+          body: {
+            name: leaderboard,
+            type: downloadType,
+            start,
+            end,
+          },
+        };
+        const answer = await this.ws?.sendAndWaitForResponse(order);
+        if (answer?.body.success === false) {
+          throw new Error('Failed')
+        }
+        this._LeaderboardDownloadScoreResultValue = answer?.body.success
+        this._LeaderboardDownloadScoreErrorValue = ''
+
+        console.log('answer?.body', answer?.body.data)
+
+        const jsonInstance = jsonObject.getFirstInstance()
+        jsonInstance?.setJsonDataCopy(answer?.body.data)
+
+        await this.trigger(tag, [
+          C3.Plugins.pipelabv2.Cnds.OnLeaderboardDownloadScoreSuccess,
+          C3.Plugins.pipelabv2.Cnds.OnAnyLeaderboardDownloadScoreSuccess
+        ])
+      } catch (e) {
+        if (e instanceof Error) {
+          this._LeaderboardDownloadScoreErrorValue = e.message
+          this._LeaderboardDownloadScoreResultValue = -1
+          await this.trigger(tag, [
+            C3.Plugins.pipelabv2.Cnds.OnLeaderboardDownloadScoreError,
+            C3.Plugins.pipelabv2.Cnds.OnAnyLeaderboardDownloadScoreError
+          ])
+        }
+      }
+    }, this.unsupportedEngine)
+    _LeaderboardDownloadScore = this._LeaderboardDownloadScoreBase
+    _LeaderboardDownloadScoreSync = this._LeaderboardDownloadScoreBase
+
     _SetRichPresenceBase = this.wrap(super._SetRichPresence, async (
       /** @type {string} */ key,
       /** @type {string} */ value,
@@ -1988,7 +2166,11 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     _DiscordSetActivity = this._DiscordSetActivityBase
 
     // #region Cnds
-    _OnInitializeSuccess = this.wrap(super._OnInitializeSuccess, (/** @type {Tag} */ tag) => this._currentTag === tag)
+    _OnInitializeSuccess = this.wrap(super._OnInitializeSuccess, (/** @type {Tag} */ tag) => {
+      console.log('tag', tag)
+      console.log('this._currentTag', this._currentTag)
+      return this._currentTag === tag;
+    })
     _OnAnyInitializeSuccess = this.wrap(super._OnAnyInitializeSuccess, () => {
       return true
     })
@@ -2297,6 +2479,22 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     _OnAnyActivateAchievementSuccess = this.wrap(super._OnAnyActivateAchievementSuccess, () => true)
     _OnActivateAchievementError = this.wrap(super._OnActivateAchievementError, (/** @type {Tag} */ tag) => this._currentTag === tag)
     _OnAnyActivateAchievementError = this.wrap(super._OnAnyActivateAchievementError, () => true)
+
+    _OnLeaderboardUploadScoreSuccess = this.wrap(super._OnLeaderboardUploadScoreSuccess, (/** @type {Tag} */ tag) => this._currentTag === tag)
+    _OnAnyLeaderboardUploadScoreSuccess = this.wrap(super._OnAnyLeaderboardUploadScoreSuccess, () => true)
+    _OnLeaderboardUploadScoreError = this.wrap(super._OnLeaderboardUploadScoreError, (/** @type {Tag} */ tag) => this._currentTag === tag)
+    _OnAnyLeaderboardUploadScoreError = this.wrap(super._OnAnyLeaderboardUploadScoreError, () => true)
+
+    _OnLeaderboardDownloadScoreSuccess = this.wrap(super._OnLeaderboardDownloadScoreSuccess, (/** @type {Tag} */ tag) => this._currentTag === tag)
+    _OnAnyLeaderboardDownloadScoreSuccess = this.wrap(super._OnAnyLeaderboardDownloadScoreSuccess, () => true)
+    _OnLeaderboardDownloadScoreError = this.wrap(super._OnLeaderboardDownloadScoreError, (/** @type {Tag} */ tag) => this._currentTag === tag)
+    _OnAnyLeaderboardDownloadScoreError = this.wrap(super._OnAnyLeaderboardDownloadScoreError, () => true)
+
+    _OnLeaderboardUploadScoreWithMetadataSuccess = this.wrap(super._OnLeaderboardUploadScoreWithMetadataSuccess, (/** @type {Tag} */ tag) => this._currentTag === tag)
+    _OnAnyLeaderboardUploadScoreWithMetadataSuccess = this.wrap(super._OnAnyLeaderboardUploadScoreWithMetadataSuccess, () => true)
+    _OnLeaderboardUploadScoreWithMetadataError = this.wrap(super._OnLeaderboardUploadScoreWithMetadataError, (/** @type {Tag} */ tag) => this._currentTag === tag)
+    _OnAnyLeaderboardUploadScoreWithMetadataError = this.wrap(super._OnAnyLeaderboardUploadScoreWithMetadataError, () => true)
+
 
     _OnClearAchievementSuccess = this.wrap(super._OnClearAchievementSuccess, (/** @type {Tag} */ tag) => this._currentTag === tag)
     _OnAnyClearAchievementSuccess = this.wrap(super._OnAnyClearAchievementSuccess, () => {
@@ -2759,6 +2957,27 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     })
     _SetRichPresenceResult = this.exprs(super._SetRichPresenceResult, () => {
       return this._SetRichPresenceResultValue
+    })
+
+    _LeaderboardUploadScoreError = this.exprs(super._LeaderboardUploadScoreError, () => {
+      return this._LeaderboardUploadScoreErrorValue
+    })
+    _LeaderboardUploadScoreResult = this.exprs(super._LeaderboardUploadScoreResult, () => {
+      return this._LeaderboardUploadScoreResultValue
+    })
+
+    _LeaderboardUploadScoreWithMetadataError = this.exprs(super._LeaderboardUploadScoreWithMetadataError, () => {
+      return this._LeaderboardUploadScoreWithMetadataErrorValue
+    })
+    _LeaderboardUploadScoreWithMetadataResult = this.exprs(super._LeaderboardUploadScoreWithMetadataResult, () => {
+      return this._LeaderboardUploadScoreWithMetadataResultValue
+    })
+
+    _LeaderboardDownloadScoreError = this.exprs(super._LeaderboardDownloadScoreError, () => {
+      return this._LeaderboardDownloadScoreErrorValue
+    })
+    _LeaderboardDownloadScoreResult = this.exprs(super._LeaderboardDownloadScoreResult, () => {
+      return this._LeaderboardDownloadScoreResultValue
     })
 
     _DiscordSetActivityError = this.exprs(super._DiscordSetActivityError, () => {

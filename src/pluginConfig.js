@@ -909,6 +909,7 @@ const ActivateAchievement = ACEGenerator("ActivateAchievement", /** @type {const
   displayText: "Activate achievement [b]{0}[/b]",
   description: "Activate a steam achievement",
 }))
+
 const ClearAchievement = ACEGenerator("ClearAchievement", /** @type {const} */ ({
   category: "steam",
   highlight: false,
@@ -965,6 +966,135 @@ const SetRichPresence = ACEGenerator("SetRichPresence", /** @type {const} */ ({
   ],
   description: "Set the rich presence of the local player.",
 }))
+
+const LeaderboardUploadScoreWithMetadata = ACEGenerator("LeaderboardUploadScoreWithMetadata", /** @type {const} */ ({
+  category: "steam",
+  highlight: false,
+  deprecated: false,
+  params: [
+    {
+      id: 'leaderboard',
+      desc: "The leaderboard name",
+      name: "Leaderboard",
+      type: 'string',
+      initialValue: "\"\"",
+    },
+    {
+      id: 'score',
+      desc: "The score to upload",
+      name: "Score",
+      type: 'number',
+      initialValue: "0",
+    },
+    {
+      id: 'metadata',
+      desc: "The metadata to upload alsong the score",
+      name: "Metadata",
+      type: 'object',
+      allowedPluginIds: ['Arr']
+    },
+    {
+      id: 'uploadType',
+      desc: "Whether to force the score to change, or keep the previous score if it was better?",
+      name: "Upload type",
+      type: 'combo',
+      items: [
+        { "keepBest": "Keep the best" },
+        { "overwrite": "Overwrite" },
+      ]
+    }
+  ],
+  listName: "Upload score with metadata",
+  displayText: "Upload score [b]{1}[/b] to leaderboard {0} (type={3}, meta={2})",
+  description: "Upload a score to a leaderboard with metadata"
+}))
+
+const LeaderboardUploadScore = ACEGenerator("LeaderboardUploadScore", /** @type {const} */ ({
+  category: "steam",
+  highlight: false,
+  deprecated: false,
+  params: [
+    {
+      id: 'leaderboard',
+      desc: "The leaderboard name",
+      name: "Leaderboard",
+      type: 'string',
+      initialValue: "\"\"",
+    },
+    {
+      id: 'score',
+      desc: "The score to upload",
+      name: "Score",
+      type: 'number',
+      initialValue: "0",
+    },
+    {
+      id: 'uploadType',
+      desc: "Whether to force the score to change, or keep the previous score if it was better?",
+      name: "Upload type",
+      type: 'combo',
+      items: [
+        { "keepBest": "Keep the best" },
+        { "overwrite": "Overwrite" },
+      ]
+    }
+  ],
+  listName: "Upload score",
+  displayText: "Upload score [b]{1}[/b] to leaderboard {0} (type={2})",
+  description: "Upload a score to a leaderboard"
+}))
+
+const LeaderboardDownloadScore = ACEGenerator("LeaderboardDownloadScore", /** @type {const} */ ({
+  category: "steam",
+  highlight: false,
+  deprecated: false,
+  params: [
+    {
+      id: 'leaderboard',
+      desc: "The leaderboard name",
+      name: "Leaderboard",
+      type: 'string',
+      initialValue: "\"\"",
+    },
+    {
+      id: 'downloadType',
+      desc: "The type of data you want to query",
+      name: "Download type",
+      type: 'combo',
+      items: [
+        { "regular": "Regular" },
+        { "around": "Around the user" },
+        { "friends": "Friends" },
+      ]
+    },
+    {
+      id: 'start',
+      desc: "The offset start",
+      name: "Start",
+      type: 'number',
+      initialValue: "0",
+    },
+    {
+      id: 'end',
+      desc: "The offset end",
+      name: "End",
+      type: 'number',
+      initialValue: "0",
+    },
+    {
+      id: 'output',
+      desc: "The output object",
+      name: "Output",
+      type: 'object',
+      allowedPluginIds: ['Json']
+    },
+  ],
+  listName: "Download scores",
+  displayText: "Download scores from leaderboard {0} (type={1}, {2}..{3}) into {4}",
+  description: "Download scores from a leaderboard\nWhen Download type is Regular, offset are absolute.\nWhen Download type is Around the user, the offsets are the amount of entries around the user to fetch."
+}))
+
+// Discord
 
 const DiscordSetActivity = ACEGenerator("DiscordSetActivity", /** @type {const} */ ({
   category: "discord",
@@ -1196,6 +1326,9 @@ const Config = /** @type {const} */({
     ...CheckAchievementActivationState.actions,
     ...SetRichPresence.actions,
     ...DiscordSetActivity.actions,
+    ...LeaderboardUploadScore.actions,
+    ...LeaderboardUploadScoreWithMetadata.actions,
+    ...LeaderboardDownloadScore.actions,
   },
   Cnds: {
     ...Initialize.conditions,
@@ -1241,6 +1374,9 @@ const Config = /** @type {const} */({
     ...CheckAchievementActivationState.conditions,
     ...SetRichPresence.conditions,
     ...DiscordSetActivity.conditions,
+    ...LeaderboardUploadScore.conditions,
+    ...LeaderboardUploadScoreWithMetadata.conditions,
+    ...LeaderboardDownloadScore.conditions,
     IsEngine: {
       category: "general",
       forward: "_IsEngine",
@@ -1344,6 +1480,9 @@ const Config = /** @type {const} */({
     ...CheckAchievementActivationState.expressions,
     ...SetRichPresence.expressions,
     ...DiscordSetActivity.expressions,
+    ...LeaderboardUploadScore.expressions,
+    ...LeaderboardUploadScoreWithMetadata.expressions,
+    ...LeaderboardDownloadScore.expressions,
 
     // command line
     ArgumentAt: {

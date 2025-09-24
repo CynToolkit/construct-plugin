@@ -6,6 +6,7 @@ _.file = ".env"
 
 [tasks.build]
 run = "pnpm run build"
+depends = ["validate"]
 
 [tasks.validate]
 run = "pnpm run validate"

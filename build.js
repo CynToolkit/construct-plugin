@@ -1,6 +1,7 @@
 // @ts-check
 import { existsSync, readdirSync, lstatSync, unlinkSync, rmdirSync, mkdirSync, closeSync, openSync, writeFileSync, copyFileSync, readFileSync } from "fs";
 import { join } from "path";
+import esbuild from 'esbuild'
 
 const __dirname = import.meta.dirname;
 
@@ -579,7 +580,23 @@ try {
       .replaceAll("//<-- SDK_VERSION -->", `sdk = "${sdk}"`)
       .replaceAll(/\/\* REMOVE START \*\/[\s\S]*?\/\* REMOVE END \*\//gmi, '')
 
-    writeFileSync(`./${exportDir}/c3runtime/plugin.js`, pluginWithPluginInfo);
+    const pluginTranspiled = await esbuild.build({
+      stdin: {
+        contents: pluginWithPluginInfo,
+
+        // resolveDir: './src',
+        loader: 'ts',
+      },
+      bundle: true,
+      format: 'cjs',
+      write: false,
+    })
+
+    console.log('pluginTranspiled', pluginTranspiled)
+
+    const file = pluginTranspiled.outputFiles[0].text;
+
+    writeFileSync(`./${exportDir}/c3runtime/plugin.js`, file);
 
     if (config.domSideScripts) {
       config.domSideScripts.forEach((script) => {
