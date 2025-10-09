@@ -1149,6 +1149,62 @@ const DiscordSetActivity = ACEGenerator("DiscordSetActivity", /** @type {const} 
   description: "Set the discord activity (aka Rich presence).",
 }))
 
+const ActivateToWebPage = ACEGenerator("ActivateToWebPage", /** @type {const} */ ({
+  category: "steam",
+  highlight: false,
+  deprecated: false,
+  params: [
+    {
+      id: 'url',
+      desc: "The webpage to open. A fully qualified address with the protocol is required (e.g. 'http://www.steampowered.com')",
+      name: "URL",
+      type: 'string',
+      initialValue: "\"\"",
+    },
+    {
+      id: 'mode',
+      desc: "Mode for the web page.",
+      name: "Mode",
+      type: 'combo',
+      items: [
+        { "default": "Default" },
+        { "modal": "Modal" },
+      ]
+    }
+  ],
+  listName: "Activate Steam overlay to web page",
+  displayText: "Activate Steam overlay to web page [b]{0}[/b] (mode: {1})",
+  description: "Activates Steam Overlay web browser directly to the specified URL",
+}))
+
+const ActivateToStore = ACEGenerator("ActivateToStore", /** @type {const} */ ({
+  category: "steam",
+  highlight: false,
+  deprecated: false,
+  params: [
+    {
+      id: 'appId',
+      desc: "The app ID to show the store page of",
+      name: "App ID",
+      type: 'number',
+      initialValue: "0",
+    },
+    {
+      id: 'flag',
+      desc: "Flags to modify the behavior when the page opens",
+      name: "Flag",
+      type: 'combo',
+      items: [
+        { "none": "None" },
+        { "addToCartAndShow": "Add to cart and show" },
+      ]
+    }
+  ],
+  listName: "Activate Steam overlay to store",
+  displayText: "Activate Steam overlay to store for app [b]{0}[/b] (flag: {1})",
+  description: "Activates the Steam Overlay to the Steam store page for the provided app",
+}))
+
 /**
  * @satisfies {import('./sdk.js').Config<import('./sdk.js').Categories>}
  */
@@ -1329,6 +1385,8 @@ const Config = /** @type {const} */({
     ...LeaderboardUploadScore.actions,
     ...LeaderboardUploadScoreWithMetadata.actions,
     ...LeaderboardDownloadScore.actions,
+    ...ActivateToWebPage.actions,
+    ...ActivateToStore.actions,
   },
   Cnds: {
     ...Initialize.conditions,
@@ -1377,6 +1435,8 @@ const Config = /** @type {const} */({
     ...LeaderboardUploadScore.conditions,
     ...LeaderboardUploadScoreWithMetadata.conditions,
     ...LeaderboardDownloadScore.conditions,
+    ...ActivateToWebPage.conditions,
+    ...ActivateToStore.conditions,
     IsEngine: {
       category: "general",
       forward: "_IsEngine",
@@ -1483,6 +1543,8 @@ const Config = /** @type {const} */({
     ...LeaderboardUploadScore.expressions,
     ...LeaderboardUploadScoreWithMetadata.expressions,
     ...LeaderboardDownloadScore.expressions,
+    ...ActivateToWebPage.expressions,
+    ...ActivateToStore.expressions,
 
     // command line
     ArgumentAt: {
@@ -1880,6 +1942,14 @@ const Config = /** @type {const} */({
       deprecated: false,
       returnType: 'number',
       description: "Return true if the app is running on a Steam Deck.",
+    },
+    SteamAppId: {
+      category: "steam",
+      forward: "_SteamAppId",
+      highlight: false,
+      deprecated: false,
+      returnType: 'number',
+      description: "Get the currently used Steam App ID.",
     },
   },
 });
