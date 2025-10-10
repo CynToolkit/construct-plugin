@@ -348,6 +348,7 @@ When Download type is Around the user, the offsets are the amount of entries aro
 | On "ActivateToStore" error | Trigger when the "ActivateToStore" failed to execute. | Tag *(string)* <br> |
 | On any "ActivateToStore" error | Trigger when any of the "ActivateToStore" failed to execute. |  |
 | Is engine | Return true if the engine running the app is the one selected | Engine *(combo)* <br> |
+| Is initialized | Returns true if the Pipelab integration has been initialized |  |
 | Is full screen | Returns true if the window is in full screen mode. | State *(combo)* <br> |
 | Last checked path exists | Returns true if the last checked path exists. |  |
 
