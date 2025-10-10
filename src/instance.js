@@ -2643,6 +2643,10 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     _LastCheckedPathExists = this.wrap(super._LastCheckedPathExists, (state) => {
       return this._CheckIfPathExistErrorValue === ''
     }, () => false)
+
+    _IsInitialized = this.wrap(super._IsInitialized, () => {
+      return this._isInitialized
+    }, () => false)
     // #endregion
 
     // #region Exps

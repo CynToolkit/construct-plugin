@@ -1459,6 +1459,19 @@ const Config = /** @type {const} */({
       listName: "Is engine",
     },
 
+    IsInitialized: {
+      category: "general",
+      forward: "_IsInitialized",
+      highlight: false,
+      deprecated: false,
+      description: "Returns true if the Pipelab integration has been initialized",
+      displayText: "Is initialized",
+      listName: "Is initialized",
+      isInvertible: true,
+      isTrigger: false,
+      params: []
+    },
+
     IsFullScreen: {
       category: "window",
       forward: "_IsFullScreen",
