@@ -17,7 +17,8 @@
     "build": "node build.js --buildWrapperExtension",
     "dev": "node dev.js",
     "doc": "node doc.js",
-    "validate": "node validate.js"
+    "validate": "node validate.js",
+    "version": "pnpm validate && pnpm doc && git add package.json README.md"
   },
   "repository": {
     "type": "git",
