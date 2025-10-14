@@ -223,6 +223,17 @@ const defaultSteamId = {
   steamId64: '',
 }
 
+// Simple path utility for POSIX-style path operations
+const posixPath = {
+  dirname: (path) => {
+    const lastSlash = path.lastIndexOf('/');
+    return lastSlash === -1 ? '.' : path.substring(0, lastSlash);
+  },
+  join: (dirname, filename) => {
+    return dirname.endsWith('/') ? dirname + filename : dirname + '/' + filename;
+  }
+};
+
 let DOM_COMPONENT_ID = ''
 //<-- DOM_COMPONENT_ID -->
 
@@ -355,10 +366,23 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     /** @type {string} */
     _arch = ''
 
+    /** @type {number} */
+    _steam_AppId = -1
+
     /** @type {string} */
     _ListFilesErrorValue = ''
     /** @type {import("@pipelab/core").FileFolder[]} */
     _ListFilesResultValue = []
+
+    /** @type {string} */
+    _ActivateToWebPageErrorValue = ''
+    /** @type {boolean} */
+    _ActivateToWebPageResultValue = false
+
+    /** @type {string} */
+    _ActivateToStoreErrorValue = ''
+    /** @type {boolean} */
+    _ActivateToStoreResultValue = false
 
     /**
      * Description
@@ -679,6 +703,20 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
           const response = await this.ws?.sendAndWaitForResponse(order);
           this._platform = response?.body.platform ?? "";
           this._arch = response?.body.arch ?? "";
+        })
+
+        promises.push(async () => {
+          /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').SteamRaw<'utils', 'getAppId'>, 'input'>} */
+          const order = {
+            url: '/steam/raw',
+            body: {
+              namespace: 'utils',
+              method: 'getAppId',
+              args: [],
+            },
+          };
+          const response = await this.ws?.sendAndWaitForResponse(order);
+          this._steam_AppId = response?.body.data ?? -1;
         })
 
         const results = await Promise.allSettled(promises.map(x => x()))
@@ -2136,6 +2174,94 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     _DiscordSetActivitySync = this._DiscordSetActivityBase
     _DiscordSetActivity = this._DiscordSetActivityBase
 
+    _ActivateToWebPageBase = this.wrap(super._ActivateToWebPage, async (
+      /** @type {string} */ url,
+      /** @type {number} */ mode,
+      /** @type {Tag} */ tag
+    ) => {
+      try {
+        // Map Construct3 combo values to Steam constants
+        // 0 = "default", 1 = "modal"
+        const steamMode = mode === 1 ? 1 : 0; // k_EActivateGameOverlayToWebPageMode_Modal : k_EActivateGameOverlayToWebPageMode_Default
+
+        /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').SteamRaw<'overlay', 'activateToWebPage'>, 'input'>} */
+        const order = {
+          url: '/steam/raw',
+          body: {
+            namespace: 'overlay',
+            method: 'activateToWebPage',
+            args: [url, steamMode],
+          },
+        };
+        const answer = await this.ws?.sendAndWaitForResponse(order);
+        if (answer?.body.success === false) {
+          throw new Error('Failed')
+        }
+        this._ActivateToWebPageResultValue = answer?.body.success
+        this._ActivateToWebPageErrorValue = ''
+
+        await this.trigger(tag, [
+          C3.Plugins.pipelabv2.Cnds.OnActivateToWebPageSuccess,
+          C3.Plugins.pipelabv2.Cnds.OnAnyActivateToWebPageSuccess
+        ])
+      } catch (e) {
+        if (e instanceof Error) {
+          this._ActivateToWebPageErrorValue = e.message
+          this._ActivateToWebPageResultValue = false
+          await this.trigger(tag, [
+            C3.Plugins.pipelabv2.Cnds.OnActivateToWebPageError,
+            C3.Plugins.pipelabv2.Cnds.OnAnyActivateToWebPageError
+          ])
+        }
+      }
+    }, this.unsupportedEngine)
+    _ActivateToWebPage = this._ActivateToWebPageBase
+    _ActivateToWebPageSync = this._ActivateToWebPageBase
+
+    _ActivateToStoreBase = this.wrap(super._ActivateToStore, async (
+      /** @type {number} */ appId,
+      /** @type {number} */ flag,
+      /** @type {Tag} */ tag
+    ) => {
+      try {
+        // Map Construct3 combo values to Steam constants
+        // 0 = "none", 1 = "addToCartAndShow"
+        const steamFlag = flag === 1 ? 2 : 0; // k_EOverlayToStoreFlag_AddToCartAndShow : k_EOverlayToStoreFlag_None
+        
+        /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').SteamRaw<'overlay', 'activateToStore'>, 'input'>} */
+        const order = {
+          url: '/steam/raw',
+          body: {
+            namespace: 'overlay',
+            method: 'activateToStore',
+            args: [appId, steamFlag],
+          },
+        };
+        const answer = await this.ws?.sendAndWaitForResponse(order);
+        if (answer?.body.success === false) {
+          throw new Error('Failed')
+        }
+        this._ActivateToStoreResultValue = answer?.body.success
+        this._ActivateToStoreErrorValue = ''
+
+        await this.trigger(tag, [
+          C3.Plugins.pipelabv2.Cnds.OnActivateToStoreSuccess,
+          C3.Plugins.pipelabv2.Cnds.OnAnyActivateToStoreSuccess
+        ])
+      } catch (e) {
+        if (e instanceof Error) {
+          this._ActivateToStoreErrorValue = e.message
+          this._ActivateToStoreResultValue = false
+          await this.trigger(tag, [
+            C3.Plugins.pipelabv2.Cnds.OnActivateToStoreError,
+            C3.Plugins.pipelabv2.Cnds.OnAnyActivateToStoreError
+          ])
+        }
+      }
+    }, this.unsupportedEngine)
+    _ActivateToStore = this._ActivateToStoreBase
+    _ActivateToStoreSync = this._ActivateToStoreBase
+
     // #region Cnds
     _OnInitializeSuccess = this.wrap(super._OnInitializeSuccess, (/** @type {Tag} */ tag) => {
       return this._currentTag === tag;
@@ -2500,12 +2626,26 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
       return true
     })
 
+    _OnActivateToWebPageSuccess = this.wrap(super._OnActivateToWebPageSuccess, (/** @type {Tag} */ tag) => this._currentTag === tag)
+    _OnAnyActivateToWebPageSuccess = this.wrap(super._OnAnyActivateToWebPageSuccess, () => true)
+    _OnActivateToWebPageError = this.wrap(super._OnActivateToWebPageError, (/** @type {Tag} */ tag) => this._currentTag === tag)
+    _OnAnyActivateToWebPageError = this.wrap(super._OnAnyActivateToWebPageError, () => true)
+
+    _OnActivateToStoreSuccess = this.wrap(super._OnActivateToStoreSuccess, (/** @type {Tag} */ tag) => this._currentTag === tag)
+    _OnAnyActivateToStoreSuccess = this.wrap(super._OnAnyActivateToStoreSuccess, () => true)
+    _OnActivateToStoreError = this.wrap(super._OnActivateToStoreError, (/** @type {Tag} */ tag) => this._currentTag === tag)
+    _OnAnyActivateToStoreError = this.wrap(super._OnAnyActivateToStoreError, () => true)
+
     _IsFullScreen = this.wrap(super._IsFullScreen, (state) => {
       return this._fullscreenState === state
     }, () => false)
 
     _LastCheckedPathExists = this.wrap(super._LastCheckedPathExists, (state) => {
       return this._CheckIfPathExistErrorValue === ''
+    }, () => false)
+
+    _IsInitialized = this.wrap(super._IsInitialized, () => {
+      return this._isInitialized
     }, () => false)
     // #endregion
 
@@ -2673,6 +2813,9 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     })
     _SteamIsRunningOnSteamDeck = this.exprs(super._SteamIsRunningOnSteamDeck, () => {
       return this._steam_IsRunningOnSteamDeck ? 1 : 0
+    })
+    _SteamAppId = this.exprs(super._SteamAppId, () => {
+      return this._steam_AppId
     })
 
     _InitializeError = this.exprs(super._InitializeError, () => {
@@ -2954,6 +3097,20 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     })
     _DiscordSetActivityResult = this.exprs(super._DiscordSetActivityResult, () => {
       return this._DiscordSetActivityResultValue
+    })
+
+    _ActivateToWebPageError = this.exprs(super._ActivateToWebPageError, () => {
+      return this._ActivateToWebPageErrorValue
+    })
+    _ActivateToWebPageResult = this.exprs(super._ActivateToWebPageResult, () => {
+      return this._ActivateToWebPageResultValue
+    })
+
+    _ActivateToStoreError = this.exprs(super._ActivateToStoreError, () => {
+      return this._ActivateToStoreErrorValue
+    })
+    _ActivateToStoreResult = this.exprs(super._ActivateToStoreResult, () => {
+      return this._ActivateToStoreResultValue
     })
 
     //

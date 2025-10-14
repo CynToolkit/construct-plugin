@@ -5,7 +5,7 @@ A plugin that integrate with Pipelab <br>
 Author: Armaldio <br>
 Website: https://github.com/CynToolkit/construct-plugin <br>
 Addon Url: https://github.com/CynToolkit/construct-plugin <br>
-Download Latest Version : [Version: 2.2.0](https://github.com/CynToolkit/construct-plugin/releases/latest) <br>
+Download Latest Version : [Version: 2.3.0](https://github.com/CynToolkit/construct-plugin/releases/latest) <br>
 <sub>Made using [c3ide2-framework](https://github.com/ConstructFund/c3ide2-framework) </sub><br>
 
 ## Table of Contents
@@ -145,6 +145,10 @@ When Download type is Around the user, the offsets are the amount of entries aro
 | Download scores | Download scores from a leaderboard
 When Download type is Regular, offset are absolute.
 When Download type is Around the user, the offsets are the amount of entries around the user to fetch. | Leaderboard             *(string)* <br>Download type             *(combo)* <br>Start             *(number)* <br>End             *(number)* <br>Output             *(object)* <br> |
+| Activate Steam overlay to web page (synchronous) | Activates Steam Overlay web browser directly to the specified URL (synchronous) | URL             *(string)* <br>Mode             *(combo)* <br>Tag             *(string)* <br> |
+| Activate Steam overlay to web page | Activates Steam Overlay web browser directly to the specified URL | URL             *(string)* <br>Mode             *(combo)* <br> |
+| Activate Steam overlay to store (synchronous) | Activates the Steam Overlay to the Steam store page for the provided app (synchronous) | App ID             *(number)* <br>Flag             *(combo)* <br>Tag             *(string)* <br> |
+| Activate Steam overlay to store | Activates the Steam Overlay to the Steam store page for the provided app | App ID             *(number)* <br>Flag             *(combo)* <br> |
 
 
 ---
@@ -335,7 +339,16 @@ When Download type is Around the user, the offsets are the amount of entries aro
 | On any "LeaderboardDownloadScore" success | Trigger when any of the "LeaderboardDownloadScore" are executed with success. |  |
 | On "LeaderboardDownloadScore" error | Trigger when the "LeaderboardDownloadScore" failed to execute. | Tag *(string)* <br> |
 | On any "LeaderboardDownloadScore" error | Trigger when any of the "LeaderboardDownloadScore" failed to execute. |  |
+| On "ActivateToWebPage" success | Trigger when the "ActivateToWebPage" is executed with success. | Tag *(string)* <br> |
+| On any "ActivateToWebPage" success | Trigger when any of the "ActivateToWebPage" are executed with success. |  |
+| On "ActivateToWebPage" error | Trigger when the "ActivateToWebPage" failed to execute. | Tag *(string)* <br> |
+| On any "ActivateToWebPage" error | Trigger when any of the "ActivateToWebPage" failed to execute. |  |
+| On "ActivateToStore" success | Trigger when the "ActivateToStore" is executed with success. | Tag *(string)* <br> |
+| On any "ActivateToStore" success | Trigger when any of the "ActivateToStore" are executed with success. |  |
+| On "ActivateToStore" error | Trigger when the "ActivateToStore" failed to execute. | Tag *(string)* <br> |
+| On any "ActivateToStore" error | Trigger when any of the "ActivateToStore" failed to execute. |  |
 | Is engine | Return true if the engine running the app is the one selected | Engine *(combo)* <br> |
+| Is initialized | Returns true if the Pipelab integration has been initialized |  |
 | Is full screen | Returns true if the window is in full screen mode. | State *(combo)* <br> |
 | Last checked path exists | Returns true if the last checked path exists. |  |
 
@@ -436,6 +449,10 @@ When Download type is Around the user, the offsets are the amount of entries aro
 | LeaderboardUploadScoreWithMetadataResult | The result of the "LeaderboardUploadScoreWithMetadata last call" | string |  | 
 | LeaderboardDownloadScoreError | The error of the "LeaderboardDownloadScore last call" | string |  | 
 | LeaderboardDownloadScoreResult | The result of the "LeaderboardDownloadScore last call" | string |  | 
+| ActivateToWebPageError | The error of the "ActivateToWebPage last call" | string |  | 
+| ActivateToWebPageResult | The result of the "ActivateToWebPage last call" | string |  | 
+| ActivateToStoreError | The error of the "ActivateToStore last call" | string |  | 
+| ActivateToStoreResult | The result of the "ActivateToStore last call" | string |  | 
 | ArgumentAt | Get the argument at the given index. | string | Index *(number)* <br> | 
 | ArgumentCount | Get the number of arguments. | number |  | 
 | AppFolderURL | Return the URL of the folder of the current app. | string |  | 
@@ -480,6 +497,7 @@ When Download type is Around the user, the offsets are the amount of entries aro
 | SteamLevel | Get the Steam level. | number |  | 
 | SteamIpCountry | Get the Steam IP country. | string |  | 
 | SteamIsRunningOnSteamDeck | Return true if the app is running on a Steam Deck. | number |  | 
+| SteamAppId | Get the currently used Steam App ID. | number |  | 
 
 ## Paths
 **ProjectFilesFolder**: Direct path to your games's content
