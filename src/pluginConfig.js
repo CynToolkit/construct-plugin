@@ -1235,6 +1235,112 @@ const CheckDLCIsInstalled = ACEGenerator("CheckDLCIsInstalled", /** @type {const
   description: "Checks if the user owns and has installed a specific DLC",
 }))
 
+// Steam Workshop
+const CreateWorkshopItem = ACEGenerator("CreateWorkshopItem", /** @type {const} */ ({
+  category: "steam-workshop",
+  highlight: false,
+  deprecated: false,
+  params: [],
+  listName: "Create workshop item",
+  displayText: "Create workshop item",
+  description: "Creates a new workshop item and returns its ID",
+}))
+
+const UploadWorkshopItem = ACEGenerator("UploadWorkshopItem", /** @type {const} */ ({
+  category: "steam-workshop",
+  highlight: false,
+  deprecated: false,
+  params: [
+    {
+      id: 'itemId',
+      desc: "The Workshop Item ID",
+      name: "Item ID",
+      type: 'string',
+      initialValue: '""',
+    },
+    {
+      id: 'title',
+      desc: "The title of the workshop item",
+      name: "Title",
+      type: 'string',
+      initialValue: '""',
+    },
+    {
+      id: 'description',
+      desc: "The description of the workshop item",
+      name: "Description",
+      type: 'string',
+      initialValue: '""',
+    },
+    {
+      id: 'contentFolderPath',
+      desc: "Absolute path to the folder containing the workshop content",
+      name: "Content Folder Path",
+      type: 'string',
+      initialValue: '""',
+    },
+    {
+      id: 'previewImagePath',
+      desc: "Absolute path to the preview image file",
+      name: "Preview Image Path",
+      type: 'string',
+      initialValue: '""',
+    },
+    {
+      id: 'tags',
+      desc: "Comma-separated list of tags",
+      name: "Tags",
+      type: 'string',
+      initialValue: '""',
+    },
+    {
+      id: 'visibility',
+      desc: "Visibility setting (0=Public, 1=FriendsOnly, 2=Private, 3=Unlisted)",
+      name: "Visibility",
+      type: 'number',
+      initialValue: "0",
+    },
+  ],
+  listName: "Upload workshop item",
+  displayText: "Upload workshop item [b]{0}[/b] (title: {1}, description: {2}, content: {3}, preview: {4}, tags: {5}, visibility: {6})",
+  description: "Uploads content to a workshop item",
+}))
+
+const GetSubscribedItemsWithMetadata = ACEGenerator("GetSubscribedItemsWithMetadata", /** @type {const} */ ({
+  category: "steam-workshop",
+  highlight: false,
+  deprecated: false,
+  params: [],
+  listName: "Get subscribed items with metadata",
+  displayText: "Get subscribed items with metadata",
+  description: "Gets all subscribed workshop items with their metadata and install info",
+}))
+
+const DownloadWorkshopItem = ACEGenerator("DownloadWorkshopItem", /** @type {const} */ ({
+  category: "steam-workshop",
+  highlight: false,
+  deprecated: false,
+  params: [
+    {
+      id: 'itemId',
+      desc: "The Workshop Item ID",
+      name: "Item ID",
+      type: 'string',
+      initialValue: '""',
+    },
+    {
+      id: 'highPriority',
+      desc: "Whether to download with high priority",
+      name: "High Priority",
+      type: 'boolean',
+      initialValue: 'false',
+    },
+  ],
+  listName: "Download workshop item",
+  displayText: "Download workshop item [b]{0}[/b] (priority: {1})",
+  description: "Downloads or updates a workshop item",
+}))
+
 /**
  * @satisfies {import('./sdk.js').Config<import('./sdk.js').Categories>}
  */
@@ -1363,6 +1469,7 @@ const Config = /** @type {const} */({
     'file-dialogs': "File Dialogs",
     'command-line': "Command line",
     'steam': "Steam",
+    'steam-workshop': "Steam Workshop",
     'discord': "Discord"
   },
   Acts: /** @type {const} */ {
@@ -1419,6 +1526,10 @@ const Config = /** @type {const} */({
     ...ActivateToStore.actions,
     ...TriggerScreenshot.actions,
     ...CheckDLCIsInstalled.actions,
+    ...CreateWorkshopItem.actions,
+    ...UploadWorkshopItem.actions,
+    ...GetSubscribedItemsWithMetadata.actions,
+    ...DownloadWorkshopItem.actions,
   },
   Cnds: {
     ...Initialize.conditions,
@@ -1471,6 +1582,10 @@ const Config = /** @type {const} */({
     ...ActivateToStore.conditions,
     ...TriggerScreenshot.conditions,
     ...CheckDLCIsInstalled.conditions,
+    ...CreateWorkshopItem.conditions,
+    ...UploadWorkshopItem.conditions,
+    ...GetSubscribedItemsWithMetadata.conditions,
+    ...DownloadWorkshopItem.conditions,
     IsEngine: {
       category: "general",
       forward: "_IsEngine",
@@ -1594,6 +1709,324 @@ const Config = /** @type {const} */({
     ...ActivateToStore.expressions,
     ...TriggerScreenshot.expressions,
     ...CheckDLCIsInstalled.expressions,
+    ...CreateWorkshopItem.expressions,
+    ...UploadWorkshopItem.expressions,
+    ...GetSubscribedItemsWithMetadata.expressions,
+    ...DownloadWorkshopItem.expressions,
+
+    // Steam Workshop - Additional Expressions
+    SubscribedItemsCount: {
+      category: "steam-workshop",
+      forward: "_SubscribedItemsCount",
+      highlight: false,
+      deprecated: false,
+      returnType: 'number',
+      description: "Get the number of subscribed workshop items",
+    },
+    SubscribedItemIdAt: {
+      category: "steam-workshop",
+      forward: "_SubscribedItemIdAt",
+      highlight: false,
+      deprecated: false,
+      returnType: 'string',
+      params: [
+        {
+          id: 'index',
+          desc: "The index of the item (0 to count-1)",
+          name: "Index",
+          type: 'number',
+        }
+      ],
+      description: "Get the workshop item ID at the given index",
+    },
+    WorkshopItemTitle: {
+      category: "steam-workshop",
+      forward: "_WorkshopItemTitle",
+      highlight: false,
+      deprecated: false,
+      returnType: 'string',
+      params: [
+        {
+          id: 'itemId',
+          desc: "The workshop item ID",
+          name: "Item ID",
+          type: 'string',
+        }
+      ],
+      description: "Get the title of a workshop item",
+    },
+    WorkshopItemDescription: {
+      category: "steam-workshop",
+      forward: "_WorkshopItemDescription",
+      highlight: false,
+      deprecated: false,
+      returnType: 'string',
+      params: [
+        {
+          id: 'itemId',
+          desc: "The workshop item ID",
+          name: "Item ID",
+          type: 'string',
+        }
+      ],
+      description: "Get the description of a workshop item",
+    },
+    WorkshopItemOwnerSteamId64: {
+      category: "steam-workshop",
+      forward: "_WorkshopItemOwnerSteamId64",
+      highlight: false,
+      deprecated: false,
+      returnType: 'string',
+      params: [
+        {
+          id: 'itemId',
+          desc: "The workshop item ID",
+          name: "Item ID",
+          type: 'string',
+        }
+      ],
+      description: "Get the owner's Steam ID64 of a workshop item",
+    },
+    WorkshopItemOwnerAccountId: {
+      category: "steam-workshop",
+      forward: "_WorkshopItemOwnerAccountId",
+      highlight: false,
+      deprecated: false,
+      returnType: 'number',
+      params: [
+        {
+          id: 'itemId',
+          desc: "The workshop item ID",
+          name: "Item ID",
+          type: 'string',
+        }
+      ],
+      description: "Get the owner's account ID of a workshop item",
+    },
+    WorkshopItemTags: {
+      category: "steam-workshop",
+      forward: "_WorkshopItemTags",
+      highlight: false,
+      deprecated: false,
+      returnType: 'string',
+      params: [
+        {
+          id: 'itemId',
+          desc: "The workshop item ID",
+          name: "Item ID",
+          type: 'string',
+        }
+      ],
+      description: "Get the tags of a workshop item (comma-separated)",
+    },
+    WorkshopItemUpvotes: {
+      category: "steam-workshop",
+      forward: "_WorkshopItemUpvotes",
+      highlight: false,
+      deprecated: false,
+      returnType: 'number',
+      params: [
+        {
+          id: 'itemId',
+          desc: "The workshop item ID",
+          name: "Item ID",
+          type: 'string',
+        }
+      ],
+      description: "Get the number of upvotes for a workshop item",
+    },
+    WorkshopItemDownvotes: {
+      category: "steam-workshop",
+      forward: "_WorkshopItemDownvotes",
+      highlight: false,
+      deprecated: false,
+      returnType: 'number',
+      params: [
+        {
+          id: 'itemId',
+          desc: "The workshop item ID",
+          name: "Item ID",
+          type: 'string',
+        }
+      ],
+      description: "Get the number of downvotes for a workshop item",
+    },
+    WorkshopItemPreviewUrl: {
+      category: "steam-workshop",
+      forward: "_WorkshopItemPreviewUrl",
+      highlight: false,
+      deprecated: false,
+      returnType: 'string',
+      params: [
+        {
+          id: 'itemId',
+          desc: "The workshop item ID",
+          name: "Item ID",
+          type: 'string',
+        }
+      ],
+      description: "Get the preview image URL of a workshop item",
+    },
+    WorkshopItemUrl: {
+      category: "steam-workshop",
+      forward: "_WorkshopItemUrl",
+      highlight: false,
+      deprecated: false,
+      returnType: 'string',
+      params: [
+        {
+          id: 'itemId',
+          desc: "The workshop item ID",
+          name: "Item ID",
+          type: 'string',
+        }
+      ],
+      description: "Get the Steam Workshop URL of a workshop item",
+    },
+    WorkshopItemTimeCreated: {
+      category: "steam-workshop",
+      forward: "_WorkshopItemTimeCreated",
+      highlight: false,
+      deprecated: false,
+      returnType: 'number',
+      params: [
+        {
+          id: 'itemId',
+          desc: "The workshop item ID",
+          name: "Item ID",
+          type: 'string',
+        }
+      ],
+      description: "Get the creation timestamp of a workshop item (Unix epoch)",
+    },
+    WorkshopItemTimeUpdated: {
+      category: "steam-workshop",
+      forward: "_WorkshopItemTimeUpdated",
+      highlight: false,
+      deprecated: false,
+      returnType: 'number',
+      params: [
+        {
+          id: 'itemId',
+          desc: "The workshop item ID",
+          name: "Item ID",
+          type: 'string',
+        }
+      ],
+      description: "Get the last update timestamp of a workshop item (Unix epoch)",
+    },
+    WorkshopItemState: {
+      category: "steam-workshop",
+      forward: "_WorkshopItemState",
+      highlight: false,
+      deprecated: false,
+      returnType: 'number',
+      params: [
+        {
+          id: 'itemId',
+          desc: "The workshop item ID",
+          name: "Item ID",
+          type: 'string',
+        }
+      ],
+      description: "Get the state bitfield of a workshop item",
+    },
+    WorkshopItemIsInstalled: {
+      category: "steam-workshop",
+      forward: "_WorkshopItemIsInstalled",
+      highlight: false,
+      deprecated: false,
+      returnType: 'number',
+      params: [
+        {
+          id: 'itemId',
+          desc: "The workshop item ID",
+          name: "Item ID",
+          type: 'string',
+        }
+      ],
+      description: "Check if a workshop item is installed (returns 0 or 1)",
+    },
+    WorkshopItemIsDownloading: {
+      category: "steam-workshop",
+      forward: "_WorkshopItemIsDownloading",
+      highlight: false,
+      deprecated: false,
+      returnType: 'number',
+      params: [
+        {
+          id: 'itemId',
+          desc: "The workshop item ID",
+          name: "Item ID",
+          type: 'string',
+        }
+      ],
+      description: "Check if a workshop item is downloading (returns 0 or 1)",
+    },
+    WorkshopItemNeedsUpdate: {
+      category: "steam-workshop",
+      forward: "_WorkshopItemNeedsUpdate",
+      highlight: false,
+      deprecated: false,
+      returnType: 'number',
+      params: [
+        {
+          id: 'itemId',
+          desc: "The workshop item ID",
+          name: "Item ID",
+          type: 'string',
+        }
+      ],
+      description: "Check if a workshop item needs an update (returns 0 or 1)",
+    },
+    WorkshopItemInstallFolder: {
+      category: "steam-workshop",
+      forward: "_WorkshopItemInstallFolder",
+      highlight: false,
+      deprecated: false,
+      returnType: 'string',
+      params: [
+        {
+          id: 'itemId',
+          desc: "The workshop item ID",
+          name: "Item ID",
+          type: 'string',
+        }
+      ],
+      description: "Get the installation folder path of a workshop item",
+    },
+    WorkshopItemSizeOnDisk: {
+      category: "steam-workshop",
+      forward: "_WorkshopItemSizeOnDisk",
+      highlight: false,
+      deprecated: false,
+      returnType: 'number',
+      params: [
+        {
+          id: 'itemId',
+          desc: "The workshop item ID",
+          name: "Item ID",
+          type: 'string',
+        }
+      ],
+      description: "Get the size on disk of a workshop item in bytes",
+    },
+    WorkshopItemTimestamp: {
+      category: "steam-workshop",
+      forward: "_WorkshopItemTimestamp",
+      highlight: false,
+      deprecated: false,
+      returnType: 'number',
+      params: [
+        {
+          id: 'itemId',
+          desc: "The workshop item ID",
+          name: "Item ID",
+          type: 'string',
+        }
+      ],
+      description: "Get the install timestamp of a workshop item",
+    },
 
     // command line
     ArgumentAt: {

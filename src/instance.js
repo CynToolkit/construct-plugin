@@ -2341,6 +2341,267 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     _CheckDLCIsInstalled = this._CheckDLCIsInstalledBase
     _CheckDLCIsInstalledSync = this._CheckDLCIsInstalledBase
 
+    // Steam Workshop
+    /** @type {Map<string, any>} */
+    _workshopItemsMap = new Map()
+    /** @type {string[]} */
+    _subscribedItemIds = []
+
+    _CreateWorkshopItemBase = this.wrap(super._CreateWorkshopItem, async (
+      /** @type {Tag} */ tag
+    ) => {
+      try {
+        /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').SteamRaw<'workshop', 'createItem'>, 'input'>} */
+        const order = {
+          url: '/steam/raw',
+          body: {
+            namespace: 'workshop',
+            method: 'createItem',
+            args: [null],
+          },
+        };
+        const answer = await this.ws?.sendAndWaitForResponse(order);
+        if (answer?.body.success === false) {
+          throw new Error('Failed')
+        }
+        const result = answer?.body.data
+        // @ts-ignore - API returns UgcResult
+        this._CreateWorkshopItemResultValue = result?.itemId?.toString() ?? ''
+        // @ts-ignore - API returns UgcResult
+        this._CreateWorkshopItemNeedsAgreementValue = result?.needsToAcceptAgreement ? 1 : 0
+        this._CreateWorkshopItemErrorValue = ''
+
+        await this.trigger(tag, [
+          C3.Plugins.pipelabv2.Cnds.OnCreateWorkshopItemSuccess,
+          C3.Plugins.pipelabv2.Cnds.OnAnyCreateWorkshopItemSuccess
+        ])
+      } catch (e) {
+        if (e instanceof Error) {
+          this._CreateWorkshopItemErrorValue = e.message
+          this._CreateWorkshopItemResultValue = ''
+          this._CreateWorkshopItemNeedsAgreementValue = 0
+          await this.trigger(tag, [
+            C3.Plugins.pipelabv2.Cnds.OnCreateWorkshopItemError,
+            C3.Plugins.pipelabv2.Cnds.OnAnyCreateWorkshopItemError
+          ])
+        }
+      }
+    }, this.unsupportedEngine)
+    _CreateWorkshopItem = this._CreateWorkshopItemBase
+    _CreateWorkshopItemSync = this._CreateWorkshopItemBase
+
+    _UploadWorkshopItemBase = this.wrap(super._UploadWorkshopItem, async (
+      /** @type {string} */ itemId,
+      /** @type {string} */ title,
+      /** @type {string} */ description,
+      /** @type {string} */ contentFolderPath,
+      /** @type {string} */ previewImagePath,
+      /** @type {string} */ tags,
+      /** @type {number} */ visibility,
+      /** @type {Tag} */ tag
+    ) => {
+      try {
+        const tagArray = tags.split(',').map(t => t.trim()).filter(t => t.length > 0)
+        /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').SteamRaw<'workshop', 'updateItem'>, 'input'>} */
+        const order = {
+          url: '/steam/raw',
+          body: {
+            namespace: 'workshop',
+            method: 'updateItem',
+            args: [
+              itemId,
+              {
+                title,
+                description,
+                contentPath: contentFolderPath,
+                previewPath: previewImagePath,
+                tags: tagArray,
+                visibility
+              },
+              null
+            ],
+          },
+        };
+        const answer = await this.ws?.sendAndWaitForResponse(order);
+        if (answer?.body.success === false) {
+          throw new Error('Failed')
+        }
+        const result = answer?.body.data
+        // @ts-ignore - API returns UgcResult
+        this._UploadWorkshopItemResultValue = result?.itemId?.toString() ?? ''
+        // @ts-ignore - API returns UgcResult
+        this._UploadWorkshopItemNeedsAgreementValue = result?.needsToAcceptAgreement ? 1 : 0
+        this._UploadWorkshopItemErrorValue = ''
+
+        await this.trigger(tag, [
+          C3.Plugins.pipelabv2.Cnds.OnUploadWorkshopItemSuccess,
+          C3.Plugins.pipelabv2.Cnds.OnAnyUploadWorkshopItemSuccess
+        ])
+      } catch (e) {
+        if (e instanceof Error) {
+          this._UploadWorkshopItemErrorValue = e.message
+          this._UploadWorkshopItemResultValue = ''
+          this._UploadWorkshopItemNeedsAgreementValue = 0
+          await this.trigger(tag, [
+            C3.Plugins.pipelabv2.Cnds.OnUploadWorkshopItemError,
+            C3.Plugins.pipelabv2.Cnds.OnAnyUploadWorkshopItemError
+          ])
+        }
+      }
+    }, this.unsupportedEngine)
+    _UploadWorkshopItem = this._UploadWorkshopItemBase
+    _UploadWorkshopItemSync = this._UploadWorkshopItemBase
+
+    _GetSubscribedItemsWithMetadataBase = this.wrap(super._GetSubscribedItemsWithMetadata, async (
+      /** @type {Tag} */ tag
+    ) => {
+      try {
+        // Get subscribed items
+        /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').SteamRaw<'workshop', 'getSubscribedItems'>, 'input'>} */
+        const orderSubscribed = {
+          url: '/steam/raw',
+          body: {
+            namespace: 'workshop',
+            method: 'getSubscribedItems',
+            args: [false],
+          },
+        };
+        const subscribedAnswer = await this.ws?.sendAndWaitForResponse(orderSubscribed);
+        if (subscribedAnswer?.body.success === false) {
+          throw new Error('Failed to get subscribed items')
+        }
+        
+        const itemIds = subscribedAnswer?.body.data ?? []
+        this._subscribedItemIds = itemIds.map(id => id.toString())
+        
+        if (itemIds.length === 0) {
+          this._workshopItemsMap.clear()
+          this._GetSubscribedItemsWithMetadataErrorValue = ''
+          await this.trigger(tag, [
+            C3.Plugins.pipelabv2.Cnds.OnGetSubscribedItemsWithMetadataSuccess,
+            C3.Plugins.pipelabv2.Cnds.OnAnyGetSubscribedItemsWithMetadataSuccess
+          ])
+          return
+        }
+
+        // Get metadata for all items
+        /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').SteamRaw<'workshop', 'getItems'>, 'input'>} */
+        const orderMetadata = {
+          url: '/steam/raw',
+          body: {
+            namespace: 'workshop',
+            method: 'getItems',
+            args: [itemIds, null],
+          },
+        };
+        const metadataAnswer = await this.ws?.sendAndWaitForResponse(orderMetadata);
+        if (metadataAnswer?.body.success === false) {
+          throw new Error('Failed to get item metadata')
+        }
+
+        // @ts-ignore - API returns WorkshopItemsResult
+        const items = metadataAnswer?.body.data?.items ?? []
+        
+        // Store items in map and get state/install info for each
+        this._workshopItemsMap.clear()
+        for (const item of items) {
+          if (!item) continue
+          const itemId = item.publishedFileId.toString()
+          
+          // Get state
+          /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').SteamRaw<'workshop', 'state'>, 'input'>} */
+          const orderState = {
+            url: '/steam/raw',
+            body: {
+              namespace: 'workshop',
+              method: 'state',
+              args: [item.publishedFileId],
+            },
+          };
+          const stateAnswer = await this.ws?.sendAndWaitForResponse(orderState);
+          const state = stateAnswer?.body.data ?? 0
+          
+          // Get install info
+          /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').SteamRaw<'workshop', 'installInfo'>, 'input'>} */
+          const orderInstall = {
+            url: '/steam/raw',
+            body: {
+              namespace: 'workshop',
+              method: 'installInfo',
+              args: [item.publishedFileId],
+            },
+          };
+          const installAnswer = await this.ws?.sendAndWaitForResponse(orderInstall);
+          const installInfo = installAnswer?.body.data
+          
+          // Store combined data
+          this._workshopItemsMap.set(itemId, {
+            ...item,
+            state,
+            installInfo
+          })
+        }
+
+        this._GetSubscribedItemsWithMetadataErrorValue = ''
+        await this.trigger(tag, [
+          C3.Plugins.pipelabv2.Cnds.OnGetSubscribedItemsWithMetadataSuccess,
+          C3.Plugins.pipelabv2.Cnds.OnAnyGetSubscribedItemsWithMetadataSuccess
+        ])
+      } catch (e) {
+        if (e instanceof Error) {
+          this._GetSubscribedItemsWithMetadataErrorValue = e.message
+          this._subscribedItemIds = []
+          this._workshopItemsMap.clear()
+          await this.trigger(tag, [
+            C3.Plugins.pipelabv2.Cnds.OnGetSubscribedItemsWithMetadataError,
+            C3.Plugins.pipelabv2.Cnds.OnAnyGetSubscribedItemsWithMetadataError
+          ])
+        }
+      }
+    }, this.unsupportedEngine)
+    _GetSubscribedItemsWithMetadata = this._GetSubscribedItemsWithMetadataBase
+    _GetSubscribedItemsWithMetadataSync = this._GetSubscribedItemsWithMetadataBase
+
+    _DownloadWorkshopItemBase = this.wrap(super._DownloadWorkshopItem, async (
+      /** @type {string} */ itemId,
+      /** @type {boolean} */ highPriority,
+      /** @type {Tag} */ tag
+    ) => {
+      try {
+        /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').SteamRaw<'workshop', 'download'>, 'input'>} */
+        const order = {
+          url: '/steam/raw',
+          body: {
+            namespace: 'workshop',
+            method: 'download',
+            args: [itemId, highPriority],
+          },
+        };
+        const answer = await this.ws?.sendAndWaitForResponse(order);
+        if (answer?.body.success === false) {
+          throw new Error('Failed')
+        }
+        this._DownloadWorkshopItemResultValue = answer?.body.data ? 1 : 0
+        this._DownloadWorkshopItemErrorValue = ''
+
+        await this.trigger(tag, [
+          C3.Plugins.pipelabv2.Cnds.OnDownloadWorkshopItemSuccess,
+          C3.Plugins.pipelabv2.Cnds.OnAnyDownloadWorkshopItemSuccess
+        ])
+      } catch (e) {
+        if (e instanceof Error) {
+          this._DownloadWorkshopItemErrorValue = e.message
+          this._DownloadWorkshopItemResultValue = 0
+          await this.trigger(tag, [
+            C3.Plugins.pipelabv2.Cnds.OnDownloadWorkshopItemError,
+            C3.Plugins.pipelabv2.Cnds.OnAnyDownloadWorkshopItemError
+          ])
+        }
+      }
+    }, this.unsupportedEngine)
+    _DownloadWorkshopItem = this._DownloadWorkshopItemBase
+    _DownloadWorkshopItemSync = this._DownloadWorkshopItemBase
+
     // #region Cnds
     _OnInitializeSuccess = this.wrap(super._OnInitializeSuccess, (/** @type {Tag} */ tag) => {
       return this._currentTag === tag;
@@ -2724,6 +2985,26 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     _OnAnyCheckDLCIsInstalledSuccess = this.wrap(super._OnAnyCheckDLCIsInstalledSuccess, () => true)
     _OnCheckDLCIsInstalledError = this.wrap(super._OnCheckDLCIsInstalledError, (/** @type {Tag} */ tag) => this._currentTag === tag)
     _OnAnyCheckDLCIsInstalledError = this.wrap(super._OnAnyCheckDLCIsInstalledError, () => true)
+
+    _OnCreateWorkshopItemSuccess = this.wrap(super._OnCreateWorkshopItemSuccess, (/** @type {Tag} */ tag) => this._currentTag === tag)
+    _OnAnyCreateWorkshopItemSuccess = this.wrap(super._OnAnyCreateWorkshopItemSuccess, () => true)
+    _OnCreateWorkshopItemError = this.wrap(super._OnCreateWorkshopItemError, (/** @type {Tag} */ tag) => this._currentTag === tag)
+    _OnAnyCreateWorkshopItemError = this.wrap(super._OnAnyCreateWorkshopItemError, () => true)
+
+    _OnUploadWorkshopItemSuccess = this.wrap(super._OnUploadWorkshopItemSuccess, (/** @type {Tag} */ tag) => this._currentTag === tag)
+    _OnAnyUploadWorkshopItemSuccess = this.wrap(super._OnAnyUploadWorkshopItemSuccess, () => true)
+    _OnUploadWorkshopItemError = this.wrap(super._OnUploadWorkshopItemError, (/** @type {Tag} */ tag) => this._currentTag === tag)
+    _OnAnyUploadWorkshopItemError = this.wrap(super._OnAnyUploadWorkshopItemError, () => true)
+
+    _OnGetSubscribedItemsWithMetadataSuccess = this.wrap(super._OnGetSubscribedItemsWithMetadataSuccess, (/** @type {Tag} */ tag) => this._currentTag === tag)
+    _OnAnyGetSubscribedItemsWithMetadataSuccess = this.wrap(super._OnAnyGetSubscribedItemsWithMetadataSuccess, () => true)
+    _OnGetSubscribedItemsWithMetadataError = this.wrap(super._OnGetSubscribedItemsWithMetadataError, (/** @type {Tag} */ tag) => this._currentTag === tag)
+    _OnAnyGetSubscribedItemsWithMetadataError = this.wrap(super._OnAnyGetSubscribedItemsWithMetadataError, () => true)
+
+    _OnDownloadWorkshopItemSuccess = this.wrap(super._OnDownloadWorkshopItemSuccess, (/** @type {Tag} */ tag) => this._currentTag === tag)
+    _OnAnyDownloadWorkshopItemSuccess = this.wrap(super._OnAnyDownloadWorkshopItemSuccess, () => true)
+    _OnDownloadWorkshopItemError = this.wrap(super._OnDownloadWorkshopItemError, (/** @type {Tag} */ tag) => this._currentTag === tag)
+    _OnAnyDownloadWorkshopItemError = this.wrap(super._OnAnyDownloadWorkshopItemError, () => true)
 
     _IsFullScreen = this.wrap(super._IsFullScreen, (state) => {
       return this._fullscreenState === state
@@ -3214,6 +3495,140 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     })
     _CheckDLCIsInstalledResult = this.exprs(super._CheckDLCIsInstalledResult, () => {
       return this._CheckDLCIsInstalledResultValue
+    })
+
+    // Workshop expressions
+    _CreateWorkshopItemError = this.exprs(super._CreateWorkshopItemError, () => {
+      return this._CreateWorkshopItemErrorValue
+    })
+    _CreateWorkshopItemResult = this.exprs(super._CreateWorkshopItemResult, () => {
+      return this._CreateWorkshopItemResultValue
+    })
+    _CreateWorkshopItemNeedsAgreement = this.exprs(super._CreateWorkshopItemNeedsAgreement, () => {
+      return this._CreateWorkshopItemNeedsAgreementValue
+    })
+
+    _UploadWorkshopItemError = this.exprs(super._UploadWorkshopItemError, () => {
+      return this._UploadWorkshopItemErrorValue
+    })
+    _UploadWorkshopItemResult = this.exprs(super._UploadWorkshopItemResult, () => {
+      return this._UploadWorkshopItemResultValue
+    })
+    _UploadWorkshopItemNeedsAgreement = this.exprs(super._UploadWorkshopItemNeedsAgreement, () => {
+      return this._UploadWorkshopItemNeedsAgreementValue
+    })
+
+    _GetSubscribedItemsWithMetadataError = this.exprs(super._GetSubscribedItemsWithMetadataError, () => {
+      return this._GetSubscribedItemsWithMetadataErrorValue
+    })
+    _GetSubscribedItemsWithMetadataResult = this.exprs(super._GetSubscribedItemsWithMetadataResult, () => {
+      return 1  // Success indicator
+    })
+
+    _DownloadWorkshopItemError = this.exprs(super._DownloadWorkshopItemError, () => {
+      return this._DownloadWorkshopItemErrorValue
+    })
+    _DownloadWorkshopItemResult = this.exprs(super._DownloadWorkshopItemResult, () => {
+      return this._DownloadWorkshopItemResultValue
+    })
+
+    _SubscribedItemsCount = this.exprs(super._SubscribedItemsCount, () => {
+      return this._subscribedItemIds.length
+    })
+
+    _SubscribedItemIdAt = this.exprs(super._SubscribedItemIdAt, (/** @type {number} */ index) => {
+      if (index < 0 || index >= this._subscribedItemIds.length) return ''
+      return this._subscribedItemIds[index]
+    })
+
+    _WorkshopItemTitle = this.exprs(super._WorkshopItemTitle, (/** @type {string} */ itemId) => {
+      const item = this._workshopItemsMap.get(itemId)
+      return item?.title ?? ''
+    })
+
+    _WorkshopItemDescription = this.exprs(super._WorkshopItemDescription, (/** @type {string} */ itemId) => {
+      const item = this._workshopItemsMap.get(itemId)
+      return item?.description ?? ''
+    })
+
+    _WorkshopItemOwnerSteamId64 = this.exprs(super._WorkshopItemOwnerSteamId64, (/** @type {string} */ itemId) => {
+      const item = this._workshopItemsMap.get(itemId)
+      return item?.owner?.steamId64?.toString() ?? ''
+    })
+
+    _WorkshopItemOwnerAccountId = this.exprs(super._WorkshopItemOwnerAccountId, (/** @type {string} */ itemId) => {
+      const item = this._workshopItemsMap.get(itemId)
+      return item?.owner?.accountId ?? 0
+    })
+
+    _WorkshopItemTags = this.exprs(super._WorkshopItemTags, (/** @type {string} */ itemId) => {
+      const item = this._workshopItemsMap.get(itemId)
+      return item?.tags?.join(', ') ?? ''
+    })
+
+    _WorkshopItemUpvotes = this.exprs(super._WorkshopItemUpvotes, (/** @type {string} */ itemId) => {
+      const item = this._workshopItemsMap.get(itemId)
+      return item?.numUpvotes ?? 0
+    })
+
+    _WorkshopItemDownvotes = this.exprs(super._WorkshopItemDownvotes, (/** @type {string} */ itemId) => {
+      const item = this._workshopItemsMap.get(itemId)
+      return item?.numDownvotes ?? 0
+    })
+
+    _WorkshopItemPreviewUrl = this.exprs(super._WorkshopItemPreviewUrl, (/** @type {string} */ itemId) => {
+      const item = this._workshopItemsMap.get(itemId)
+      return item?.previewUrl ?? ''
+    })
+
+    _WorkshopItemUrl = this.exprs(super._WorkshopItemUrl, (/** @type {string} */ itemId) => {
+      const item = this._workshopItemsMap.get(itemId)
+      return item?.url ?? ''
+    })
+
+    _WorkshopItemTimeCreated = this.exprs(super._WorkshopItemTimeCreated, (/** @type {string} */ itemId) => {
+      const item = this._workshopItemsMap.get(itemId)
+      return item?.timeCreated ?? 0
+    })
+
+    _WorkshopItemTimeUpdated = this.exprs(super._WorkshopItemTimeUpdated, (/** @type {string} */ itemId) => {
+      const item = this._workshopItemsMap.get(itemId)
+      return item?.timeUpdated ?? 0
+    })
+
+    _WorkshopItemState = this.exprs(super._WorkshopItemState, (/** @type {string} */ itemId) => {
+      const item = this._workshopItemsMap.get(itemId)
+      return item?.state ?? 0
+    })
+
+    _WorkshopItemIsInstalled = this.exprs(super._WorkshopItemIsInstalled, (/** @type {string} */ itemId) => {
+      const item = this._workshopItemsMap.get(itemId)
+      return item?.state && (item.state & 4) ? 1 : 0
+    })
+
+    _WorkshopItemIsDownloading = this.exprs(super._WorkshopItemIsDownloading, (/** @type {string} */ itemId) => {
+      const item = this._workshopItemsMap.get(itemId)
+      return item?.state && (item.state & 16) ? 1 : 0
+    })
+
+    _WorkshopItemNeedsUpdate = this.exprs(super._WorkshopItemNeedsUpdate, (/** @type {string} */ itemId) => {
+      const item = this._workshopItemsMap.get(itemId)
+      return item?.state && (item.state & 8) ? 1 : 0
+    })
+
+    _WorkshopItemInstallFolder = this.exprs(super._WorkshopItemInstallFolder, (/** @type {string} */ itemId) => {
+      const item = this._workshopItemsMap.get(itemId)
+      return item?.installInfo?.folder ?? ''
+    })
+
+    _WorkshopItemSizeOnDisk = this.exprs(super._WorkshopItemSizeOnDisk, (/** @type {string} */ itemId) => {
+      const item = this._workshopItemsMap.get(itemId)
+      return Number(item?.installInfo?.sizeOnDisk ?? 0)
+    })
+
+    _WorkshopItemTimestamp = this.exprs(super._WorkshopItemTimestamp, (/** @type {string} */ itemId) => {
+      const item = this._workshopItemsMap.get(itemId)
+      return item?.installInfo?.timestamp ?? 0
     })
 
     //

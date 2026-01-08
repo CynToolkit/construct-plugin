@@ -153,6 +153,14 @@ When Download type is Around the user, the offsets are the amount of entries aro
 | Trigger screenshot | Captures the current screen and saves to Steam screenshot library |  |
 | Check DLC is installed (synchronous) | Checks if the user owns and has installed a specific DLC (synchronous) | DLC App ID             *(number)* <br>Tag             *(string)* <br> |
 | Check DLC is installed | Checks if the user owns and has installed a specific DLC | DLC App ID             *(number)* <br> |
+| Create workshop item (synchronous) | Creates a new workshop item and returns its ID (synchronous) | Tag             *(string)* <br> |
+| Create workshop item | Creates a new workshop item and returns its ID |  |
+| Upload workshop item (synchronous) | Uploads content to a workshop item (synchronous) | Item ID             *(string)* <br>Title             *(string)* <br>Description             *(string)* <br>Content Folder Path             *(string)* <br>Preview Image Path             *(string)* <br>Tags             *(string)* <br>Visibility             *(number)* <br>Tag             *(string)* <br> |
+| Upload workshop item | Uploads content to a workshop item | Item ID             *(string)* <br>Title             *(string)* <br>Description             *(string)* <br>Content Folder Path             *(string)* <br>Preview Image Path             *(string)* <br>Tags             *(string)* <br>Visibility             *(number)* <br> |
+| Get subscribed items with metadata (synchronous) | Gets all subscribed workshop items with their metadata and install info (synchronous) | Tag             *(string)* <br> |
+| Get subscribed items with metadata | Gets all subscribed workshop items with their metadata and install info |  |
+| Download workshop item (synchronous) | Downloads or updates a workshop item (synchronous) | Item ID             *(string)* <br>High Priority             *(boolean)* <br>Tag             *(string)* <br> |
+| Download workshop item | Downloads or updates a workshop item | Item ID             *(string)* <br>High Priority             *(boolean)* <br> |
 
 
 ---
@@ -359,6 +367,22 @@ When Download type is Around the user, the offsets are the amount of entries aro
 | On any "CheckDLCIsInstalled" success | Trigger when any of the "CheckDLCIsInstalled" are executed with success. |  |
 | On "CheckDLCIsInstalled" error | Trigger when the "CheckDLCIsInstalled" failed to execute. | Tag *(string)* <br> |
 | On any "CheckDLCIsInstalled" error | Trigger when any of the "CheckDLCIsInstalled" failed to execute. |  |
+| On "CreateWorkshopItem" success | Trigger when the "CreateWorkshopItem" is executed with success. | Tag *(string)* <br> |
+| On any "CreateWorkshopItem" success | Trigger when any of the "CreateWorkshopItem" are executed with success. |  |
+| On "CreateWorkshopItem" error | Trigger when the "CreateWorkshopItem" failed to execute. | Tag *(string)* <br> |
+| On any "CreateWorkshopItem" error | Trigger when any of the "CreateWorkshopItem" failed to execute. |  |
+| On "UploadWorkshopItem" success | Trigger when the "UploadWorkshopItem" is executed with success. | Tag *(string)* <br> |
+| On any "UploadWorkshopItem" success | Trigger when any of the "UploadWorkshopItem" are executed with success. |  |
+| On "UploadWorkshopItem" error | Trigger when the "UploadWorkshopItem" failed to execute. | Tag *(string)* <br> |
+| On any "UploadWorkshopItem" error | Trigger when any of the "UploadWorkshopItem" failed to execute. |  |
+| On "GetSubscribedItemsWithMetadata" success | Trigger when the "GetSubscribedItemsWithMetadata" is executed with success. | Tag *(string)* <br> |
+| On any "GetSubscribedItemsWithMetadata" success | Trigger when any of the "GetSubscribedItemsWithMetadata" are executed with success. |  |
+| On "GetSubscribedItemsWithMetadata" error | Trigger when the "GetSubscribedItemsWithMetadata" failed to execute. | Tag *(string)* <br> |
+| On any "GetSubscribedItemsWithMetadata" error | Trigger when any of the "GetSubscribedItemsWithMetadata" failed to execute. |  |
+| On "DownloadWorkshopItem" success | Trigger when the "DownloadWorkshopItem" is executed with success. | Tag *(string)* <br> |
+| On any "DownloadWorkshopItem" success | Trigger when any of the "DownloadWorkshopItem" are executed with success. |  |
+| On "DownloadWorkshopItem" error | Trigger when the "DownloadWorkshopItem" failed to execute. | Tag *(string)* <br> |
+| On any "DownloadWorkshopItem" error | Trigger when any of the "DownloadWorkshopItem" failed to execute. |  |
 | Is engine | Return true if the engine running the app is the one selected | Engine *(combo)* <br> |
 | Is initialized | Returns true if the Pipelab integration has been initialized |  |
 | Is full screen | Returns true if the window is in full screen mode. | State *(combo)* <br> |
@@ -469,6 +493,34 @@ When Download type is Around the user, the offsets are the amount of entries aro
 | TriggerScreenshotResult | The result of the "TriggerScreenshot last call" | string |  | 
 | CheckDLCIsInstalledError | The error of the "CheckDLCIsInstalled last call" | string |  | 
 | CheckDLCIsInstalledResult | The result of the "CheckDLCIsInstalled last call" | string |  | 
+| CreateWorkshopItemError | The error of the "CreateWorkshopItem last call" | string |  | 
+| CreateWorkshopItemResult | The result of the "CreateWorkshopItem last call" | string |  | 
+| UploadWorkshopItemError | The error of the "UploadWorkshopItem last call" | string |  | 
+| UploadWorkshopItemResult | The result of the "UploadWorkshopItem last call" | string |  | 
+| GetSubscribedItemsWithMetadataError | The error of the "GetSubscribedItemsWithMetadata last call" | string |  | 
+| GetSubscribedItemsWithMetadataResult | The result of the "GetSubscribedItemsWithMetadata last call" | string |  | 
+| DownloadWorkshopItemError | The error of the "DownloadWorkshopItem last call" | string |  | 
+| DownloadWorkshopItemResult | The result of the "DownloadWorkshopItem last call" | string |  | 
+| SubscribedItemsCount | Get the number of subscribed workshop items | number |  | 
+| SubscribedItemIdAt | Get the workshop item ID at the given index | string | Index *(number)* <br> | 
+| WorkshopItemTitle | Get the title of a workshop item | string | Item ID *(string)* <br> | 
+| WorkshopItemDescription | Get the description of a workshop item | string | Item ID *(string)* <br> | 
+| WorkshopItemOwnerSteamId64 | Get the owner's Steam ID64 of a workshop item | string | Item ID *(string)* <br> | 
+| WorkshopItemOwnerAccountId | Get the owner's account ID of a workshop item | number | Item ID *(string)* <br> | 
+| WorkshopItemTags | Get the tags of a workshop item (comma-separated) | string | Item ID *(string)* <br> | 
+| WorkshopItemUpvotes | Get the number of upvotes for a workshop item | number | Item ID *(string)* <br> | 
+| WorkshopItemDownvotes | Get the number of downvotes for a workshop item | number | Item ID *(string)* <br> | 
+| WorkshopItemPreviewUrl | Get the preview image URL of a workshop item | string | Item ID *(string)* <br> | 
+| WorkshopItemUrl | Get the Steam Workshop URL of a workshop item | string | Item ID *(string)* <br> | 
+| WorkshopItemTimeCreated | Get the creation timestamp of a workshop item (Unix epoch) | number | Item ID *(string)* <br> | 
+| WorkshopItemTimeUpdated | Get the last update timestamp of a workshop item (Unix epoch) | number | Item ID *(string)* <br> | 
+| WorkshopItemState | Get the state bitfield of a workshop item | number | Item ID *(string)* <br> | 
+| WorkshopItemIsInstalled | Check if a workshop item is installed (returns 0 or 1) | number | Item ID *(string)* <br> | 
+| WorkshopItemIsDownloading | Check if a workshop item is downloading (returns 0 or 1) | number | Item ID *(string)* <br> | 
+| WorkshopItemNeedsUpdate | Check if a workshop item needs an update (returns 0 or 1) | number | Item ID *(string)* <br> | 
+| WorkshopItemInstallFolder | Get the installation folder path of a workshop item | string | Item ID *(string)* <br> | 
+| WorkshopItemSizeOnDisk | Get the size on disk of a workshop item in bytes | number | Item ID *(string)* <br> | 
+| WorkshopItemTimestamp | Get the install timestamp of a workshop item | number | Item ID *(string)* <br> | 
 | ArgumentAt | Get the argument at the given index. | string | Index *(number)* <br> | 
 | ArgumentCount | Get the number of arguments. | number |  | 
 | AppFolderURL | Return the URL of the folder of the current app. | string |  | 
