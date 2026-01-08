@@ -1205,6 +1205,17 @@ const ActivateToStore = ACEGenerator("ActivateToStore", /** @type {const} */ ({
   description: "Activates the Steam Overlay to the Steam store page for the provided app",
 }))
 
+// Steam Screenshots
+const TriggerScreenshot = ACEGenerator("TriggerScreenshot", /** @type {const} */ ({
+  category: "steam",
+  highlight: false,
+  deprecated: false,
+  params: [],
+  listName: "Trigger screenshot",
+  displayText: "Trigger Steam screenshot",
+  description: "Captures the current screen and saves to Steam screenshot library",
+}))
+
 /**
  * @satisfies {import('./sdk.js').Config<import('./sdk.js').Categories>}
  */
@@ -1387,6 +1398,7 @@ const Config = /** @type {const} */({
     ...LeaderboardDownloadScore.actions,
     ...ActivateToWebPage.actions,
     ...ActivateToStore.actions,
+    ...TriggerScreenshot.actions,
   },
   Cnds: {
     ...Initialize.conditions,
@@ -1437,6 +1449,7 @@ const Config = /** @type {const} */({
     ...LeaderboardDownloadScore.conditions,
     ...ActivateToWebPage.conditions,
     ...ActivateToStore.conditions,
+    ...TriggerScreenshot.conditions,
     IsEngine: {
       category: "general",
       forward: "_IsEngine",
@@ -1558,6 +1571,7 @@ const Config = /** @type {const} */({
     ...LeaderboardDownloadScore.expressions,
     ...ActivateToWebPage.expressions,
     ...ActivateToStore.expressions,
+    ...TriggerScreenshot.expressions,
 
     // command line
     ArgumentAt: {

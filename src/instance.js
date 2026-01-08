@@ -2262,6 +2262,45 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     _ActivateToStore = this._ActivateToStoreBase
     _ActivateToStoreSync = this._ActivateToStoreBase
 
+    // Steam Screenshots
+    _TriggerScreenshotBase = this.wrap(super._TriggerScreenshot, async (
+      /** @type {Tag} */ tag
+    ) => {
+      try {
+        /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').SteamRaw<'screenshots', 'triggerScreenshot'>, 'input'>} */
+        const order = {
+          url: '/steam/raw',
+          body: {
+            namespace: 'screenshots',
+            method: 'triggerScreenshot',
+            args: [],
+          },
+        };
+        const answer = await this.ws?.sendAndWaitForResponse(order);
+        if (answer?.body.success === false) {
+          throw new Error('Failed')
+        }
+        this._TriggerScreenshotResultValue = answer?.body.data
+        this._TriggerScreenshotErrorValue = ''
+
+        await this.trigger(tag, [
+          C3.Plugins.pipelabv2.Cnds.OnTriggerScreenshotSuccess,
+          C3.Plugins.pipelabv2.Cnds.OnAnyTriggerScreenshotSuccess
+        ])
+      } catch (e) {
+        if (e instanceof Error) {
+          this._TriggerScreenshotErrorValue = e.message
+          this._TriggerScreenshotResultValue = -1
+          await this.trigger(tag, [
+            C3.Plugins.pipelabv2.Cnds.OnTriggerScreenshotError,
+            C3.Plugins.pipelabv2.Cnds.OnAnyTriggerScreenshotError
+          ])
+        }
+      }
+    }, this.unsupportedEngine)
+    _TriggerScreenshot = this._TriggerScreenshotBase
+    _TriggerScreenshotSync = this._TriggerScreenshotBase
+
     // #region Cnds
     _OnInitializeSuccess = this.wrap(super._OnInitializeSuccess, (/** @type {Tag} */ tag) => {
       return this._currentTag === tag;
@@ -2635,6 +2674,11 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     _OnAnyActivateToStoreSuccess = this.wrap(super._OnAnyActivateToStoreSuccess, () => true)
     _OnActivateToStoreError = this.wrap(super._OnActivateToStoreError, (/** @type {Tag} */ tag) => this._currentTag === tag)
     _OnAnyActivateToStoreError = this.wrap(super._OnAnyActivateToStoreError, () => true)
+
+    _OnTriggerScreenshotSuccess = this.wrap(super._OnTriggerScreenshotSuccess, (/** @type {Tag} */ tag) => this._currentTag === tag)
+    _OnAnyTriggerScreenshotSuccess = this.wrap(super._OnAnyTriggerScreenshotSuccess, () => true)
+    _OnTriggerScreenshotError = this.wrap(super._OnTriggerScreenshotError, (/** @type {Tag} */ tag) => this._currentTag === tag)
+    _OnAnyTriggerScreenshotError = this.wrap(super._OnAnyTriggerScreenshotError, () => true)
 
     _IsFullScreen = this.wrap(super._IsFullScreen, (state) => {
       return this._fullscreenState === state
@@ -3111,6 +3155,13 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     })
     _ActivateToStoreResult = this.exprs(super._ActivateToStoreResult, () => {
       return this._ActivateToStoreResultValue
+    })
+
+    _TriggerScreenshotError = this.exprs(super._TriggerScreenshotError, () => {
+      return this._TriggerScreenshotErrorValue
+    })
+    _TriggerScreenshotResult = this.exprs(super._TriggerScreenshotResult, () => {
+      return this._TriggerScreenshotResultValue
     })
 
     //
