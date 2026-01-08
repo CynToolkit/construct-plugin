@@ -151,6 +151,8 @@ When Download type is Around the user, the offsets are the amount of entries aro
 | Activate Steam overlay to store | Activates the Steam Overlay to the Steam store page for the provided app | App ID             *(number)* <br>Flag             *(combo)* <br> |
 | Trigger screenshot (synchronous) | Captures the current screen and saves to Steam screenshot library (synchronous) | Tag             *(string)* <br> |
 | Trigger screenshot | Captures the current screen and saves to Steam screenshot library |  |
+| Check DLC is installed (synchronous) | Checks if the user owns and has installed a specific DLC (synchronous) | DLC App ID             *(number)* <br>Tag             *(string)* <br> |
+| Check DLC is installed | Checks if the user owns and has installed a specific DLC | DLC App ID             *(number)* <br> |
 
 
 ---
@@ -353,6 +355,10 @@ When Download type is Around the user, the offsets are the amount of entries aro
 | On any "TriggerScreenshot" success | Trigger when any of the "TriggerScreenshot" are executed with success. |  |
 | On "TriggerScreenshot" error | Trigger when the "TriggerScreenshot" failed to execute. | Tag *(string)* <br> |
 | On any "TriggerScreenshot" error | Trigger when any of the "TriggerScreenshot" failed to execute. |  |
+| On "CheckDLCIsInstalled" success | Trigger when the "CheckDLCIsInstalled" is executed with success. | Tag *(string)* <br> |
+| On any "CheckDLCIsInstalled" success | Trigger when any of the "CheckDLCIsInstalled" are executed with success. |  |
+| On "CheckDLCIsInstalled" error | Trigger when the "CheckDLCIsInstalled" failed to execute. | Tag *(string)* <br> |
+| On any "CheckDLCIsInstalled" error | Trigger when any of the "CheckDLCIsInstalled" failed to execute. |  |
 | Is engine | Return true if the engine running the app is the one selected | Engine *(combo)* <br> |
 | Is initialized | Returns true if the Pipelab integration has been initialized |  |
 | Is full screen | Returns true if the window is in full screen mode. | State *(combo)* <br> |
@@ -461,6 +467,8 @@ When Download type is Around the user, the offsets are the amount of entries aro
 | ActivateToStoreResult | The result of the "ActivateToStore last call" | string |  | 
 | TriggerScreenshotError | The error of the "TriggerScreenshot last call" | string |  | 
 | TriggerScreenshotResult | The result of the "TriggerScreenshot last call" | string |  | 
+| CheckDLCIsInstalledError | The error of the "CheckDLCIsInstalled last call" | string |  | 
+| CheckDLCIsInstalledResult | The result of the "CheckDLCIsInstalled last call" | string |  | 
 | ArgumentAt | Get the argument at the given index. | string | Index *(number)* <br> | 
 | ArgumentCount | Get the number of arguments. | number |  | 
 | AppFolderURL | Return the URL of the folder of the current app. | string |  | 
