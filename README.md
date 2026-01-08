@@ -149,6 +149,8 @@ When Download type is Around the user, the offsets are the amount of entries aro
 | Activate Steam overlay to web page | Activates Steam Overlay web browser directly to the specified URL | URL             *(string)* <br>Mode             *(combo)* <br> |
 | Activate Steam overlay to store (synchronous) | Activates the Steam Overlay to the Steam store page for the provided app (synchronous) | App ID             *(number)* <br>Flag             *(combo)* <br>Tag             *(string)* <br> |
 | Activate Steam overlay to store | Activates the Steam Overlay to the Steam store page for the provided app | App ID             *(number)* <br>Flag             *(combo)* <br> |
+| Trigger screenshot (synchronous) | Captures the current screen and saves to Steam screenshot library (synchronous) | Tag             *(string)* <br> |
+| Trigger screenshot | Captures the current screen and saves to Steam screenshot library |  |
 
 
 ---
@@ -347,6 +349,10 @@ When Download type is Around the user, the offsets are the amount of entries aro
 | On any "ActivateToStore" success | Trigger when any of the "ActivateToStore" are executed with success. |  |
 | On "ActivateToStore" error | Trigger when the "ActivateToStore" failed to execute. | Tag *(string)* <br> |
 | On any "ActivateToStore" error | Trigger when any of the "ActivateToStore" failed to execute. |  |
+| On "TriggerScreenshot" success | Trigger when the "TriggerScreenshot" is executed with success. | Tag *(string)* <br> |
+| On any "TriggerScreenshot" success | Trigger when any of the "TriggerScreenshot" are executed with success. |  |
+| On "TriggerScreenshot" error | Trigger when the "TriggerScreenshot" failed to execute. | Tag *(string)* <br> |
+| On any "TriggerScreenshot" error | Trigger when any of the "TriggerScreenshot" failed to execute. |  |
 | Is engine | Return true if the engine running the app is the one selected | Engine *(combo)* <br> |
 | Is initialized | Returns true if the Pipelab integration has been initialized |  |
 | Is full screen | Returns true if the window is in full screen mode. | State *(combo)* <br> |
@@ -453,6 +459,8 @@ When Download type is Around the user, the offsets are the amount of entries aro
 | ActivateToWebPageResult | The result of the "ActivateToWebPage last call" | string |  | 
 | ActivateToStoreError | The error of the "ActivateToStore last call" | string |  | 
 | ActivateToStoreResult | The result of the "ActivateToStore last call" | string |  | 
+| TriggerScreenshotError | The error of the "TriggerScreenshot last call" | string |  | 
+| TriggerScreenshotResult | The result of the "TriggerScreenshot last call" | string |  | 
 | ArgumentAt | Get the argument at the given index. | string | Index *(number)* <br> | 
 | ArgumentCount | Get the number of arguments. | number |  | 
 | AppFolderURL | Return the URL of the folder of the current app. | string |  | 
