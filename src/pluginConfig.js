@@ -1216,6 +1216,25 @@ const TriggerScreenshot = ACEGenerator("TriggerScreenshot", /** @type {const} */
   description: "Captures the current screen and saves to Steam screenshot library",
 }))
 
+// Steam DLC
+const CheckDLCIsInstalled = ACEGenerator("CheckDLCIsInstalled", /** @type {const} */ ({
+  category: "steam",
+  highlight: false,
+  deprecated: false,
+  params: [
+    {
+      id: 'appId',
+      desc: "The App ID of the DLC to check",
+      name: "DLC App ID",
+      type: 'number',
+      initialValue: "0",
+    }
+  ],
+  listName: "Check DLC is installed",
+  displayText: "Check DLC [b]{0}[/b] is installed",
+  description: "Checks if the user owns and has installed a specific DLC",
+}))
+
 /**
  * @satisfies {import('./sdk.js').Config<import('./sdk.js').Categories>}
  */
@@ -1399,6 +1418,7 @@ const Config = /** @type {const} */({
     ...ActivateToWebPage.actions,
     ...ActivateToStore.actions,
     ...TriggerScreenshot.actions,
+    ...CheckDLCIsInstalled.actions,
   },
   Cnds: {
     ...Initialize.conditions,
@@ -1450,6 +1470,7 @@ const Config = /** @type {const} */({
     ...ActivateToWebPage.conditions,
     ...ActivateToStore.conditions,
     ...TriggerScreenshot.conditions,
+    ...CheckDLCIsInstalled.conditions,
     IsEngine: {
       category: "general",
       forward: "_IsEngine",
@@ -1572,6 +1593,7 @@ const Config = /** @type {const} */({
     ...ActivateToWebPage.expressions,
     ...ActivateToStore.expressions,
     ...TriggerScreenshot.expressions,
+    ...CheckDLCIsInstalled.expressions,
 
     // command line
     ArgumentAt: {

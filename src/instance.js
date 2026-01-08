@@ -2301,6 +2301,46 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     _TriggerScreenshot = this._TriggerScreenshotBase
     _TriggerScreenshotSync = this._TriggerScreenshotBase
 
+    // Steam DLC
+    _CheckDLCIsInstalledBase = this.wrap(super._CheckDLCIsInstalled, async (
+      /** @type {number} */ appId,
+      /** @type {Tag} */ tag
+    ) => {
+      try {
+        /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').SteamRaw<'apps', 'isDlcInstalled'>, 'input'>} */
+        const order = {
+          url: '/steam/raw',
+          body: {
+            namespace: 'apps',
+            method: 'isDlcInstalled',
+            args: [appId],
+          },
+        };
+        const answer = await this.ws?.sendAndWaitForResponse(order);
+        if (answer?.body.success === false) {
+          throw new Error('Failed')
+        }
+        this._CheckDLCIsInstalledResultValue = answer?.body.data
+        this._CheckDLCIsInstalledErrorValue = ''
+
+        await this.trigger(tag, [
+          C3.Plugins.pipelabv2.Cnds.OnCheckDLCIsInstalledSuccess,
+          C3.Plugins.pipelabv2.Cnds.OnAnyCheckDLCIsInstalledSuccess
+        ])
+      } catch (e) {
+        if (e instanceof Error) {
+          this._CheckDLCIsInstalledErrorValue = e.message
+          this._CheckDLCIsInstalledResultValue = false
+          await this.trigger(tag, [
+            C3.Plugins.pipelabv2.Cnds.OnCheckDLCIsInstalledError,
+            C3.Plugins.pipelabv2.Cnds.OnAnyCheckDLCIsInstalledError
+          ])
+        }
+      }
+    }, this.unsupportedEngine)
+    _CheckDLCIsInstalled = this._CheckDLCIsInstalledBase
+    _CheckDLCIsInstalledSync = this._CheckDLCIsInstalledBase
+
     // #region Cnds
     _OnInitializeSuccess = this.wrap(super._OnInitializeSuccess, (/** @type {Tag} */ tag) => {
       return this._currentTag === tag;
@@ -2679,6 +2719,11 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     _OnAnyTriggerScreenshotSuccess = this.wrap(super._OnAnyTriggerScreenshotSuccess, () => true)
     _OnTriggerScreenshotError = this.wrap(super._OnTriggerScreenshotError, (/** @type {Tag} */ tag) => this._currentTag === tag)
     _OnAnyTriggerScreenshotError = this.wrap(super._OnAnyTriggerScreenshotError, () => true)
+
+    _OnCheckDLCIsInstalledSuccess = this.wrap(super._OnCheckDLCIsInstalledSuccess, (/** @type {Tag} */ tag) => this._currentTag === tag)
+    _OnAnyCheckDLCIsInstalledSuccess = this.wrap(super._OnAnyCheckDLCIsInstalledSuccess, () => true)
+    _OnCheckDLCIsInstalledError = this.wrap(super._OnCheckDLCIsInstalledError, (/** @type {Tag} */ tag) => this._currentTag === tag)
+    _OnAnyCheckDLCIsInstalledError = this.wrap(super._OnAnyCheckDLCIsInstalledError, () => true)
 
     _IsFullScreen = this.wrap(super._IsFullScreen, (state) => {
       return this._fullscreenState === state
@@ -3162,6 +3207,13 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     })
     _TriggerScreenshotResult = this.exprs(super._TriggerScreenshotResult, () => {
       return this._TriggerScreenshotResultValue
+    })
+
+    _CheckDLCIsInstalledError = this.exprs(super._CheckDLCIsInstalledError, () => {
+      return this._CheckDLCIsInstalledErrorValue
+    })
+    _CheckDLCIsInstalledResult = this.exprs(super._CheckDLCIsInstalledResult, () => {
+      return this._CheckDLCIsInstalledResultValue
     })
 
     //
