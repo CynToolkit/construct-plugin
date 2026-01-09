@@ -1297,9 +1297,14 @@ const UploadWorkshopItem = ACEGenerator("UploadWorkshopItem", /** @type {const} 
       id: 'visibility',
       desc: "Visibility setting (0=Public, 1=FriendsOnly, 2=Private, 3=Unlisted)",
       name: "Visibility",
-      type: 'number',
-      initialValue: "0",
-    },
+      type: 'combo',
+      items: [
+        { "public": "Public" },
+        { "friendsOnly": "Friends Only" },
+        { "private": "Private" },
+        { "unlisted": "Unlisted" },
+      ]
+    }
   ],
   listName: "Upload workshop item",
   displayText: "Upload workshop item [b]{0}[/b] (title: {1}, description: {2}, content: {3}, preview: {4}, tags: {5}, visibility: {6})",

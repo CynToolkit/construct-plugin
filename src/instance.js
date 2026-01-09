@@ -2357,7 +2357,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
           body: {
             namespace: 'workshop',
             method: 'createItem',
-            args: [null],
+            args: [],
           },
         };
         const answer = await this.ws?.sendAndWaitForResponse(order);
@@ -2365,9 +2365,9 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
           throw new Error('Failed')
         }
         const result = answer?.body.data
-        // @ts-ignore - API returns UgcResult
+        // @ts-expect-error - API returns UgcResult
         this._CreateWorkshopItemResultValue = result?.itemId?.toString() ?? ''
-        // @ts-ignore - API returns UgcResult
+        // @ts-expect-error - API returns UgcResult
         this._CreateWorkshopItemNeedsAgreementValue = result?.needsToAcceptAgreement ? 1 : 0
         this._CreateWorkshopItemErrorValue = ''
 
@@ -2427,9 +2427,9 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
           throw new Error('Failed')
         }
         const result = answer?.body.data
-        // @ts-ignore - API returns UgcResult
+        // @ts-expect-error - API returns UgcResult
         this._UploadWorkshopItemResultValue = result?.itemId?.toString() ?? ''
-        // @ts-ignore - API returns UgcResult
+        // @ts-expect-error - API returns UgcResult
         this._UploadWorkshopItemNeedsAgreementValue = result?.needsToAcceptAgreement ? 1 : 0
         this._UploadWorkshopItemErrorValue = ''
 
@@ -2499,7 +2499,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
           throw new Error('Failed to get item metadata')
         }
 
-        // @ts-ignore - API returns WorkshopItemsResult
+        // @ts-expect-error - API returns WorkshopItemsResult
         const items = metadataAnswer?.body.data?.items ?? []
         
         // Store items in map and get state/install info for each
