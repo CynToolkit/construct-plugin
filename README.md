@@ -5,7 +5,7 @@ A plugin that integrate with Pipelab <br>
 Author: Armaldio <br>
 Website: https://github.com/CynToolkit/construct-plugin <br>
 Addon Url: https://github.com/CynToolkit/construct-plugin <br>
-Download Latest Version : [Version: 2.4.0](https://github.com/CynToolkit/construct-plugin/releases/latest) <br>
+Download Latest Version : [Version: 2.4.1](https://github.com/CynToolkit/construct-plugin/releases/latest) <br>
 <sub>Made using [c3ide2-framework](https://github.com/ConstructFund/c3ide2-framework) </sub><br>
 
 ## Table of Contents
@@ -153,10 +153,10 @@ When Download type is Around the user, the offsets are the amount of entries aro
 | Trigger screenshot | Captures the current screen and saves to Steam screenshot library |  |
 | Check DLC is installed (synchronous) | Checks if the user owns and has installed a specific DLC (synchronous) | DLC App ID             *(number)* <br>Tag             *(string)* <br> |
 | Check DLC is installed | Checks if the user owns and has installed a specific DLC | DLC App ID             *(number)* <br> |
-| Create workshop item (synchronous) | Creates a new workshop item and returns its ID (synchronous) | Tag             *(string)* <br> |
-| Create workshop item | Creates a new workshop item and returns its ID |  |
-| Upload workshop item (synchronous) | Uploads content to a workshop item (synchronous) | Item ID             *(string)* <br>Title             *(string)* <br>Description             *(string)* <br>Content Folder Path             *(string)* <br>Preview Image Path             *(string)* <br>Tags             *(string)* <br>Visibility             *(combo)* <br>Tag             *(string)* <br> |
-| Upload workshop item | Uploads content to a workshop item | Item ID             *(string)* <br>Title             *(string)* <br>Description             *(string)* <br>Content Folder Path             *(string)* <br>Preview Image Path             *(string)* <br>Tags             *(string)* <br>Visibility             *(combo)* <br> |
+| Create workshop item (synchronous) | Creates a new workshop item for the specified Steam App ID and returns its ID (synchronous) | App ID             *(number)* <br>Tag             *(string)* <br> |
+| Create workshop item | Creates a new workshop item for the specified Steam App ID and returns its ID | App ID             *(number)* <br> |
+| Upload workshop item (synchronous) | Uploads content to a workshop item (synchronous) | App ID             *(number)* <br>Item ID             *(string)* <br>Title             *(string)* <br>Description             *(string)* <br>Content Folder Path             *(string)* <br>Preview Image Path             *(string)* <br>Tags             *(string)* <br>Visibility             *(combo)* <br>Tag             *(string)* <br> |
+| Upload workshop item | Uploads content to a workshop item | App ID             *(number)* <br>Item ID             *(string)* <br>Title             *(string)* <br>Description             *(string)* <br>Content Folder Path             *(string)* <br>Preview Image Path             *(string)* <br>Tags             *(string)* <br>Visibility             *(combo)* <br> |
 | Get subscribed items with metadata (synchronous) | Gets all subscribed workshop items with their metadata and install info (synchronous) | Tag             *(string)* <br> |
 | Get subscribed items with metadata | Gets all subscribed workshop items with their metadata and install info |  |
 | Download workshop item (synchronous) | Downloads or updates a workshop item (synchronous) | Item ID             *(string)* <br>High Priority             *(boolean)* <br>Tag             *(string)* <br> |
