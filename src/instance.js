@@ -2348,6 +2348,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     _subscribedItemIds = []
 
     _CreateWorkshopItemBase = this.wrap(super._CreateWorkshopItem, async (
+      /** @type {number} */ appID,
       /** @type {Tag} */ tag
     ) => {
       try {
@@ -2357,7 +2358,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
           body: {
             namespace: 'workshop',
             method: 'createItem',
-            args: [],
+            args: [appID],
           },
         };
         const answer = await this.ws?.sendAndWaitForResponse(order);
@@ -2391,6 +2392,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     _CreateWorkshopItemSync = this._CreateWorkshopItemBase
 
     _UploadWorkshopItemBase = this.wrap(super._UploadWorkshopItem, async (
+      /** @type {number} */ appID,
       /** @type {string} */ itemId,
       /** @type {string} */ title,
       /** @type {string} */ description,
@@ -2409,7 +2411,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
             namespace: 'workshop',
             method: 'updateItem',
             args: [
-              itemId,
+              BigInt(itemId),
               {
                 title,
                 description,
@@ -2418,7 +2420,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
                 tags: tagArray,
                 visibility
               },
-              null
+              appID
             ],
           },
         };

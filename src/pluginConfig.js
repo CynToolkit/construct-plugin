@@ -1240,10 +1240,17 @@ const CreateWorkshopItem = ACEGenerator("CreateWorkshopItem", /** @type {const} 
   category: "steam-workshop",
   highlight: false,
   deprecated: false,
-  params: [],
+  params: [
+    {
+      id: 'appID',
+      desc: "The Steam App ID for the workshop item",
+      name: "App ID",
+      type: 'number',
+    }
+  ],
   listName: "Create workshop item",
-  displayText: "Create workshop item",
-  description: "Creates a new workshop item and returns its ID",
+  displayText: "Create workshop item for app [b]{0}[/b]",
+  description: "Creates a new workshop item for the specified Steam App ID and returns its ID",
 }))
 
 const UploadWorkshopItem = ACEGenerator("UploadWorkshopItem", /** @type {const} */ ({
@@ -1251,6 +1258,12 @@ const UploadWorkshopItem = ACEGenerator("UploadWorkshopItem", /** @type {const} 
   highlight: false,
   deprecated: false,
   params: [
+    {
+      id: 'appID',
+      desc: "The Steam App ID for the workshop item",
+      name: "App ID",
+      type: 'number',
+    },
     {
       id: 'itemId',
       desc: "The Workshop Item ID",
@@ -1307,7 +1320,7 @@ const UploadWorkshopItem = ACEGenerator("UploadWorkshopItem", /** @type {const} 
     }
   ],
   listName: "Upload workshop item",
-  displayText: "Upload workshop item [b]{0}[/b] (title: {1}, description: {2}, content: {3}, preview: {4}, tags: {5}, visibility: {6})",
+  displayText: "Upload workshop item [b]{1}[/b] for app [b]{0}[/b] (title: {2}, description: {3}, content: {4}, preview: {5}, tags: {6}, visibility: {7})",
   description: "Uploads content to a workshop item",
 }))
 
