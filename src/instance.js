@@ -2408,18 +2408,16 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         const order = {
           url: '/steam/workshop/update-item',
           body: {
-            args: [
-              itemId,
-              {
-                title,
-                description,
-                contentPath: contentFolderPath,
-                previewPath: previewImagePath,
-                tags: tagArray,
-                visibility
-              },
-              appID
-            ],
+            itemId,
+            updateDetails:{
+              title,
+              description,
+              contentPath: contentFolderPath,
+              previewPath: previewImagePath,
+              tags: tagArray,
+              visibility
+            },
+            appID,
           },
         };
         const answer = await this.ws?.sendAndWaitForResponse(order);
@@ -2487,12 +2485,10 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         // Get metadata for all items
         /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').SteamRaw<'workshop', 'getItems'>, 'input'>} */
         const orderMetadata = {
-          url: '/steam/raw',
+          url: '/steam/workshop/get-items',
           body: {
-            namespace: 'workshop',
-            method: 'getItems',
-            args: [itemIds, null],
-          },
+            itemIds
+          }
         };
         const metadataAnswer = await this.ws?.sendAndWaitForResponse(orderMetadata);
         if (metadataAnswer?.body.success === false) {
