@@ -1272,11 +1272,25 @@ const UpdateWorkshopItem = ACEGenerator("UpdateWorkshopItem", /** @type {const} 
       initialValue: '""',
     },
     {
+      id: 'updateTitle',
+      desc: "Whether to update the title",
+      name: "Update Title",
+      type: 'boolean',
+      initialValue: 'true',
+    },
+    {
       id: 'title',
       desc: "The title of the workshop item",
       name: "Title",
       type: 'string',
       initialValue: '""',
+    },
+    {
+      id: 'updateDescription',
+      desc: "Whether to update the description",
+      name: "Update Description",
+      type: 'boolean',
+      initialValue: 'true',
     },
     {
       id: 'description',
@@ -1286,11 +1300,25 @@ const UpdateWorkshopItem = ACEGenerator("UpdateWorkshopItem", /** @type {const} 
       initialValue: '""',
     },
     {
+      id: 'updateContent',
+      desc: "Whether to update the content folder",
+      name: "Update Content",
+      type: 'boolean',
+      initialValue: 'true',
+    },
+    {
       id: 'contentFolderPath',
       desc: "Absolute path to the folder containing the workshop content",
       name: "Content Folder Path",
       type: 'string',
       initialValue: '""',
+    },
+    {
+      id: 'updatePreview',
+      desc: "Whether to update the preview image",
+      name: "Update Preview",
+      type: 'boolean',
+      initialValue: 'true',
     },
     {
       id: 'previewImagePath',
@@ -1300,11 +1328,25 @@ const UpdateWorkshopItem = ACEGenerator("UpdateWorkshopItem", /** @type {const} 
       initialValue: '""',
     },
     {
+      id: 'updateTags',
+      desc: "Whether to update the tags",
+      name: "Update Tags",
+      type: 'boolean',
+      initialValue: 'true',
+    },
+    {
       id: 'tags',
       desc: "Comma-separated list of tags",
       name: "Tags",
       type: 'string',
       initialValue: '""',
+    },
+    {
+      id: 'updateVisibility',
+      desc: "Whether to update the visibility",
+      name: "Update Visibility",
+      type: 'boolean',
+      initialValue: 'true',
     },
     {
       id: 'visibility',
@@ -1327,8 +1369,8 @@ const UpdateWorkshopItem = ACEGenerator("UpdateWorkshopItem", /** @type {const} 
     }
   ],
   listName: "Update workshop item",
-  displayText: "Update workshop item [b]{1}[/b] for app [b]{0}[/b] (title: {2}, description: {3}, content: {4}, preview: {5}, tags: {6}, visibility: {7}, note: {8})",
-  description: "Updates content and metadata of a workshop item",
+  displayText: "Update workshop item [b]{1}[/b] for app [b]{0}[/b] (title: {2} {3}, description: {4} {5}, content: {6} {7}, preview: {8} {9}, tags: {10} {11}, visibility: {12} {13}, change note: {14})",
+  description: "Updates content and metadata of a workshop item. Use the update flags to control which fields are updated.",
 }))
 
 const GetSubscribedItemsWithMetadata = ACEGenerator("GetSubscribedItemsWithMetadata", /** @type {const} */ ({

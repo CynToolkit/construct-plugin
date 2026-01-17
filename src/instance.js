@@ -2443,31 +2443,61 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     _UpdateWorkshopItemBase = this.wrap(super._UpdateWorkshopItem, async (
       /** @type {number} */ appID,
       /** @type {string} */ itemId,
+      /** @type {boolean} */ updateTitle,
       /** @type {string} */ title,
+      /** @type {boolean} */ updateDescription,
       /** @type {string} */ description,
+      /** @type {boolean} */ updateContent,
       /** @type {string} */ contentFolderPath,
+      /** @type {boolean} */ updatePreview,
       /** @type {string} */ previewImagePath,
+      /** @type {boolean} */ updateTags,
       /** @type {string} */ tags,
+      /** @type {boolean} */ updateVisibility,
       /** @type {number} */ visibility,
       /** @type {string} */ changeNote,
       /** @type {Tag} */ tag
     ) => {
       try {
-        const tagArray = tags.split(',').map(t => t.trim()).filter(t => t.length > 0)
+        // Build updateDetails object with only the fields that should be updated
+        /** @type {Record<string, any>} */
+        const updateDetails = {}
+        
+        if (updateTitle) {
+          updateDetails.title = title
+        }
+        
+        if (updateDescription) {
+          updateDetails.description = description
+        }
+        
+        if (updateContent) {
+          updateDetails.contentPath = contentFolderPath
+        }
+        
+        if (updatePreview) {
+          updateDetails.previewPath = previewImagePath
+        }
+        
+        if (updateTags) {
+          const tagArray = tags.split(',').map(t => t.trim()).filter(t => t.length > 0)
+          updateDetails.tags = tagArray
+        }
+        
+        if (updateVisibility) {
+          updateDetails.visibility = visibility
+        }
+        
+        if (changeNote) {
+          updateDetails.changeNote = changeNote
+        }
+
         /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').SteamRaw<'workshop', 'updateItem'>, 'input'>} */
         const order = {
           url: '/steam/workshop/update-item',
           body: {
             itemId,
-            updateDetails:{
-              title,
-              description,
-              contentPath: contentFolderPath,
-              previewPath: previewImagePath,
-              tags: tagArray,
-              visibility,
-              changeNote: changeNote || undefined
-            },
+            updateDetails,
             appID,
           },
         };

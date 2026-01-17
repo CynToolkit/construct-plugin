@@ -13,7 +13,7 @@ function validateDisplayText(name, obj, aceType) {
   if (obj.hasOwnProperty("displayText")) {
     const paramCount = (obj.params || []).length;
     // use regex to find the number of {/d} in displayText
-    const regex = /{\d}/g;
+    const regex = /{\d+}/g;
     const matches = obj.displayText.match(regex);
     const matchCount = matches ? matches.length : 0;
     // check if the number of {/d} matches the number of params
@@ -48,8 +48,8 @@ async function ensureForwardScript(name, obj, aceType) {
           addLoadPromise: () => {},
         },
       };
-      _postToDOMAsync = () => new Promise(() => {})
-      _addDOMMessageHandler = () => {}
+      _postToDOMAsync = () => new Promise(() => {});
+      _addDOMMessageHandler = () => {};
     },
     undefined,
     undefined

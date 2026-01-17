@@ -155,8 +155,8 @@ When Download type is Around the user, the offsets are the amount of entries aro
 | Check DLC is installed | Checks if the user owns and has installed a specific DLC | DLC App ID             *(number)* <br> |
 | Create workshop item (synchronous) | Creates a new workshop item for the specified Steam App ID and returns its ID (synchronous) | App ID             *(number)* <br>Tag             *(string)* <br> |
 | Create workshop item | Creates a new workshop item for the specified Steam App ID and returns its ID | App ID             *(number)* <br> |
-| Upload workshop item (synchronous) | Uploads content to a workshop item (synchronous) | App ID             *(number)* <br>Item ID             *(string)* <br>Title             *(string)* <br>Description             *(string)* <br>Content Folder Path             *(string)* <br>Preview Image Path             *(string)* <br>Tags             *(string)* <br>Visibility             *(combo)* <br>Tag             *(string)* <br> |
-| Upload workshop item | Uploads content to a workshop item | App ID             *(number)* <br>Item ID             *(string)* <br>Title             *(string)* <br>Description             *(string)* <br>Content Folder Path             *(string)* <br>Preview Image Path             *(string)* <br>Tags             *(string)* <br>Visibility             *(combo)* <br> |
+| Update workshop item (synchronous) | Updates content and metadata of a workshop item. Use the update flags to control which fields are updated. (synchronous) | App ID             *(number)* <br>Item ID             *(string)* <br>Update Title             *(boolean)* <br>Title             *(string)* <br>Update Description             *(boolean)* <br>Description             *(string)* <br>Update Content             *(boolean)* <br>Content Folder Path             *(string)* <br>Update Preview             *(boolean)* <br>Preview Image Path             *(string)* <br>Update Tags             *(boolean)* <br>Tags             *(string)* <br>Update Visibility             *(boolean)* <br>Visibility             *(combo)* <br>Change Note             *(string)* <br>Tag             *(string)* <br> |
+| Update workshop item | Updates content and metadata of a workshop item. Use the update flags to control which fields are updated. | App ID             *(number)* <br>Item ID             *(string)* <br>Update Title             *(boolean)* <br>Title             *(string)* <br>Update Description             *(boolean)* <br>Description             *(string)* <br>Update Content             *(boolean)* <br>Content Folder Path             *(string)* <br>Update Preview             *(boolean)* <br>Preview Image Path             *(string)* <br>Update Tags             *(boolean)* <br>Tags             *(string)* <br>Update Visibility             *(boolean)* <br>Visibility             *(combo)* <br>Change Note             *(string)* <br> |
 | Get subscribed items with metadata (synchronous) | Gets all subscribed workshop items with their metadata and install info (synchronous) | Tag             *(string)* <br> |
 | Get subscribed items with metadata | Gets all subscribed workshop items with their metadata and install info |  |
 | Download workshop item (synchronous) | Downloads or updates a workshop item (synchronous) | Item ID             *(string)* <br>High Priority             *(boolean)* <br>Tag             *(string)* <br> |
@@ -393,10 +393,10 @@ When Download type is Around the user, the offsets are the amount of entries aro
 | On any "CreateWorkshopItem" success | Trigger when any of the "CreateWorkshopItem" are executed with success. |  |
 | On "CreateWorkshopItem" error | Trigger when the "CreateWorkshopItem" failed to execute. | Tag *(string)* <br> |
 | On any "CreateWorkshopItem" error | Trigger when any of the "CreateWorkshopItem" failed to execute. |  |
-| On "UploadWorkshopItem" success | Trigger when the "UploadWorkshopItem" is executed with success. | Tag *(string)* <br> |
-| On any "UploadWorkshopItem" success | Trigger when any of the "UploadWorkshopItem" are executed with success. |  |
-| On "UploadWorkshopItem" error | Trigger when the "UploadWorkshopItem" failed to execute. | Tag *(string)* <br> |
-| On any "UploadWorkshopItem" error | Trigger when any of the "UploadWorkshopItem" failed to execute. |  |
+| On "UpdateWorkshopItem" success | Trigger when the "UpdateWorkshopItem" is executed with success. | Tag *(string)* <br> |
+| On any "UpdateWorkshopItem" success | Trigger when any of the "UpdateWorkshopItem" are executed with success. |  |
+| On "UpdateWorkshopItem" error | Trigger when the "UpdateWorkshopItem" failed to execute. | Tag *(string)* <br> |
+| On any "UpdateWorkshopItem" error | Trigger when any of the "UpdateWorkshopItem" failed to execute. |  |
 | On "GetSubscribedItemsWithMetadata" success | Trigger when the "GetSubscribedItemsWithMetadata" is executed with success. | Tag *(string)* <br> |
 | On any "GetSubscribedItemsWithMetadata" success | Trigger when any of the "GetSubscribedItemsWithMetadata" are executed with success. |  |
 | On "GetSubscribedItemsWithMetadata" error | Trigger when the "GetSubscribedItemsWithMetadata" failed to execute. | Tag *(string)* <br> |
@@ -561,8 +561,8 @@ When Download type is Around the user, the offsets are the amount of entries aro
 | CheckDLCIsInstalledResult | The result of the "CheckDLCIsInstalled last call" | string |  | 
 | CreateWorkshopItemError | The error of the "CreateWorkshopItem last call" | string |  | 
 | CreateWorkshopItemResult | The result of the "CreateWorkshopItem last call" | string |  | 
-| UploadWorkshopItemError | The error of the "UploadWorkshopItem last call" | string |  | 
-| UploadWorkshopItemResult | The result of the "UploadWorkshopItem last call" | string |  | 
+| UpdateWorkshopItemError | The error of the "UpdateWorkshopItem last call" | string |  | 
+| UpdateWorkshopItemResult | The result of the "UpdateWorkshopItem last call" | string |  | 
 | GetSubscribedItemsWithMetadataError | The error of the "GetSubscribedItemsWithMetadata last call" | string |  | 
 | GetSubscribedItemsWithMetadataResult | The result of the "GetSubscribedItemsWithMetadata last call" | string |  | 
 | DownloadWorkshopItemError | The error of the "DownloadWorkshopItem last call" | string |  | 
@@ -609,6 +609,8 @@ When Download type is Around the user, the offsets are the amount of entries aro
 | WorkshopItemInstallFolder | Get the installation folder path of a workshop item | string | Item ID *(string)* <br> | 
 | WorkshopItemSizeOnDisk | Get the size on disk of a workshop item in bytes | number | Item ID *(string)* <br> | 
 | WorkshopItemTimestamp | Get the install timestamp of a workshop item | number | Item ID *(string)* <br> | 
+| WorkshopItemDownloadCurrent | Get the current download progress of a workshop item | number | Item ID *(string)* <br> | 
+| WorkshopItemDownloadTotal | Get the total download progress of a workshop item | number | Item ID *(string)* <br> | 
 | ArgumentAt | Get the argument at the given index. | string | Index *(number)* <br> | 
 | ArgumentCount | Get the number of arguments. | number |  | 
 | AppFolderURL | Return the URL of the folder of the current app. | string |  | 
