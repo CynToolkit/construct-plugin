@@ -4319,6 +4319,16 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
       return item?.installInfo?.timestamp ?? 0
     })
 
+    _WorkshopItemDownloadCurrent = this.exprs(super._WorkshopItemDownloadCurrent, (/** @type {string} */ itemId) => {
+      const item = this._workshopItemsMap.get(itemId)
+      return item?.downloadInfo?.current ?? 0
+    })
+
+    _WorkshopItemDownloadTotal = this.exprs(super._WorkshopItemDownloadTotal, (/** @type {string} */ itemId) => {
+      const item = this._workshopItemsMap.get(itemId)
+      return item?.downloadInfo?.total ?? 0
+    })
+
     //
 
     _saveToJson() {
