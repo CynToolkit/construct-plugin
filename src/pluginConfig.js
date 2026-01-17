@@ -1253,7 +1253,7 @@ const CreateWorkshopItem = ACEGenerator("CreateWorkshopItem", /** @type {const} 
   description: "Creates a new workshop item for the specified Steam App ID and returns its ID",
 }))
 
-const UploadWorkshopItem = ACEGenerator("UploadWorkshopItem", /** @type {const} */ ({
+const UpdateWorkshopItem = ACEGenerator("UpdateWorkshopItem", /** @type {const} */ ({
   category: "steam-workshop",
   highlight: false,
   deprecated: false,
@@ -1317,11 +1317,18 @@ const UploadWorkshopItem = ACEGenerator("UploadWorkshopItem", /** @type {const} 
         { "private": "Private" },
         { "unlisted": "Unlisted" },
       ]
+    },
+    {
+      id: 'changeNote',
+      desc: "Optional change note describing the update",
+      name: "Change Note",
+      type: 'string',
+      initialValue: '""',
     }
   ],
-  listName: "Upload workshop item",
-  displayText: "Upload workshop item [b]{1}[/b] for app [b]{0}[/b] (title: {2}, description: {3}, content: {4}, preview: {5}, tags: {6}, visibility: {7})",
-  description: "Uploads content to a workshop item",
+  listName: "Update workshop item",
+  displayText: "Update workshop item [b]{1}[/b] for app [b]{0}[/b] (title: {2}, description: {3}, content: {4}, preview: {5}, tags: {6}, visibility: {7}, note: {8})",
+  description: "Updates content and metadata of a workshop item",
 }))
 
 const GetSubscribedItemsWithMetadata = ACEGenerator("GetSubscribedItemsWithMetadata", /** @type {const} */ ({
@@ -1735,7 +1742,7 @@ const Config = /** @type {const} */({
     ...TriggerScreenshot.actions,
     ...CheckDLCIsInstalled.actions,
     ...CreateWorkshopItem.actions,
-    ...UploadWorkshopItem.actions,
+    ...UpdateWorkshopItem.actions,
     ...GetSubscribedItemsWithMetadata.actions,
     ...DownloadWorkshopItem.actions,
     ...DeleteWorkshopItem.actions,
@@ -1802,7 +1809,7 @@ const Config = /** @type {const} */({
     ...TriggerScreenshot.conditions,
     ...CheckDLCIsInstalled.conditions,
     ...CreateWorkshopItem.conditions,
-    ...UploadWorkshopItem.conditions,
+    ...UpdateWorkshopItem.conditions,
     ...GetSubscribedItemsWithMetadata.conditions,
     ...DownloadWorkshopItem.conditions,
     ...DeleteWorkshopItem.conditions,
@@ -1940,7 +1947,7 @@ const Config = /** @type {const} */({
     ...TriggerScreenshot.expressions,
     ...CheckDLCIsInstalled.expressions,
     ...CreateWorkshopItem.expressions,
-    ...UploadWorkshopItem.expressions,
+    ...UpdateWorkshopItem.expressions,
     ...GetSubscribedItemsWithMetadata.expressions,
     ...DownloadWorkshopItem.expressions,
     ...DeleteWorkshopItem.expressions,
@@ -2267,6 +2274,38 @@ const Config = /** @type {const} */({
         }
       ],
       description: "Get the install timestamp of a workshop item",
+    },
+    WorkshopItemDownloadCurrent: {
+      category: "steam-workshop",
+      forward: "_WorkshopItemDownloadCurrent",
+      highlight: false,
+      deprecated: false,
+      returnType: 'number',
+      params: [
+        {
+          id: 'itemId',
+          desc: "The workshop item ID",
+          name: "Item ID",
+          type: 'string',
+        }
+      ],
+      description: "Get the current download progress of a workshop item",
+    },
+    WorkshopItemDownloadTotal: {
+      category: "steam-workshop",
+      forward: "_WorkshopItemDownloadTotal",
+      highlight: false,
+      deprecated: false,
+      returnType: 'number',
+      params: [
+        {
+          id: 'itemId',
+          desc: "The workshop item ID",
+          name: "Item ID",
+          type: 'string',
+        }
+      ],
+      description: "Get the total download progress of a workshop item",
     },
 
     // command line

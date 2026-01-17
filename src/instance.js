@@ -2440,7 +2440,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     _CreateWorkshopItem = this._CreateWorkshopItemBase
     _CreateWorkshopItemSync = this._CreateWorkshopItemBase
 
-    _UploadWorkshopItemBase = this.wrap(super._UploadWorkshopItem, async (
+    _UpdateWorkshopItemBase = this.wrap(super._UpdateWorkshopItem, async (
       /** @type {number} */ appID,
       /** @type {string} */ itemId,
       /** @type {string} */ title,
@@ -2449,6 +2449,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
       /** @type {string} */ previewImagePath,
       /** @type {string} */ tags,
       /** @type {number} */ visibility,
+      /** @type {string} */ changeNote,
       /** @type {Tag} */ tag
     ) => {
       try {
@@ -2464,7 +2465,8 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
               contentPath: contentFolderPath,
               previewPath: previewImagePath,
               tags: tagArray,
-              visibility
+              visibility,
+              changeNote: changeNote || undefined
             },
             appID,
           },
@@ -2475,29 +2477,29 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         }
         const result = answer?.body.data
         // @ts-expect-error - API returns UgcResult
-        this._UploadWorkshopItemResultValue = result?.itemId?.toString() ?? ''
+        this._UpdateWorkshopItemResultValue = result?.itemId?.toString() ?? ''
         // @ts-expect-error - API returns UgcResult
-        this._UploadWorkshopItemNeedsAgreementValue = result?.needsToAcceptAgreement ? 1 : 0
-        this._UploadWorkshopItemErrorValue = ''
+        this._UpdateWorkshopItemNeedsAgreementValue = result?.needsToAcceptAgreement ? 1 : 0
+        this._UpdateWorkshopItemErrorValue = ''
 
         await this.trigger(tag, [
-          C3.Plugins.pipelabv2.Cnds.OnUploadWorkshopItemSuccess,
-          C3.Plugins.pipelabv2.Cnds.OnAnyUploadWorkshopItemSuccess
+          C3.Plugins.pipelabv2.Cnds.OnUpdateWorkshopItemSuccess,
+          C3.Plugins.pipelabv2.Cnds.OnAnyUpdateWorkshopItemSuccess
         ])
       } catch (e) {
         if (e instanceof Error) {
-          this._UploadWorkshopItemErrorValue = e.message
-          this._UploadWorkshopItemResultValue = ''
-          this._UploadWorkshopItemNeedsAgreementValue = 0
+          this._UpdateWorkshopItemErrorValue = e.message
+          this._UpdateWorkshopItemResultValue = ''
+          this._UpdateWorkshopItemNeedsAgreementValue = 0
           await this.trigger(tag, [
-            C3.Plugins.pipelabv2.Cnds.OnUploadWorkshopItemError,
-            C3.Plugins.pipelabv2.Cnds.OnAnyUploadWorkshopItemError
+            C3.Plugins.pipelabv2.Cnds.OnUpdateWorkshopItemError,
+            C3.Plugins.pipelabv2.Cnds.OnAnyUpdateWorkshopItemError
           ])
         }
       }
     }, this.unsupportedEngine)
-    _UploadWorkshopItem = this._UploadWorkshopItemBase
-    _UploadWorkshopItemSync = this._UploadWorkshopItemBase
+    _UpdateWorkshopItem = this._UpdateWorkshopItemBase
+    _UpdateWorkshopItemSync = this._UpdateWorkshopItemBase
 
     _GetSubscribedItemsWithMetadataBase = this.wrap(super._GetSubscribedItemsWithMetadata, async (
       /** @type {Tag} */ tag
@@ -3544,10 +3546,10 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     _OnCreateWorkshopItemError = this.wrap(super._OnCreateWorkshopItemError, (/** @type {Tag} */ tag) => this._currentTag === tag)
     _OnAnyCreateWorkshopItemError = this.wrap(super._OnAnyCreateWorkshopItemError, () => true)
 
-    _OnUploadWorkshopItemSuccess = this.wrap(super._OnUploadWorkshopItemSuccess, (/** @type {Tag} */ tag) => this._currentTag === tag)
-    _OnAnyUploadWorkshopItemSuccess = this.wrap(super._OnAnyUploadWorkshopItemSuccess, () => true)
-    _OnUploadWorkshopItemError = this.wrap(super._OnUploadWorkshopItemError, (/** @type {Tag} */ tag) => this._currentTag === tag)
-    _OnAnyUploadWorkshopItemError = this.wrap(super._OnAnyUploadWorkshopItemError, () => true)
+    _OnUpdateWorkshopItemSuccess = this.wrap(super._OnUpdateWorkshopItemSuccess, (/** @type {Tag} */ tag) => this._currentTag === tag)
+    _OnAnyUpdateWorkshopItemSuccess = this.wrap(super._OnAnyUpdateWorkshopItemSuccess, () => true)
+    _OnUpdateWorkshopItemError = this.wrap(super._OnUpdateWorkshopItemError, (/** @type {Tag} */ tag) => this._currentTag === tag)
+    _OnAnyUpdateWorkshopItemError = this.wrap(super._OnAnyUpdateWorkshopItemError, () => true)
 
     _OnGetSubscribedItemsWithMetadataSuccess = this.wrap(super._OnGetSubscribedItemsWithMetadataSuccess, (/** @type {Tag} */ tag) => this._currentTag === tag)
     _OnAnyGetSubscribedItemsWithMetadataSuccess = this.wrap(super._OnAnyGetSubscribedItemsWithMetadataSuccess, () => true)
@@ -4116,14 +4118,14 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
       return this._CreateWorkshopItemNeedsAgreementValue
     })
 
-    _UploadWorkshopItemError = this.exprs(super._UploadWorkshopItemError, () => {
-      return this._UploadWorkshopItemErrorValue
+    _UpdateWorkshopItemError = this.exprs(super._UpdateWorkshopItemError, () => {
+      return this._UpdateWorkshopItemErrorValue
     })
-    _UploadWorkshopItemResult = this.exprs(super._UploadWorkshopItemResult, () => {
-      return this._UploadWorkshopItemResultValue
+    _UpdateWorkshopItemResult = this.exprs(super._UpdateWorkshopItemResult, () => {
+      return this._UpdateWorkshopItemResultValue
     })
-    _UploadWorkshopItemNeedsAgreement = this.exprs(super._UploadWorkshopItemNeedsAgreement, () => {
-      return this._UploadWorkshopItemNeedsAgreementValue
+    _UpdateWorkshopItemNeedsAgreement = this.exprs(super._UpdateWorkshopItemNeedsAgreement, () => {
+      return this._UpdateWorkshopItemNeedsAgreementValue
     })
 
     _GetSubscribedItemsWithMetadataError = this.exprs(super._GetSubscribedItemsWithMetadataError, () => {
@@ -4321,12 +4323,12 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
 
     _WorkshopItemDownloadCurrent = this.exprs(super._WorkshopItemDownloadCurrent, (/** @type {string} */ itemId) => {
       const item = this._workshopItemsMap.get(itemId)
-      return item?.downloadInfo?.current ?? 0
+      return Number(item?.downloadInfo?.current ?? 0)
     })
 
     _WorkshopItemDownloadTotal = this.exprs(super._WorkshopItemDownloadTotal, (/** @type {string} */ itemId) => {
       const item = this._workshopItemsMap.get(itemId)
-      return item?.downloadInfo?.total ?? 0
+      return Number(item?.downloadInfo?.total ?? 0)
     })
 
     //
