@@ -1314,6 +1314,13 @@ const UpdateWorkshopItem = ACEGenerator("UpdateWorkshopItem", /** @type {const} 
       initialValue: '""',
     },
     {
+      id: 'changeNote',
+      desc: "Optional change note describing the content update",
+      name: "Change Note",
+      type: 'string',
+      initialValue: '""',
+    },
+    {
       id: 'updatePreview',
       desc: "Whether to update the preview image",
       name: "Update Preview",
@@ -1359,17 +1366,10 @@ const UpdateWorkshopItem = ACEGenerator("UpdateWorkshopItem", /** @type {const} 
         { "private": "Private" },
         { "unlisted": "Unlisted" },
       ]
-    },
-    {
-      id: 'changeNote',
-      desc: "Optional change note describing the update",
-      name: "Change Note",
-      type: 'string',
-      initialValue: '""',
     }
   ],
   listName: "Update workshop item",
-  displayText: "Update workshop item [b]{1}[/b] for app [b]{0}[/b] (title: {2} {3}, description: {4} {5}, content: {6} {7}, preview: {8} {9}, tags: {10} {11}, visibility: {12} {13}, change note: {14})",
+  displayText: "Update workshop item [b]{1}[/b] for app [b]{0}[/b] (title: {2} {3}, description: {4} {5}, content: {6} {7} with change note: {8}, preview: {9} {10}, tags: {11} {12}, visibility: {13} {14})",
   description: "Updates content and metadata of a workshop item. Use the update flags to control which fields are updated.",
 }))
 

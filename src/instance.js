@@ -2449,13 +2449,13 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
       /** @type {string} */ description,
       /** @type {boolean} */ updateContent,
       /** @type {string} */ contentFolderPath,
+      /** @type {string} */ changeNote,
       /** @type {boolean} */ updatePreview,
       /** @type {string} */ previewImagePath,
       /** @type {boolean} */ updateTags,
       /** @type {string} */ tags,
       /** @type {boolean} */ updateVisibility,
       /** @type {number} */ visibility,
-      /** @type {string} */ changeNote,
       /** @type {Tag} */ tag
     ) => {
       try {
@@ -2629,11 +2629,10 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
       try {
         /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').SteamRaw<'workshop', 'download'>, 'input'>} */
         const order = {
-          url: '/steam/raw',
+          url: '/steam/workshop/download',
           body: {
-            namespace: 'workshop',
-            method: 'download',
-            args: [itemId, highPriority],
+            itemId,
+            highPriority: highPriority ?? false
           },
         };
         const answer = await this.ws?.sendAndWaitForResponse(order);
