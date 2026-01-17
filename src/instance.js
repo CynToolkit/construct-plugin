@@ -56,7 +56,7 @@ class WebSocketClient {
       };
 
       this.socket.onmessage = (event) => {
-        let parsedData = JSON.parse(event.data);
+        const parsedData = JSON.parse(event.data);
         // Assuming the server sends a 'correlationId' with every message
         if (parsedData.correlationId && this.responseResolvers.has(parsedData.correlationId)) {
           const resolver = this.responseResolvers.get(parsedData.correlationId);
