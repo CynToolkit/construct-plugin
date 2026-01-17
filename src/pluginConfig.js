@@ -1359,6 +1359,196 @@ const DownloadWorkshopItem = ACEGenerator("DownloadWorkshopItem", /** @type {con
   description: "Downloads or updates a workshop item",
 }))
 
+const DeleteWorkshopItem = ACEGenerator("DeleteWorkshopItem", /** @type {const} */ ({
+  category: "steam-workshop",
+  highlight: false,
+  deprecated: false,
+  params: [
+    {
+      id: 'itemId',
+      desc: "The Workshop Item ID",
+      name: "Item ID",
+      type: 'string',
+      initialValue: '""',
+    },
+  ],
+  listName: "Delete workshop item",
+  displayText: "Delete workshop item [b]{0}[/b]",
+  description: "Deletes a workshop item",
+}))
+
+const SubscribeWorkshopItem = ACEGenerator("SubscribeWorkshopItem", /** @type {const} */ ({
+  category: "steam-workshop",
+  highlight: false,
+  deprecated: false,
+  params: [
+    {
+      id: 'itemId',
+      desc: "The Workshop Item ID",
+      name: "Item ID",
+      type: 'string',
+      initialValue: '""',
+    },
+  ],
+  listName: "Subscribe to workshop item",
+  displayText: "Subscribe to workshop item [b]{0}[/b]",
+  description: "Subscribes to a workshop item",
+}))
+
+const UnsubscribeWorkshopItem = ACEGenerator("UnsubscribeWorkshopItem", /** @type {const} */ ({
+  category: "steam-workshop",
+  highlight: false,
+  deprecated: false,
+  params: [
+    {
+      id: 'itemId',
+      desc: "The Workshop Item ID",
+      name: "Item ID",
+      type: 'string',
+      initialValue: '""',
+    },
+  ],
+  listName: "Unsubscribe from workshop item",
+  displayText: "Unsubscribe from workshop item [b]{0}[/b]",
+  description: "Unsubscribes from a workshop item",
+}))
+
+const GetWorkshopItemState = ACEGenerator("GetWorkshopItemState", /** @type {const} */ ({
+  category: "steam-workshop",
+  highlight: false,
+  deprecated: false,
+  params: [
+    {
+      id: 'itemId',
+      desc: "The Workshop Item ID",
+      name: "Item ID",
+      type: 'string',
+      initialValue: '""',
+    },
+  ],
+  listName: "Get workshop item state",
+  displayText: "Get state of workshop item [b]{0}[/b]",
+  description: "Gets the state of a workshop item",
+}))
+
+const GetWorkshopItemInstallInfo = ACEGenerator("GetWorkshopItemInstallInfo", /** @type {const} */ ({
+  category: "steam-workshop",
+  highlight: false,
+  deprecated: false,
+  params: [
+    {
+      id: 'itemId',
+      desc: "The Workshop Item ID",
+      name: "Item ID",
+      type: 'string',
+      initialValue: '""',
+    },
+  ],
+  listName: "Get workshop item install info",
+  displayText: "Get install info of workshop item [b]{0}[/b]",
+  description: "Gets the install info of a workshop item",
+}))
+
+const GetWorkshopItemDownloadInfo = ACEGenerator("GetWorkshopItemDownloadInfo", /** @type {const} */ ({
+  category: "steam-workshop",
+  highlight: false,
+  deprecated: false,
+  params: [
+    {
+      id: 'itemId',
+      desc: "The Workshop Item ID",
+      name: "Item ID",
+      type: 'string',
+      initialValue: '""',
+    },
+  ],
+  listName: "Get workshop item download info",
+  displayText: "Get download info of workshop item [b]{0}[/b]",
+  description: "Gets the download info of a workshop item",
+}))
+
+const GetWorkshopItem = ACEGenerator("GetWorkshopItem", /** @type {const} */ ({
+  category: "steam-workshop",
+  highlight: false,
+  deprecated: false,
+  params: [
+    {
+      id: 'itemId',
+      desc: "The Workshop Item ID",
+      name: "Item ID",
+      type: 'string',
+      initialValue: '""',
+    },
+  ],
+  listName: "Get workshop item",
+  displayText: "Get workshop item [b]{0}[/b]",
+  description: "Gets a workshop item's metadata",
+}))
+
+const GetWorkshopItems = ACEGenerator("GetWorkshopItems", /** @type {const} */ ({
+  category: "steam-workshop",
+  highlight: false,
+  deprecated: false,
+  params: [
+    {
+      id: 'itemIds',
+      desc: "Comma-separated list of Workshop Item IDs",
+      name: "Item IDs",
+      type: 'string',
+      initialValue: '""',
+    },
+  ],
+  listName: "Get workshop items",
+  displayText: "Get workshop items [b]{0}[/b]",
+  description: "Gets multiple workshop items' metadata",
+}))
+
+const GetSubscribedWorkshopItems = ACEGenerator("GetSubscribedWorkshopItems", /** @type {const} */ ({
+  category: "steam-workshop",
+  highlight: false,
+  deprecated: false,
+  params: [],
+  listName: "Get subscribed items",
+  displayText: "Get subscribed workshop items",
+  description: "Gets all subscribed workshop item IDs",
+}))
+
+const GetWorkshopItemWithMetadata = ACEGenerator("GetWorkshopItemWithMetadata", /** @type {const} */ ({
+  category: "steam-workshop",
+  highlight: false,
+  deprecated: false,
+  params: [
+    {
+      id: 'itemId',
+      desc: "The Workshop Item ID",
+      name: "Item ID",
+      type: 'string',
+      initialValue: '""',
+    },
+  ],
+  listName: "Get workshop item with metadata",
+  displayText: "Get workshop item [b]{0}[/b] with metadata",
+  description: "Gets a workshop item with its metadata, state, install info, and download info",
+}))
+
+const GetWorkshopItemsWithMetadata = ACEGenerator("GetWorkshopItemsWithMetadata", /** @type {const} */ ({
+  category: "steam-workshop",
+  highlight: false,
+  deprecated: false,
+  params: [
+    {
+      id: 'itemIds',
+      desc: "Comma-separated list of Workshop Item IDs",
+      name: "Item IDs",
+      type: 'string',
+      initialValue: '""',
+    },
+  ],
+  listName: "Get workshop items with metadata",
+  displayText: "Get workshop items [b]{0}[/b] with metadata",
+  description: "Gets multiple workshop items with their metadata, state, install info, and download info",
+}))
+
 /**
  * @satisfies {import('./sdk.js').Config<import('./sdk.js').Categories>}
  */
@@ -1548,6 +1738,17 @@ const Config = /** @type {const} */({
     ...UploadWorkshopItem.actions,
     ...GetSubscribedItemsWithMetadata.actions,
     ...DownloadWorkshopItem.actions,
+    ...DeleteWorkshopItem.actions,
+    ...SubscribeWorkshopItem.actions,
+    ...UnsubscribeWorkshopItem.actions,
+    ...GetWorkshopItemState.actions,
+    ...GetWorkshopItemInstallInfo.actions,
+    ...GetWorkshopItemDownloadInfo.actions,
+    ...GetWorkshopItem.actions,
+    ...GetWorkshopItems.actions,
+    ...GetSubscribedWorkshopItems.actions,
+    ...GetWorkshopItemWithMetadata.actions,
+    ...GetWorkshopItemsWithMetadata.actions,
   },
   Cnds: {
     ...Initialize.conditions,
@@ -1604,6 +1805,17 @@ const Config = /** @type {const} */({
     ...UploadWorkshopItem.conditions,
     ...GetSubscribedItemsWithMetadata.conditions,
     ...DownloadWorkshopItem.conditions,
+    ...DeleteWorkshopItem.conditions,
+    ...SubscribeWorkshopItem.conditions,
+    ...UnsubscribeWorkshopItem.conditions,
+    ...GetWorkshopItemState.conditions,
+    ...GetWorkshopItemInstallInfo.conditions,
+    ...GetWorkshopItemDownloadInfo.conditions,
+    ...GetWorkshopItem.conditions,
+    ...GetWorkshopItems.conditions,
+    ...GetSubscribedWorkshopItems.conditions,
+    ...GetWorkshopItemWithMetadata.conditions,
+    ...GetWorkshopItemsWithMetadata.conditions,
     IsEngine: {
       category: "general",
       forward: "_IsEngine",
@@ -1731,6 +1943,17 @@ const Config = /** @type {const} */({
     ...UploadWorkshopItem.expressions,
     ...GetSubscribedItemsWithMetadata.expressions,
     ...DownloadWorkshopItem.expressions,
+    ...DeleteWorkshopItem.expressions,
+    ...SubscribeWorkshopItem.expressions,
+    ...UnsubscribeWorkshopItem.expressions,
+    ...GetWorkshopItemState.expressions,
+    ...GetWorkshopItemInstallInfo.expressions,
+    ...GetWorkshopItemDownloadInfo.expressions,
+    ...GetWorkshopItem.expressions,
+    ...GetWorkshopItems.expressions,
+    ...GetSubscribedWorkshopItems.expressions,
+    ...GetWorkshopItemWithMetadata.expressions,
+    ...GetWorkshopItemsWithMetadata.expressions,
 
     // Steam Workshop - Additional Expressions
     SubscribedItemsCount: {
