@@ -5,7 +5,7 @@ A plugin that integrate with Pipelab <br>
 Author: Armaldio <br>
 Website: https://github.com/CynToolkit/construct-plugin <br>
 Addon Url: https://github.com/CynToolkit/construct-plugin <br>
-Download Latest Version : [Version: 2.4.0](https://github.com/CynToolkit/construct-plugin/releases/latest) <br>
+Download Latest Version : [Version: 2.4.1](https://github.com/CynToolkit/construct-plugin/releases/latest) <br>
 <sub>Made using [c3ide2-framework](https://github.com/ConstructFund/c3ide2-framework) </sub><br>
 
 ## Table of Contents
@@ -149,6 +149,40 @@ When Download type is Around the user, the offsets are the amount of entries aro
 | Activate Steam overlay to web page | Activates Steam Overlay web browser directly to the specified URL | URL             *(string)* <br>Mode             *(combo)* <br> |
 | Activate Steam overlay to store (synchronous) | Activates the Steam Overlay to the Steam store page for the provided app (synchronous) | App ID             *(number)* <br>Flag             *(combo)* <br>Tag             *(string)* <br> |
 | Activate Steam overlay to store | Activates the Steam Overlay to the Steam store page for the provided app | App ID             *(number)* <br>Flag             *(combo)* <br> |
+| Trigger screenshot (synchronous) | Captures the current screen and saves to Steam screenshot library (synchronous) | Tag             *(string)* <br> |
+| Trigger screenshot | Captures the current screen and saves to Steam screenshot library |  |
+| Check DLC is installed (synchronous) | Checks if the user owns and has installed a specific DLC (synchronous) | DLC App ID             *(number)* <br>Tag             *(string)* <br> |
+| Check DLC is installed | Checks if the user owns and has installed a specific DLC | DLC App ID             *(number)* <br> |
+| Create workshop item (synchronous) | Creates a new workshop item for the specified Steam App ID and returns its ID (synchronous) | App ID             *(number)* <br>Tag             *(string)* <br> |
+| Create workshop item | Creates a new workshop item for the specified Steam App ID and returns its ID | App ID             *(number)* <br> |
+| Update workshop item (synchronous) | Updates content and metadata of a workshop item. Use the update flags to control which fields are updated. (synchronous) | App ID             *(number)* <br>Item ID             *(string)* <br>Update Title             *(boolean)* <br>Title             *(string)* <br>Update Description             *(boolean)* <br>Description             *(string)* <br>Update Content             *(boolean)* <br>Content Folder Path             *(string)* <br>Change Note             *(string)* <br>Update Preview             *(boolean)* <br>Preview Image Path             *(string)* <br>Update Tags             *(boolean)* <br>Tags             *(string)* <br>Update Visibility             *(boolean)* <br>Visibility             *(combo)* <br>Tag             *(string)* <br> |
+| Update workshop item | Updates content and metadata of a workshop item. Use the update flags to control which fields are updated. | App ID             *(number)* <br>Item ID             *(string)* <br>Update Title             *(boolean)* <br>Title             *(string)* <br>Update Description             *(boolean)* <br>Description             *(string)* <br>Update Content             *(boolean)* <br>Content Folder Path             *(string)* <br>Change Note             *(string)* <br>Update Preview             *(boolean)* <br>Preview Image Path             *(string)* <br>Update Tags             *(boolean)* <br>Tags             *(string)* <br>Update Visibility             *(boolean)* <br>Visibility             *(combo)* <br> |
+| Get subscribed items with metadata (synchronous) | Gets all subscribed workshop items with their metadata and install info (synchronous) | Tag             *(string)* <br> |
+| Get subscribed items with metadata | Gets all subscribed workshop items with their metadata and install info |  |
+| Download workshop item (synchronous) | Downloads or updates a workshop item (synchronous) | Item ID             *(string)* <br>High Priority             *(boolean)* <br>Tag             *(string)* <br> |
+| Download workshop item | Downloads or updates a workshop item | Item ID             *(string)* <br>High Priority             *(boolean)* <br> |
+| Delete workshop item (synchronous) | Deletes a workshop item (synchronous) | Item ID             *(string)* <br>Tag             *(string)* <br> |
+| Delete workshop item | Deletes a workshop item | Item ID             *(string)* <br> |
+| Subscribe to workshop item (synchronous) | Subscribes to a workshop item (synchronous) | Item ID             *(string)* <br>Tag             *(string)* <br> |
+| Subscribe to workshop item | Subscribes to a workshop item | Item ID             *(string)* <br> |
+| Unsubscribe from workshop item (synchronous) | Unsubscribes from a workshop item (synchronous) | Item ID             *(string)* <br>Tag             *(string)* <br> |
+| Unsubscribe from workshop item | Unsubscribes from a workshop item | Item ID             *(string)* <br> |
+| Get workshop item state (synchronous) | Gets the state of a workshop item (synchronous) | Item ID             *(string)* <br>Tag             *(string)* <br> |
+| Get workshop item state | Gets the state of a workshop item | Item ID             *(string)* <br> |
+| Get workshop item install info (synchronous) | Gets the install info of a workshop item (synchronous) | Item ID             *(string)* <br>Tag             *(string)* <br> |
+| Get workshop item install info | Gets the install info of a workshop item | Item ID             *(string)* <br> |
+| Get workshop item download info (synchronous) | Gets the download info of a workshop item (synchronous) | Item ID             *(string)* <br>Tag             *(string)* <br> |
+| Get workshop item download info | Gets the download info of a workshop item | Item ID             *(string)* <br> |
+| Get workshop item (synchronous) | Gets a workshop item's metadata (synchronous) | Item ID             *(string)* <br>Tag             *(string)* <br> |
+| Get workshop item | Gets a workshop item's metadata | Item ID             *(string)* <br> |
+| Get workshop items (synchronous) | Gets multiple workshop items' metadata (synchronous) | Item IDs             *(string)* <br>Tag             *(string)* <br> |
+| Get workshop items | Gets multiple workshop items' metadata | Item IDs             *(string)* <br> |
+| Get subscribed items (synchronous) | Gets all subscribed workshop item IDs (synchronous) | Tag             *(string)* <br> |
+| Get subscribed items | Gets all subscribed workshop item IDs |  |
+| Get workshop item with metadata (synchronous) | Gets a workshop item with its metadata, state, install info, and download info (synchronous) | Item ID             *(string)* <br>Tag             *(string)* <br> |
+| Get workshop item with metadata | Gets a workshop item with its metadata, state, install info, and download info | Item ID             *(string)* <br> |
+| Get workshop items with metadata (synchronous) | Gets multiple workshop items with their metadata, state, install info, and download info (synchronous) | Item IDs             *(string)* <br>Tag             *(string)* <br> |
+| Get workshop items with metadata | Gets multiple workshop items with their metadata, state, install info, and download info | Item IDs             *(string)* <br> |
 
 
 ---
@@ -347,6 +381,74 @@ When Download type is Around the user, the offsets are the amount of entries aro
 | On any "ActivateToStore" success | Trigger when any of the "ActivateToStore" are executed with success. |  |
 | On "ActivateToStore" error | Trigger when the "ActivateToStore" failed to execute. | Tag *(string)* <br> |
 | On any "ActivateToStore" error | Trigger when any of the "ActivateToStore" failed to execute. |  |
+| On "TriggerScreenshot" success | Trigger when the "TriggerScreenshot" is executed with success. | Tag *(string)* <br> |
+| On any "TriggerScreenshot" success | Trigger when any of the "TriggerScreenshot" are executed with success. |  |
+| On "TriggerScreenshot" error | Trigger when the "TriggerScreenshot" failed to execute. | Tag *(string)* <br> |
+| On any "TriggerScreenshot" error | Trigger when any of the "TriggerScreenshot" failed to execute. |  |
+| On "CheckDLCIsInstalled" success | Trigger when the "CheckDLCIsInstalled" is executed with success. | Tag *(string)* <br> |
+| On any "CheckDLCIsInstalled" success | Trigger when any of the "CheckDLCIsInstalled" are executed with success. |  |
+| On "CheckDLCIsInstalled" error | Trigger when the "CheckDLCIsInstalled" failed to execute. | Tag *(string)* <br> |
+| On any "CheckDLCIsInstalled" error | Trigger when any of the "CheckDLCIsInstalled" failed to execute. |  |
+| On "CreateWorkshopItem" success | Trigger when the "CreateWorkshopItem" is executed with success. | Tag *(string)* <br> |
+| On any "CreateWorkshopItem" success | Trigger when any of the "CreateWorkshopItem" are executed with success. |  |
+| On "CreateWorkshopItem" error | Trigger when the "CreateWorkshopItem" failed to execute. | Tag *(string)* <br> |
+| On any "CreateWorkshopItem" error | Trigger when any of the "CreateWorkshopItem" failed to execute. |  |
+| On "UpdateWorkshopItem" success | Trigger when the "UpdateWorkshopItem" is executed with success. | Tag *(string)* <br> |
+| On any "UpdateWorkshopItem" success | Trigger when any of the "UpdateWorkshopItem" are executed with success. |  |
+| On "UpdateWorkshopItem" error | Trigger when the "UpdateWorkshopItem" failed to execute. | Tag *(string)* <br> |
+| On any "UpdateWorkshopItem" error | Trigger when any of the "UpdateWorkshopItem" failed to execute. |  |
+| On "GetSubscribedItemsWithMetadata" success | Trigger when the "GetSubscribedItemsWithMetadata" is executed with success. | Tag *(string)* <br> |
+| On any "GetSubscribedItemsWithMetadata" success | Trigger when any of the "GetSubscribedItemsWithMetadata" are executed with success. |  |
+| On "GetSubscribedItemsWithMetadata" error | Trigger when the "GetSubscribedItemsWithMetadata" failed to execute. | Tag *(string)* <br> |
+| On any "GetSubscribedItemsWithMetadata" error | Trigger when any of the "GetSubscribedItemsWithMetadata" failed to execute. |  |
+| On "DownloadWorkshopItem" success | Trigger when the "DownloadWorkshopItem" is executed with success. | Tag *(string)* <br> |
+| On any "DownloadWorkshopItem" success | Trigger when any of the "DownloadWorkshopItem" are executed with success. |  |
+| On "DownloadWorkshopItem" error | Trigger when the "DownloadWorkshopItem" failed to execute. | Tag *(string)* <br> |
+| On any "DownloadWorkshopItem" error | Trigger when any of the "DownloadWorkshopItem" failed to execute. |  |
+| On "DeleteWorkshopItem" success | Trigger when the "DeleteWorkshopItem" is executed with success. | Tag *(string)* <br> |
+| On any "DeleteWorkshopItem" success | Trigger when any of the "DeleteWorkshopItem" are executed with success. |  |
+| On "DeleteWorkshopItem" error | Trigger when the "DeleteWorkshopItem" failed to execute. | Tag *(string)* <br> |
+| On any "DeleteWorkshopItem" error | Trigger when any of the "DeleteWorkshopItem" failed to execute. |  |
+| On "SubscribeWorkshopItem" success | Trigger when the "SubscribeWorkshopItem" is executed with success. | Tag *(string)* <br> |
+| On any "SubscribeWorkshopItem" success | Trigger when any of the "SubscribeWorkshopItem" are executed with success. |  |
+| On "SubscribeWorkshopItem" error | Trigger when the "SubscribeWorkshopItem" failed to execute. | Tag *(string)* <br> |
+| On any "SubscribeWorkshopItem" error | Trigger when any of the "SubscribeWorkshopItem" failed to execute. |  |
+| On "UnsubscribeWorkshopItem" success | Trigger when the "UnsubscribeWorkshopItem" is executed with success. | Tag *(string)* <br> |
+| On any "UnsubscribeWorkshopItem" success | Trigger when any of the "UnsubscribeWorkshopItem" are executed with success. |  |
+| On "UnsubscribeWorkshopItem" error | Trigger when the "UnsubscribeWorkshopItem" failed to execute. | Tag *(string)* <br> |
+| On any "UnsubscribeWorkshopItem" error | Trigger when any of the "UnsubscribeWorkshopItem" failed to execute. |  |
+| On "GetWorkshopItemState" success | Trigger when the "GetWorkshopItemState" is executed with success. | Tag *(string)* <br> |
+| On any "GetWorkshopItemState" success | Trigger when any of the "GetWorkshopItemState" are executed with success. |  |
+| On "GetWorkshopItemState" error | Trigger when the "GetWorkshopItemState" failed to execute. | Tag *(string)* <br> |
+| On any "GetWorkshopItemState" error | Trigger when any of the "GetWorkshopItemState" failed to execute. |  |
+| On "GetWorkshopItemInstallInfo" success | Trigger when the "GetWorkshopItemInstallInfo" is executed with success. | Tag *(string)* <br> |
+| On any "GetWorkshopItemInstallInfo" success | Trigger when any of the "GetWorkshopItemInstallInfo" are executed with success. |  |
+| On "GetWorkshopItemInstallInfo" error | Trigger when the "GetWorkshopItemInstallInfo" failed to execute. | Tag *(string)* <br> |
+| On any "GetWorkshopItemInstallInfo" error | Trigger when any of the "GetWorkshopItemInstallInfo" failed to execute. |  |
+| On "GetWorkshopItemDownloadInfo" success | Trigger when the "GetWorkshopItemDownloadInfo" is executed with success. | Tag *(string)* <br> |
+| On any "GetWorkshopItemDownloadInfo" success | Trigger when any of the "GetWorkshopItemDownloadInfo" are executed with success. |  |
+| On "GetWorkshopItemDownloadInfo" error | Trigger when the "GetWorkshopItemDownloadInfo" failed to execute. | Tag *(string)* <br> |
+| On any "GetWorkshopItemDownloadInfo" error | Trigger when any of the "GetWorkshopItemDownloadInfo" failed to execute. |  |
+| On "GetWorkshopItem" success | Trigger when the "GetWorkshopItem" is executed with success. | Tag *(string)* <br> |
+| On any "GetWorkshopItem" success | Trigger when any of the "GetWorkshopItem" are executed with success. |  |
+| On "GetWorkshopItem" error | Trigger when the "GetWorkshopItem" failed to execute. | Tag *(string)* <br> |
+| On any "GetWorkshopItem" error | Trigger when any of the "GetWorkshopItem" failed to execute. |  |
+| On "GetWorkshopItems" success | Trigger when the "GetWorkshopItems" is executed with success. | Tag *(string)* <br> |
+| On any "GetWorkshopItems" success | Trigger when any of the "GetWorkshopItems" are executed with success. |  |
+| On "GetWorkshopItems" error | Trigger when the "GetWorkshopItems" failed to execute. | Tag *(string)* <br> |
+| On any "GetWorkshopItems" error | Trigger when any of the "GetWorkshopItems" failed to execute. |  |
+| On "GetSubscribedWorkshopItems" success | Trigger when the "GetSubscribedWorkshopItems" is executed with success. | Tag *(string)* <br> |
+| On any "GetSubscribedWorkshopItems" success | Trigger when any of the "GetSubscribedWorkshopItems" are executed with success. |  |
+| On "GetSubscribedWorkshopItems" error | Trigger when the "GetSubscribedWorkshopItems" failed to execute. | Tag *(string)* <br> |
+| On any "GetSubscribedWorkshopItems" error | Trigger when any of the "GetSubscribedWorkshopItems" failed to execute. |  |
+| On "GetWorkshopItemWithMetadata" success | Trigger when the "GetWorkshopItemWithMetadata" is executed with success. | Tag *(string)* <br> |
+| On any "GetWorkshopItemWithMetadata" success | Trigger when any of the "GetWorkshopItemWithMetadata" are executed with success. |  |
+| On "GetWorkshopItemWithMetadata" error | Trigger when the "GetWorkshopItemWithMetadata" failed to execute. | Tag *(string)* <br> |
+| On any "GetWorkshopItemWithMetadata" error | Trigger when any of the "GetWorkshopItemWithMetadata" failed to execute. |  |
+| On "GetWorkshopItemsWithMetadata" success | Trigger when the "GetWorkshopItemsWithMetadata" is executed with success. | Tag *(string)* <br> |
+| On any "GetWorkshopItemsWithMetadata" success | Trigger when any of the "GetWorkshopItemsWithMetadata" are executed with success. |  |
+| On "GetWorkshopItemsWithMetadata" error | Trigger when the "GetWorkshopItemsWithMetadata" failed to execute. | Tag *(string)* <br> |
+| On any "GetWorkshopItemsWithMetadata" error | Trigger when any of the "GetWorkshopItemsWithMetadata" failed to execute. |  |
 | Is engine | Return true if the engine running the app is the one selected | Engine *(combo)* <br> |
 | Is initialized | Returns true if the Pipelab integration has been initialized |  |
 | Is full screen | Returns true if the window is in full screen mode. | State *(combo)* <br> |
@@ -453,6 +555,62 @@ When Download type is Around the user, the offsets are the amount of entries aro
 | ActivateToWebPageResult | The result of the "ActivateToWebPage last call" | string |  | 
 | ActivateToStoreError | The error of the "ActivateToStore last call" | string |  | 
 | ActivateToStoreResult | The result of the "ActivateToStore last call" | string |  | 
+| TriggerScreenshotError | The error of the "TriggerScreenshot last call" | string |  | 
+| TriggerScreenshotResult | The result of the "TriggerScreenshot last call" | string |  | 
+| CheckDLCIsInstalledError | The error of the "CheckDLCIsInstalled last call" | string |  | 
+| CheckDLCIsInstalledResult | The result of the "CheckDLCIsInstalled last call" | string |  | 
+| CreateWorkshopItemError | The error of the "CreateWorkshopItem last call" | string |  | 
+| CreateWorkshopItemResult | The result of the "CreateWorkshopItem last call" | string |  | 
+| UpdateWorkshopItemError | The error of the "UpdateWorkshopItem last call" | string |  | 
+| UpdateWorkshopItemResult | The result of the "UpdateWorkshopItem last call" | string |  | 
+| GetSubscribedItemsWithMetadataError | The error of the "GetSubscribedItemsWithMetadata last call" | string |  | 
+| GetSubscribedItemsWithMetadataResult | The result of the "GetSubscribedItemsWithMetadata last call" | string |  | 
+| DownloadWorkshopItemError | The error of the "DownloadWorkshopItem last call" | string |  | 
+| DownloadWorkshopItemResult | The result of the "DownloadWorkshopItem last call" | string |  | 
+| DeleteWorkshopItemError | The error of the "DeleteWorkshopItem last call" | string |  | 
+| DeleteWorkshopItemResult | The result of the "DeleteWorkshopItem last call" | string |  | 
+| SubscribeWorkshopItemError | The error of the "SubscribeWorkshopItem last call" | string |  | 
+| SubscribeWorkshopItemResult | The result of the "SubscribeWorkshopItem last call" | string |  | 
+| UnsubscribeWorkshopItemError | The error of the "UnsubscribeWorkshopItem last call" | string |  | 
+| UnsubscribeWorkshopItemResult | The result of the "UnsubscribeWorkshopItem last call" | string |  | 
+| GetWorkshopItemStateError | The error of the "GetWorkshopItemState last call" | string |  | 
+| GetWorkshopItemStateResult | The result of the "GetWorkshopItemState last call" | string |  | 
+| GetWorkshopItemInstallInfoError | The error of the "GetWorkshopItemInstallInfo last call" | string |  | 
+| GetWorkshopItemInstallInfoResult | The result of the "GetWorkshopItemInstallInfo last call" | string |  | 
+| GetWorkshopItemDownloadInfoError | The error of the "GetWorkshopItemDownloadInfo last call" | string |  | 
+| GetWorkshopItemDownloadInfoResult | The result of the "GetWorkshopItemDownloadInfo last call" | string |  | 
+| GetWorkshopItemError | The error of the "GetWorkshopItem last call" | string |  | 
+| GetWorkshopItemResult | The result of the "GetWorkshopItem last call" | string |  | 
+| GetWorkshopItemsError | The error of the "GetWorkshopItems last call" | string |  | 
+| GetWorkshopItemsResult | The result of the "GetWorkshopItems last call" | string |  | 
+| GetSubscribedWorkshopItemsError | The error of the "GetSubscribedWorkshopItems last call" | string |  | 
+| GetSubscribedWorkshopItemsResult | The result of the "GetSubscribedWorkshopItems last call" | string |  | 
+| GetWorkshopItemWithMetadataError | The error of the "GetWorkshopItemWithMetadata last call" | string |  | 
+| GetWorkshopItemWithMetadataResult | The result of the "GetWorkshopItemWithMetadata last call" | string |  | 
+| GetWorkshopItemsWithMetadataError | The error of the "GetWorkshopItemsWithMetadata last call" | string |  | 
+| GetWorkshopItemsWithMetadataResult | The result of the "GetWorkshopItemsWithMetadata last call" | string |  | 
+| SubscribedItemsCount | Get the number of subscribed workshop items | number |  | 
+| SubscribedItemIdAt | Get the workshop item ID at the given index | string | Index *(number)* <br> | 
+| WorkshopItemTitle | Get the title of a workshop item | string | Item ID *(string)* <br> | 
+| WorkshopItemDescription | Get the description of a workshop item | string | Item ID *(string)* <br> | 
+| WorkshopItemOwnerSteamId64 | Get the owner's Steam ID64 of a workshop item | string | Item ID *(string)* <br> | 
+| WorkshopItemOwnerAccountId | Get the owner's account ID of a workshop item | number | Item ID *(string)* <br> | 
+| WorkshopItemTags | Get the tags of a workshop item (comma-separated) | string | Item ID *(string)* <br> | 
+| WorkshopItemUpvotes | Get the number of upvotes for a workshop item | number | Item ID *(string)* <br> | 
+| WorkshopItemDownvotes | Get the number of downvotes for a workshop item | number | Item ID *(string)* <br> | 
+| WorkshopItemPreviewUrl | Get the preview image URL of a workshop item | string | Item ID *(string)* <br> | 
+| WorkshopItemUrl | Get the Steam Workshop URL of a workshop item | string | Item ID *(string)* <br> | 
+| WorkshopItemTimeCreated | Get the creation timestamp of a workshop item (Unix epoch) | number | Item ID *(string)* <br> | 
+| WorkshopItemTimeUpdated | Get the last update timestamp of a workshop item (Unix epoch) | number | Item ID *(string)* <br> | 
+| WorkshopItemState | Get the state bitfield of a workshop item | number | Item ID *(string)* <br> | 
+| WorkshopItemIsInstalled | Check if a workshop item is installed (returns 0 or 1) | number | Item ID *(string)* <br> | 
+| WorkshopItemIsDownloading | Check if a workshop item is downloading (returns 0 or 1) | number | Item ID *(string)* <br> | 
+| WorkshopItemNeedsUpdate | Check if a workshop item needs an update (returns 0 or 1) | number | Item ID *(string)* <br> | 
+| WorkshopItemInstallFolder | Get the installation folder path of a workshop item | string | Item ID *(string)* <br> | 
+| WorkshopItemSizeOnDisk | Get the size on disk of a workshop item in bytes | number | Item ID *(string)* <br> | 
+| WorkshopItemTimestamp | Get the install timestamp of a workshop item | number | Item ID *(string)* <br> | 
+| WorkshopItemDownloadCurrent | Get the current download progress of a workshop item | number | Item ID *(string)* <br> | 
+| WorkshopItemDownloadTotal | Get the total download progress of a workshop item | number | Item ID *(string)* <br> | 
 | ArgumentAt | Get the argument at the given index. | string | Index *(number)* <br> | 
 | ArgumentCount | Get the number of arguments. | number |  | 
 | AppFolderURL | Return the URL of the folder of the current app. | string |  | 
