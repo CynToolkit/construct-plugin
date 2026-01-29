@@ -31,7 +31,7 @@ const ACEGenerator = (name, data) => {
 
   // /** @type {ReturnType<import('./sdk.js').ACEGenerator<V>>['actions']} */
   const actions = /** @type {const} */ ({
-    [`${name}Sync`]:  ({
+    [`${name}Sync`]: ({
       ...act,
       forward: `_${name}Sync`,
       params: syncParams,
@@ -39,7 +39,7 @@ const ACEGenerator = (name, data) => {
       displayText: `${act.displayText} ([b]{${act.params?.length}}[/b]) (synchronous)`,
       listName: `${act.listName} (synchronous)`,
     }),
-    [name]:  ({
+    [name]: ({
       ...act,
       forward: `_${name}`,
       isAsync: true,
@@ -130,7 +130,7 @@ const ACEGenerator = (name, data) => {
   return a
 }
 
-const Initialize = ACEGenerator('Initialize', /** @type {const} */ ({
+const Initialize = ACEGenerator('Initialize', /** @type {const} */({
   params: [],
   category: "general",
   highlight: false,
@@ -141,7 +141,7 @@ const Initialize = ACEGenerator('Initialize', /** @type {const} */ ({
   description: "Initialize the Pipelab integration",
 }))
 
-const AppendFile = ACEGenerator('AppendFile', /** @type {const} */ ({
+const AppendFile = ACEGenerator('AppendFile', /** @type {const} */({
   category: "filesystem",
   highlight: false,
   deprecated: false,
@@ -166,7 +166,7 @@ const AppendFile = ACEGenerator('AppendFile', /** @type {const} */ ({
   description: "Appends the contents to the file.",
 }))
 
-const CopyFile = ACEGenerator('CopyFile', /** @type {const} */ ({
+const CopyFile = ACEGenerator('CopyFile', /** @type {const} */({
   category: "filesystem",
   highlight: false,
   deprecated: false,
@@ -198,7 +198,7 @@ const CopyFile = ACEGenerator('CopyFile', /** @type {const} */ ({
   description: "Copies the file.",
 }))
 
-const FetchFileSize = ACEGenerator("FetchFileSize", /** @type {const} */ ({
+const FetchFileSize = ACEGenerator("FetchFileSize", /** @type {const} */({
   category: "filesystem",
   highlight: false,
   deprecated: false,
@@ -216,7 +216,7 @@ const FetchFileSize = ACEGenerator("FetchFileSize", /** @type {const} */ ({
   description: "Fetch the size of the file.",
 }))
 
-const CreateFolder = ACEGenerator("CreateFolder", /** @type {const} */ ({
+const CreateFolder = ACEGenerator("CreateFolder", /** @type {const} */({
   category: "filesystem",
   highlight: false,
   deprecated: false,
@@ -227,13 +227,20 @@ const CreateFolder = ACEGenerator("CreateFolder", /** @type {const} */ ({
       name: "Path",
       type: 'string',
       initialValue: "\"\"",
+    },
+    {
+      id: 'recursive',
+      desc: "Whether to create the folder recursively.",
+      name: "Recursive",
+      type: 'boolean',
+      initialValue: 'false',
     }
   ],
   listName: "Create folder",
-  displayText: "Create folder [b]{0}[/b]",
+  displayText: "Create folder [b]{0}[/b] (recursive: {1})",
   description: "Creates the folder.",
 }))
-const DeleteFile = ACEGenerator("DeleteFile", /** @type {const} */ ({
+const DeleteFile = ACEGenerator("DeleteFile", /** @type {const} */({
   category: "filesystem",
   highlight: false,
   deprecated: false,
@@ -258,7 +265,7 @@ const DeleteFile = ACEGenerator("DeleteFile", /** @type {const} */ ({
   description: "Deletes the file.",
 }))
 
-const ListFiles = ACEGenerator("ListFiles", /** @type {const} */ ({
+const ListFiles = ACEGenerator("ListFiles", /** @type {const} */({
   category: "filesystem",
   highlight: false,
   deprecated: false,
@@ -283,7 +290,7 @@ const ListFiles = ACEGenerator("ListFiles", /** @type {const} */ ({
   description: "Load a list of files in a given folder. Use expressions after this action to get the count and file names",
 }))
 
-const MoveFile = ACEGenerator("MoveFile", /** @type {const} */ ({
+const MoveFile = ACEGenerator("MoveFile", /** @type {const} */({
   category: "filesystem",
   highlight: false,
   deprecated: false,
@@ -314,7 +321,7 @@ const MoveFile = ACEGenerator("MoveFile", /** @type {const} */ ({
   displayText: "Move [b]{0}[/b] to [b]{1}[/b] (overwrite: {2})",
   description: "Moves the file.",
 }))
-const OpenBrowser = ACEGenerator("OpenBrowser", /** @type {const} */ ({
+const OpenBrowser = ACEGenerator("OpenBrowser", /** @type {const} */({
   category: "filesystem",
   highlight: false,
   deprecated: false,
@@ -332,7 +339,7 @@ const OpenBrowser = ACEGenerator("OpenBrowser", /** @type {const} */ ({
   description: "Opens the browser.",
 }))
 
-const ReadBinaryFile = ACEGenerator("ReadBinaryFile", /** @type {const} */ ({
+const ReadBinaryFile = ACEGenerator("ReadBinaryFile", /** @type {const} */({
   category: "filesystem",
   highlight: false,
   deprecated: false,
@@ -357,7 +364,7 @@ const ReadBinaryFile = ACEGenerator("ReadBinaryFile", /** @type {const} */ ({
   description: "Reads a file into a Binary Data object. Triggers 'On binary file read' when completes.",
 }))
 
-const RenameFile = ACEGenerator("RenameFile", /** @type {const} */ ({
+const RenameFile = ACEGenerator("RenameFile", /** @type {const} */({
   category: "filesystem",
   highlight: false,
   deprecated: false,
@@ -389,7 +396,7 @@ const RenameFile = ACEGenerator("RenameFile", /** @type {const} */ ({
   description: "Renames the file.",
 }))
 
-const RunFile = ACEGenerator("RunFile", /** @type {const} */ ({
+const RunFile = ACEGenerator("RunFile", /** @type {const} */({
   category: "filesystem",
   highlight: false,
   deprecated: false,
@@ -407,7 +414,7 @@ const RunFile = ACEGenerator("RunFile", /** @type {const} */ ({
   description: "Runs the file.",
 }))
 
-const ShellOpen = ACEGenerator("ShellOpen", /** @type {const} */ ({
+const ShellOpen = ACEGenerator("ShellOpen", /** @type {const} */({
   category: "filesystem",
   highlight: false,
   deprecated: false,
@@ -425,7 +432,7 @@ const ShellOpen = ACEGenerator("ShellOpen", /** @type {const} */ ({
   description: "Opens the file in the shell.",
 }))
 
-const ExplorerOpen = ACEGenerator("ExplorerOpen", /** @type {const} */ ({
+const ExplorerOpen = ACEGenerator("ExplorerOpen", /** @type {const} */({
   category: "filesystem",
   highlight: false,
   deprecated: false,
@@ -443,7 +450,7 @@ const ExplorerOpen = ACEGenerator("ExplorerOpen", /** @type {const} */ ({
   description: "Opens the path in the explorer.",
 }))
 
-const WriteBinaryFile = ACEGenerator("WriteBinaryFile", /** @type {const} */ ({
+const WriteBinaryFile = ACEGenerator("WriteBinaryFile", /** @type {const} */({
   category: "filesystem",
   highlight: false,
   deprecated: false,
@@ -468,7 +475,7 @@ const WriteBinaryFile = ACEGenerator("WriteBinaryFile", /** @type {const} */ ({
   description: "Writes the binary file.",
 }))
 
-const WriteTextFile = ACEGenerator("WriteTextFile", /** @type {const} */ ({
+const WriteTextFile = ACEGenerator("WriteTextFile", /** @type {const} */({
   category: "filesystem",
   highlight: false,
   deprecated: false,
@@ -493,7 +500,7 @@ const WriteTextFile = ACEGenerator("WriteTextFile", /** @type {const} */ ({
   description: "Writes the text file.",
 }))
 
-const WriteText = ACEGenerator("WriteText", /** @type {const} */ ({
+const WriteText = ACEGenerator("WriteText", /** @type {const} */({
   category: "filesystem",
   highlight: false,
   deprecated: true,
@@ -518,7 +525,7 @@ const WriteText = ACEGenerator("WriteText", /** @type {const} */ ({
   description: "Writes the text file.",
 }))
 
-const ReadTextFile = ACEGenerator("ReadTextFile", /** @type {const} */ ({
+const ReadTextFile = ACEGenerator("ReadTextFile", /** @type {const} */({
   category: "filesystem",
   highlight: false,
   deprecated: false,
@@ -536,7 +543,7 @@ const ReadTextFile = ACEGenerator("ReadTextFile", /** @type {const} */ ({
   displayText: "Read text file [b]{0}[/b]",
 }))
 
-const CheckIfPathExist = ACEGenerator("CheckIfPathExist", /** @type {const} */ ({
+const CheckIfPathExist = ACEGenerator("CheckIfPathExist", /** @type {const} */({
   category: "filesystem",
   highlight: false,
   deprecated: false,
@@ -555,7 +562,7 @@ const CheckIfPathExist = ACEGenerator("CheckIfPathExist", /** @type {const} */ (
 }))
 
 // file-dialogs
-const ShowFolderDialog = ACEGenerator("ShowFolderDialog", /** @type {const} */ ({
+const ShowFolderDialog = ACEGenerator("ShowFolderDialog", /** @type {const} */({
   category: "file-dialogs",
   highlight: false,
   deprecated: false,
@@ -565,7 +572,7 @@ const ShowFolderDialog = ACEGenerator("ShowFolderDialog", /** @type {const} */ (
   description: "Show a folder dialog",
 }))
 
-const ShowOpenDialog = ACEGenerator("ShowOpenDialog", /** @type {const} */ ({
+const ShowOpenDialog = ACEGenerator("ShowOpenDialog", /** @type {const} */({
   category: "file-dialogs",
   highlight: false,
   deprecated: false,
@@ -583,7 +590,7 @@ const ShowOpenDialog = ACEGenerator("ShowOpenDialog", /** @type {const} */ ({
   ]
 }))
 
-const ShowSaveDialog = ACEGenerator("ShowSaveDialog", /** @type {const} */ ({
+const ShowSaveDialog = ACEGenerator("ShowSaveDialog", /** @type {const} */({
   category: "file-dialogs",
   highlight: false,
   deprecated: false,
@@ -603,7 +610,7 @@ const ShowSaveDialog = ACEGenerator("ShowSaveDialog", /** @type {const} */ ({
 
 // window
 
-const Maximize = ACEGenerator("Maximize", /** @type {const} */ ({
+const Maximize = ACEGenerator("Maximize", /** @type {const} */({
   category: "window",
   highlight: false,
   deprecated: false,
@@ -613,7 +620,7 @@ const Maximize = ACEGenerator("Maximize", /** @type {const} */ ({
   description: "Maximize the window",
 }))
 
-const Minimize = ACEGenerator("Minimize", /** @type {const} */ ({
+const Minimize = ACEGenerator("Minimize", /** @type {const} */({
   category: "window",
   highlight: false,
   deprecated: false,
@@ -623,7 +630,7 @@ const Minimize = ACEGenerator("Minimize", /** @type {const} */ ({
   description: "Minimize the window",
 }))
 
-const Restore = ACEGenerator("Restore", /** @type {const} */ ({
+const Restore = ACEGenerator("Restore", /** @type {const} */({
   category: "window",
   highlight: false,
   deprecated: false,
@@ -633,7 +640,7 @@ const Restore = ACEGenerator("Restore", /** @type {const} */ ({
   description: "Restore the window (i.e. show again after minimizing)",
 }))
 
-const RequestAttention = ACEGenerator("RequestAttention", /** @type {const} */ ({
+const RequestAttention = ACEGenerator("RequestAttention", /** @type {const} */({
   category: "window",
   highlight: false,
   deprecated: false,
@@ -655,7 +662,7 @@ const RequestAttention = ACEGenerator("RequestAttention", /** @type {const} */ (
   ]
 }))
 
-const SetAlwaysOnTop = ACEGenerator("SetAlwaysOnTop", /** @type {const} */ ({
+const SetAlwaysOnTop = ACEGenerator("SetAlwaysOnTop", /** @type {const} */({
   category: "window",
   highlight: false,
   deprecated: false,
@@ -676,7 +683,7 @@ const SetAlwaysOnTop = ACEGenerator("SetAlwaysOnTop", /** @type {const} */ ({
   description: "Enable or disable the window always being on top of other windows.",
 }))
 
-const SetHeight = ACEGenerator("SetHeight", /** @type {const} */ ({
+const SetHeight = ACEGenerator("SetHeight", /** @type {const} */({
   category: "window",
   highlight: false,
   deprecated: false,
@@ -694,7 +701,7 @@ const SetHeight = ACEGenerator("SetHeight", /** @type {const} */ ({
   description: "Set the height of the window.",
 }))
 
-const SetMaximumSize = ACEGenerator("SetMaximumSize", /** @type {const} */ ({
+const SetMaximumSize = ACEGenerator("SetMaximumSize", /** @type {const} */({
   category: "window",
   highlight: false,
   deprecated: false,
@@ -719,7 +726,7 @@ const SetMaximumSize = ACEGenerator("SetMaximumSize", /** @type {const} */ ({
   description: "Set the maximum size of the window.",
 }))
 
-const SetMinimumSize = ACEGenerator("SetMinimumSize", /** @type {const} */ ({
+const SetMinimumSize = ACEGenerator("SetMinimumSize", /** @type {const} */({
   category: "window",
   highlight: false,
   deprecated: false,
@@ -744,7 +751,7 @@ const SetMinimumSize = ACEGenerator("SetMinimumSize", /** @type {const} */ ({
   description: "Set the minimum size of the window.",
 }))
 
-const SetResizable = ACEGenerator("SetResizable", /** @type {const} */ ({
+const SetResizable = ACEGenerator("SetResizable", /** @type {const} */({
   category: "window",
   highlight: false,
   deprecated: false,
@@ -765,7 +772,7 @@ const SetResizable = ACEGenerator("SetResizable", /** @type {const} */ ({
   description: "Enable or disable the window resizing.",
 }))
 
-const SetTitle = ACEGenerator("SetTitle", /** @type {const} */ ({
+const SetTitle = ACEGenerator("SetTitle", /** @type {const} */({
   category: "window",
   highlight: false,
   deprecated: false,
@@ -783,7 +790,7 @@ const SetTitle = ACEGenerator("SetTitle", /** @type {const} */ ({
   description: "Set the title of the window.",
 }))
 
-const SetWidth = ACEGenerator("SetWidth", /** @type {const} */ ({
+const SetWidth = ACEGenerator("SetWidth", /** @type {const} */({
   category: "window",
   highlight: false,
   deprecated: false,
@@ -801,7 +808,7 @@ const SetWidth = ACEGenerator("SetWidth", /** @type {const} */ ({
   description: "Set the width of the window.",
 }))
 
-const SetX = ACEGenerator("SetX", /** @type {const} */ ({
+const SetX = ACEGenerator("SetX", /** @type {const} */({
   category: "window",
   highlight: false,
   deprecated: false,
@@ -819,7 +826,7 @@ const SetX = ACEGenerator("SetX", /** @type {const} */ ({
   description: "Set the x position of the window.",
 }))
 
-const SetY = ACEGenerator("SetY", /** @type {const} */ ({
+const SetY = ACEGenerator("SetY", /** @type {const} */({
   category: "window",
   highlight: false,
   deprecated: false,
@@ -837,7 +844,7 @@ const SetY = ACEGenerator("SetY", /** @type {const} */ ({
   description: "Set the y position of the window.",
 }))
 
-const ShowDevTools = ACEGenerator("ShowDevTools", /** @type {const} */ ({
+const ShowDevTools = ACEGenerator("ShowDevTools", /** @type {const} */({
   category: "window",
   highlight: false,
   deprecated: false,
@@ -860,7 +867,7 @@ const ShowDevTools = ACEGenerator("ShowDevTools", /** @type {const} */ ({
 
 const a = ShowDevTools.actions.ShowDevTools.params
 
-const Unmaximize = ACEGenerator("Unmaximize", /** @type {const} */ ({
+const Unmaximize = ACEGenerator("Unmaximize", /** @type {const} */({
   category: "window",
   highlight: false,
   deprecated: false,
@@ -870,7 +877,7 @@ const Unmaximize = ACEGenerator("Unmaximize", /** @type {const} */ ({
   description: "Unmaximize the window",
 }))
 
-const SetFullscreen = ACEGenerator("SetFullscreen", /** @type {const} */ ({
+const SetFullscreen = ACEGenerator("SetFullscreen", /** @type {const} */({
   category: "window",
   highlight: false,
   deprecated: false,
@@ -892,7 +899,7 @@ const SetFullscreen = ACEGenerator("SetFullscreen", /** @type {const} */ ({
 }))
 
 // steam
-const ActivateAchievement = ACEGenerator("ActivateAchievement", /** @type {const} */ ({
+const ActivateAchievement = ACEGenerator("ActivateAchievement", /** @type {const} */({
   category: "steam",
   highlight: false,
   deprecated: false,
@@ -910,7 +917,7 @@ const ActivateAchievement = ACEGenerator("ActivateAchievement", /** @type {const
   description: "Activate a steam achievement",
 }))
 
-const ClearAchievement = ACEGenerator("ClearAchievement", /** @type {const} */ ({
+const ClearAchievement = ACEGenerator("ClearAchievement", /** @type {const} */({
   category: "steam",
   highlight: false,
   deprecated: false,
@@ -927,7 +934,7 @@ const ClearAchievement = ACEGenerator("ClearAchievement", /** @type {const} */ (
   displayText: "Clear achievement [b]{0}[/b]",
   description: "Clear a steam achievement",
 }))
-const CheckAchievementActivationState = ACEGenerator("CheckAchievementActivationState", /** @type {const} */ ({
+const CheckAchievementActivationState = ACEGenerator("CheckAchievementActivationState", /** @type {const} */({
   category: "steam",
   highlight: false,
   deprecated: false,
@@ -944,7 +951,7 @@ const CheckAchievementActivationState = ACEGenerator("CheckAchievementActivation
   displayText: "Check achievement [b]{0}[/b] activation state",
   description: "Check the activation state of a steam achievement",
 }))
-const SetRichPresence = ACEGenerator("SetRichPresence", /** @type {const} */ ({
+const SetRichPresence = ACEGenerator("SetRichPresence", /** @type {const} */({
   category: "steam",
   displayText: "Set rich presence {0} to {1}",
   listName: "Set rich presence",
@@ -967,7 +974,7 @@ const SetRichPresence = ACEGenerator("SetRichPresence", /** @type {const} */ ({
   description: "Set the rich presence of the local player.",
 }))
 
-const LeaderboardUploadScoreWithMetadata = ACEGenerator("LeaderboardUploadScoreWithMetadata", /** @type {const} */ ({
+const LeaderboardUploadScoreWithMetadata = ACEGenerator("LeaderboardUploadScoreWithMetadata", /** @type {const} */({
   category: "steam",
   highlight: false,
   deprecated: false,
@@ -1009,7 +1016,7 @@ const LeaderboardUploadScoreWithMetadata = ACEGenerator("LeaderboardUploadScoreW
   description: "Upload a score to a leaderboard with metadata"
 }))
 
-const LeaderboardUploadScore = ACEGenerator("LeaderboardUploadScore", /** @type {const} */ ({
+const LeaderboardUploadScore = ACEGenerator("LeaderboardUploadScore", /** @type {const} */({
   category: "steam",
   highlight: false,
   deprecated: false,
@@ -1044,7 +1051,7 @@ const LeaderboardUploadScore = ACEGenerator("LeaderboardUploadScore", /** @type 
   description: "Upload a score to a leaderboard"
 }))
 
-const LeaderboardDownloadScore = ACEGenerator("LeaderboardDownloadScore", /** @type {const} */ ({
+const LeaderboardDownloadScore = ACEGenerator("LeaderboardDownloadScore", /** @type {const} */({
   category: "steam",
   highlight: false,
   deprecated: false,
@@ -1096,7 +1103,7 @@ const LeaderboardDownloadScore = ACEGenerator("LeaderboardDownloadScore", /** @t
 
 // Discord
 
-const DiscordSetActivity = ACEGenerator("DiscordSetActivity", /** @type {const} */ ({
+const DiscordSetActivity = ACEGenerator("DiscordSetActivity", /** @type {const} */({
   category: "discord",
   displayText: "Set activity {0} to {1} ({2}, {3}, {4}, {5}, {6})",
   listName: "Set activity",
@@ -1149,7 +1156,7 @@ const DiscordSetActivity = ACEGenerator("DiscordSetActivity", /** @type {const} 
   description: "Set the discord activity (aka Rich presence).",
 }))
 
-const ActivateToWebPage = ACEGenerator("ActivateToWebPage", /** @type {const} */ ({
+const ActivateToWebPage = ACEGenerator("ActivateToWebPage", /** @type {const} */({
   category: "steam",
   highlight: false,
   deprecated: false,
@@ -1177,7 +1184,7 @@ const ActivateToWebPage = ACEGenerator("ActivateToWebPage", /** @type {const} */
   description: "Activates Steam Overlay web browser directly to the specified URL",
 }))
 
-const ActivateToStore = ACEGenerator("ActivateToStore", /** @type {const} */ ({
+const ActivateToStore = ACEGenerator("ActivateToStore", /** @type {const} */({
   category: "steam",
   highlight: false,
   deprecated: false,
@@ -1206,7 +1213,7 @@ const ActivateToStore = ACEGenerator("ActivateToStore", /** @type {const} */ ({
 }))
 
 // Steam Screenshots
-const TriggerScreenshot = ACEGenerator("TriggerScreenshot", /** @type {const} */ ({
+const TriggerScreenshot = ACEGenerator("TriggerScreenshot", /** @type {const} */({
   category: "steam",
   highlight: false,
   deprecated: false,
@@ -1217,7 +1224,7 @@ const TriggerScreenshot = ACEGenerator("TriggerScreenshot", /** @type {const} */
 }))
 
 // Steam DLC
-const CheckDLCIsInstalled = ACEGenerator("CheckDLCIsInstalled", /** @type {const} */ ({
+const CheckDLCIsInstalled = ACEGenerator("CheckDLCIsInstalled", /** @type {const} */({
   category: "steam",
   highlight: false,
   deprecated: false,
@@ -1236,7 +1243,7 @@ const CheckDLCIsInstalled = ACEGenerator("CheckDLCIsInstalled", /** @type {const
 }))
 
 // Steam Workshop
-const CreateWorkshopItem = ACEGenerator("CreateWorkshopItem", /** @type {const} */ ({
+const CreateWorkshopItem = ACEGenerator("CreateWorkshopItem", /** @type {const} */({
   category: "steam-workshop",
   highlight: false,
   deprecated: false,
@@ -1253,7 +1260,7 @@ const CreateWorkshopItem = ACEGenerator("CreateWorkshopItem", /** @type {const} 
   description: "Creates a new workshop item for the specified Steam App ID and returns its ID",
 }))
 
-const UpdateWorkshopItem = ACEGenerator("UpdateWorkshopItem", /** @type {const} */ ({
+const UpdateWorkshopItem = ACEGenerator("UpdateWorkshopItem", /** @type {const} */({
   category: "steam-workshop",
   highlight: false,
   deprecated: false,
@@ -1373,7 +1380,7 @@ const UpdateWorkshopItem = ACEGenerator("UpdateWorkshopItem", /** @type {const} 
   description: "Updates content and metadata of a workshop item. Use the update flags to control which fields are updated.",
 }))
 
-const GetSubscribedItemsWithMetadata = ACEGenerator("GetSubscribedItemsWithMetadata", /** @type {const} */ ({
+const GetSubscribedItemsWithMetadata = ACEGenerator("GetSubscribedItemsWithMetadata", /** @type {const} */({
   category: "steam-workshop",
   highlight: false,
   deprecated: false,
@@ -1383,7 +1390,7 @@ const GetSubscribedItemsWithMetadata = ACEGenerator("GetSubscribedItemsWithMetad
   description: "Gets all subscribed workshop items with their metadata and install info",
 }))
 
-const DownloadWorkshopItem = ACEGenerator("DownloadWorkshopItem", /** @type {const} */ ({
+const DownloadWorkshopItem = ACEGenerator("DownloadWorkshopItem", /** @type {const} */({
   category: "steam-workshop",
   highlight: false,
   deprecated: false,
@@ -1408,7 +1415,7 @@ const DownloadWorkshopItem = ACEGenerator("DownloadWorkshopItem", /** @type {con
   description: "Downloads or updates a workshop item",
 }))
 
-const DeleteWorkshopItem = ACEGenerator("DeleteWorkshopItem", /** @type {const} */ ({
+const DeleteWorkshopItem = ACEGenerator("DeleteWorkshopItem", /** @type {const} */({
   category: "steam-workshop",
   highlight: false,
   deprecated: false,
@@ -1426,7 +1433,7 @@ const DeleteWorkshopItem = ACEGenerator("DeleteWorkshopItem", /** @type {const} 
   description: "Deletes a workshop item",
 }))
 
-const SubscribeWorkshopItem = ACEGenerator("SubscribeWorkshopItem", /** @type {const} */ ({
+const SubscribeWorkshopItem = ACEGenerator("SubscribeWorkshopItem", /** @type {const} */({
   category: "steam-workshop",
   highlight: false,
   deprecated: false,
@@ -1444,7 +1451,7 @@ const SubscribeWorkshopItem = ACEGenerator("SubscribeWorkshopItem", /** @type {c
   description: "Subscribes to a workshop item",
 }))
 
-const UnsubscribeWorkshopItem = ACEGenerator("UnsubscribeWorkshopItem", /** @type {const} */ ({
+const UnsubscribeWorkshopItem = ACEGenerator("UnsubscribeWorkshopItem", /** @type {const} */({
   category: "steam-workshop",
   highlight: false,
   deprecated: false,
@@ -1462,7 +1469,7 @@ const UnsubscribeWorkshopItem = ACEGenerator("UnsubscribeWorkshopItem", /** @typ
   description: "Unsubscribes from a workshop item",
 }))
 
-const GetWorkshopItemState = ACEGenerator("GetWorkshopItemState", /** @type {const} */ ({
+const GetWorkshopItemState = ACEGenerator("GetWorkshopItemState", /** @type {const} */({
   category: "steam-workshop",
   highlight: false,
   deprecated: false,
@@ -1480,7 +1487,7 @@ const GetWorkshopItemState = ACEGenerator("GetWorkshopItemState", /** @type {con
   description: "Gets the state of a workshop item",
 }))
 
-const GetWorkshopItemInstallInfo = ACEGenerator("GetWorkshopItemInstallInfo", /** @type {const} */ ({
+const GetWorkshopItemInstallInfo = ACEGenerator("GetWorkshopItemInstallInfo", /** @type {const} */({
   category: "steam-workshop",
   highlight: false,
   deprecated: false,
@@ -1498,7 +1505,7 @@ const GetWorkshopItemInstallInfo = ACEGenerator("GetWorkshopItemInstallInfo", /*
   description: "Gets the install info of a workshop item",
 }))
 
-const GetWorkshopItemDownloadInfo = ACEGenerator("GetWorkshopItemDownloadInfo", /** @type {const} */ ({
+const GetWorkshopItemDownloadInfo = ACEGenerator("GetWorkshopItemDownloadInfo", /** @type {const} */({
   category: "steam-workshop",
   highlight: false,
   deprecated: false,
@@ -1516,7 +1523,7 @@ const GetWorkshopItemDownloadInfo = ACEGenerator("GetWorkshopItemDownloadInfo", 
   description: "Gets the download info of a workshop item",
 }))
 
-const GetWorkshopItem = ACEGenerator("GetWorkshopItem", /** @type {const} */ ({
+const GetWorkshopItem = ACEGenerator("GetWorkshopItem", /** @type {const} */({
   category: "steam-workshop",
   highlight: false,
   deprecated: false,
@@ -1534,7 +1541,7 @@ const GetWorkshopItem = ACEGenerator("GetWorkshopItem", /** @type {const} */ ({
   description: "Gets a workshop item's metadata",
 }))
 
-const GetWorkshopItems = ACEGenerator("GetWorkshopItems", /** @type {const} */ ({
+const GetWorkshopItems = ACEGenerator("GetWorkshopItems", /** @type {const} */({
   category: "steam-workshop",
   highlight: false,
   deprecated: false,
@@ -1552,7 +1559,7 @@ const GetWorkshopItems = ACEGenerator("GetWorkshopItems", /** @type {const} */ (
   description: "Gets multiple workshop items' metadata",
 }))
 
-const GetSubscribedWorkshopItems = ACEGenerator("GetSubscribedWorkshopItems", /** @type {const} */ ({
+const GetSubscribedWorkshopItems = ACEGenerator("GetSubscribedWorkshopItems", /** @type {const} */({
   category: "steam-workshop",
   highlight: false,
   deprecated: false,
@@ -1562,7 +1569,7 @@ const GetSubscribedWorkshopItems = ACEGenerator("GetSubscribedWorkshopItems", /*
   description: "Gets all subscribed workshop item IDs",
 }))
 
-const GetWorkshopItemWithMetadata = ACEGenerator("GetWorkshopItemWithMetadata", /** @type {const} */ ({
+const GetWorkshopItemWithMetadata = ACEGenerator("GetWorkshopItemWithMetadata", /** @type {const} */({
   category: "steam-workshop",
   highlight: false,
   deprecated: false,
@@ -1580,7 +1587,7 @@ const GetWorkshopItemWithMetadata = ACEGenerator("GetWorkshopItemWithMetadata", 
   description: "Gets a workshop item with its metadata, state, install info, and download info",
 }))
 
-const GetWorkshopItemsWithMetadata = ACEGenerator("GetWorkshopItemsWithMetadata", /** @type {const} */ ({
+const GetWorkshopItemsWithMetadata = ACEGenerator("GetWorkshopItemsWithMetadata", /** @type {const} */({
   category: "steam-workshop",
   highlight: false,
   deprecated: false,

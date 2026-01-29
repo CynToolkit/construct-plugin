@@ -455,12 +455,11 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
 
       this?.addLoadPromise?.(
         this.postToDOMAsync("get-fullscreen-state")
-        .then(
-          /** @type {import("./sdk.js").PostFullscreenState} */
-          data =>
-        {
-          this._fullscreenState = data.state
-        })
+          .then(
+            /** @type {import("./sdk.js").PostFullscreenState} */
+            data => {
+              this._fullscreenState = data.state
+            })
       );
 
       this.addDOMMessageHandler('fullscreen-state-changed', (data) => {
@@ -1341,6 +1340,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
 
     _CreateFolderBase = this.wrap(super._CreateFolder, async (
       /** @type {string} */ path,
+      /** @type {boolean} */ recursive,
       /** @type {Tag} */ tag,
     ) => {
       try {
@@ -1348,7 +1348,8 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         const order = {
           url: '/fs/folder/create',
           body: {
-            path
+            path,
+            recursive,
           }
         }
 
@@ -1990,7 +1991,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
       let result = []
       if (target) {
         if (target.height === 1) {
-          const  { width } = target;
+          const { width } = target;
           for (let i = 0; i < width; i++) {
             const value = target.getAt(i)
 
@@ -2227,7 +2228,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         // Map Construct3 combo values to Steam constants
         // 0 = "none", 1 = "addToCartAndShow"
         const steamFlag = flag === 1 ? 2 : 0; // k_EOverlayToStoreFlag_AddToCartAndShow : k_EOverlayToStoreFlag_None
-        
+
         /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').SteamRaw<'overlay', 'activateToStore'>, 'input'>} */
         const order = {
           url: '/steam/raw',
@@ -2462,32 +2463,32 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         // Build updateDetails object with only the fields that should be updated
         /** @type {Record<string, any>} */
         const updateDetails = {}
-        
+
         if (updateTitle) {
           updateDetails.title = title
         }
-        
+
         if (updateDescription) {
           updateDetails.description = description
         }
-        
+
         if (updateContent) {
           updateDetails.contentPath = contentFolderPath
         }
-        
+
         if (updatePreview) {
           updateDetails.previewPath = previewImagePath
         }
-        
+
         if (updateTags) {
           const tagArray = tags.split(',').map(t => t.trim()).filter(t => t.length > 0)
           updateDetails.tags = tagArray
         }
-        
+
         if (updateVisibility) {
           updateDetails.visibility = visibility
         }
-        
+
         if (changeNote) {
           updateDetails.changeNote = changeNote
         }
@@ -2549,10 +2550,10 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         if (subscribedAnswer?.body.success === false) {
           throw new Error('Failed to get subscribed items')
         }
-        
+
         const itemIds = subscribedAnswer?.body.data ?? []
         this._subscribedItemIds = itemIds.map(id => id.toString())
-        
+
         if (itemIds.length === 0) {
           this._GetSubscribedItemsWithMetadataErrorValue = ''
           await this.trigger(tag, [
@@ -2577,22 +2578,22 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
 
         // @ts-expect-error - API returns WorkshopItemsResult
         const items = metadataAnswer?.body.data?.items ?? []
-        
+
         // Store items in map and get state/install/download info for each
         for (const item of items) {
           if (!item) continue
           const itemIdStr = item.publishedFileId.toString()
-          
+
           // Get state and install info using helper functions
           const state = await this._getItemState(item.publishedFileId)
           const installInfo = await this._getItemInstallInfo(item.publishedFileId)
-          
+
           // Get download info if downloading
           let downloadInfo = null
           if (state && (state & 16)) {
             downloadInfo = await this._getItemDownloadInfo(item.publishedFileId)
           }
-          
+
           // Store combined data
           this._workshopItemsMap.set(itemIdStr, {
             ...item,
@@ -2923,12 +2924,12 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
 
         // @ts-expect-error - API returns WorkshopItem
         const item = answer?.body.data
-        
+
         if (item) {
           const itemIdStr = item.publishedFileId.toString()
           const existingItem = this._workshopItemsMap.get(itemIdStr)
           if (existingItem) {
-            this._workshopItemsMap.set(itemIdStr, {...existingItem, ... item})
+            this._workshopItemsMap.set(itemIdStr, { ...existingItem, ...item })
           } else {
             this._workshopItemsMap.set(itemIdStr, item)
           }
@@ -2958,7 +2959,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     ) => {
       try {
         const itemIdArray = itemIds.split(',').map(id => id.trim()).filter(id => id.length > 0)
-        
+
         if (itemIdArray.length === 0) {
           this._GetWorkshopItemsErrorValue = ''
           await this.trigger(tag, [
@@ -2982,13 +2983,13 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
 
         // @ts-expect-error - API returns WorkshopItemsResult
         const items = answer?.body.data?.items ?? []
-        
+
         for (const item of items) {
           if (!item) continue
           const itemIdStr = item.publishedFileId.toString()
           const existingItem = this._workshopItemsMap.get(itemIdStr)
           if (existingItem) {
-            this._workshopItemsMap.set(itemIdStr, {...existingItem, ... item})
+            this._workshopItemsMap.set(itemIdStr, { ...existingItem, ...item })
           } else {
             this._workshopItemsMap.set(itemIdStr, item)
           }
@@ -3029,10 +3030,10 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         if (answer?.body.success === false) {
           throw new Error('Failed to get subscribed items')
         }
-        
+
         const itemIds = answer?.body.data ?? []
         this._subscribedItemIds = itemIds.map(id => id.toString())
-        
+
         this._GetSubscribedWorkshopItemsErrorValue = ''
         await this.trigger(tag, [
           C3.Plugins.pipelabv2.Cnds.OnGetSubscribedWorkshopItemsSuccess,
@@ -3071,20 +3072,20 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
 
         // @ts-expect-error - API returns WorkshopItem
         const item = answer?.body.data
-        
+
         if (item) {
           const itemIdStr = item.publishedFileId.toString()
-          
+
           // Get state and install info
           const state = await this._getItemState(item.publishedFileId)
           const installInfo = await this._getItemInstallInfo(item.publishedFileId)
-          
+
           // Get download info if downloading
           let downloadInfo = null
           if (state && (state & 16)) {
             downloadInfo = await this._getItemDownloadInfo(item.publishedFileId)
           }
-          
+
           // Store combined data
           this._workshopItemsMap.set(itemIdStr, {
             ...item,
@@ -3118,7 +3119,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     ) => {
       try {
         const itemIdArray = itemIds.split(',').map(id => id.trim()).filter(id => id.length > 0)
-        
+
         if (itemIdArray.length === 0) {
           this._GetWorkshopItemsWithMetadataErrorValue = ''
           await this.trigger(tag, [
@@ -3143,22 +3144,22 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
 
         // @ts-expect-error - API returns WorkshopItemsResult
         const items = answer?.body.data?.items ?? []
-        
+
         // Get state/install/download info for each item
         for (const item of items) {
           if (!item) continue
           const itemIdStr = item.publishedFileId.toString()
-          
+
           // Get state and install info
           const state = await this._getItemState(item.publishedFileId)
           const installInfo = await this._getItemInstallInfo(item.publishedFileId)
-          
+
           // Get download info if downloading
           let downloadInfo = null
           if (state && (state & 16)) {
             downloadInfo = await this._getItemDownloadInfo(item.publishedFileId)
           }
-          
+
           // Store combined data
           this._workshopItemsMap.set(itemIdStr, {
             ...item,

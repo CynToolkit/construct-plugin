@@ -57,8 +57,8 @@ The main files you may want to look at would be instance.js
 | Copy file | Copies the file. | Source             *(string)* <br>Destination             *(string)* <br>Overwrite             *(boolean)* <br> |
 | Fetch file size (synchronous) | Fetch the size of the file. (synchronous) | Path             *(string)* <br>Tag             *(string)* <br> |
 | Fetch file size | Fetch the size of the file. | Path             *(string)* <br> |
-| Create folder (synchronous) | Creates the folder. (synchronous) | Path             *(string)* <br>Tag             *(string)* <br> |
-| Create folder | Creates the folder. | Path             *(string)* <br> |
+| Create folder (synchronous) | Creates the folder. (synchronous) | Path             *(string)* <br>Recursive             *(boolean)* <br>Tag             *(string)* <br> |
+| Create folder | Creates the folder. | Path             *(string)* <br>Recursive             *(boolean)* <br> |
 | Delete file (synchronous) | Deletes the file. (synchronous) | Path             *(string)* <br>Recursive             *(boolean)* <br>Tag             *(string)* <br> |
 | Delete file | Deletes the file. | Path             *(string)* <br>Recursive             *(boolean)* <br> |
 | List files (synchronous) | Load a list of files in a given folder. Use expressions after this action to get the count and file names (synchronous) | Path             *(string)* <br>Recursive             *(boolean)* <br>Tag             *(string)* <br> |
