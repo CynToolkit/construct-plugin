@@ -1223,6 +1223,63 @@ const TriggerScreenshot = ACEGenerator("TriggerScreenshot", /** @type {const} */
   description: "Captures the current screen and saves to Steam screenshot library",
 }))
 
+const SaveScreenshotFromURL = ACEGenerator("SaveScreenshotFromURL", /** @type {const} */({
+  category: "steam",
+  highlight: false,
+  deprecated: false,
+  params: [
+    {
+      id: 'url',
+      desc: "The URL of the image to save as a screenshot (will be converted to base64)",
+      name: "URL",
+      type: 'string',
+      initialValue: "\"\"",
+    }
+  ],
+  listName: "Save screenshot from URL",
+  displayText: "Save screenshot from URL [b]{0}[/b]",
+  description: "Saves an image from a URL as a Steam screenshot. The image will be loaded, converted to base64, and its dimensions calculated automatically.",
+}))
+
+const AddScreenshotToLibrary = ACEGenerator("AddScreenshotToLibrary", /** @type {const} */({
+  category: "steam",
+  highlight: false,
+  deprecated: false,
+  params: [
+    {
+      id: 'filename',
+      desc: "The absolute path to the screenshot file on disk",
+      name: "Filename",
+      type: 'string',
+      initialValue: "\"\"",
+    },
+    {
+      id: 'thumbnailFilename',
+      desc: "Optional absolute path to a thumbnail file (leave empty for no thumbnail)",
+      name: "Thumbnail Filename",
+      type: 'string',
+      initialValue: "\"\"",
+    },
+    {
+      id: 'width',
+      desc: "The width of the screenshot in pixels",
+      name: "Width",
+      type: 'number',
+      initialValue: "0",
+    },
+    {
+      id: 'height',
+      desc: "The height of the screenshot in pixels",
+      name: "Height",
+      type: 'number',
+      initialValue: "0",
+    }
+  ],
+  listName: "Add screenshot to library",
+  displayText: "Add screenshot [b]{0}[/b] to library (thumbnail: {1}, size: {2}x{3})",
+  description: "Adds an existing screenshot file to the Steam screenshot library. Returns the handle of the screenshot.",
+}))
+
 // Steam DLC
 const CheckDLCIsInstalled = ACEGenerator("CheckDLCIsInstalled", /** @type {const} */({
   category: "steam",
@@ -1789,6 +1846,8 @@ const Config = /** @type {const} */({
     ...ActivateToWebPage.actions,
     ...ActivateToStore.actions,
     ...TriggerScreenshot.actions,
+    ...SaveScreenshotFromURL.actions,
+    ...AddScreenshotToLibrary.actions,
     ...CheckDLCIsInstalled.actions,
     ...CreateWorkshopItem.actions,
     ...UpdateWorkshopItem.actions,
@@ -1856,6 +1915,8 @@ const Config = /** @type {const} */({
     ...ActivateToWebPage.conditions,
     ...ActivateToStore.conditions,
     ...TriggerScreenshot.conditions,
+    ...SaveScreenshotFromURL.conditions,
+    ...AddScreenshotToLibrary.conditions,
     ...CheckDLCIsInstalled.conditions,
     ...CreateWorkshopItem.conditions,
     ...UpdateWorkshopItem.conditions,
@@ -1994,6 +2055,8 @@ const Config = /** @type {const} */({
     ...ActivateToWebPage.expressions,
     ...ActivateToStore.expressions,
     ...TriggerScreenshot.expressions,
+    ...SaveScreenshotFromURL.expressions,
+    ...AddScreenshotToLibrary.expressions,
     ...CheckDLCIsInstalled.expressions,
     ...CreateWorkshopItem.expressions,
     ...UpdateWorkshopItem.expressions,
