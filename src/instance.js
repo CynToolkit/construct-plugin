@@ -2430,7 +2430,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         if (answer?.body.success === false) {
           throw new Error('Failed')
         }
-        this._CheckDLCIsInstalledResultValue = answer?.body.data
+        this._CheckDLCIsInstalledResultValue = answer?.body.data ? 1 : 0
         this._CheckDLCIsInstalledErrorValue = ''
 
         await this.trigger(tag, [
@@ -2440,7 +2440,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
       } catch (e) {
         if (e instanceof Error) {
           this._CheckDLCIsInstalledErrorValue = e.message
-          this._CheckDLCIsInstalledResultValue = false
+          this._CheckDLCIsInstalledResultValue = 0
           await this.trigger(tag, [
             C3.Plugins.pipelabv2.Cnds.OnCheckDLCIsInstalledError,
             C3.Plugins.pipelabv2.Cnds.OnAnyCheckDLCIsInstalledError
@@ -4267,7 +4267,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
       return this._CheckDLCIsInstalledErrorValue
     })
     _CheckDLCIsInstalledResult = this.exprs(super._CheckDLCIsInstalledResult, () => {
-      return this._CheckDLCIsInstalledResultValue
+      return this._CheckDLCIsInstalledResultValue ?? 0
     })
 
     // Workshop expressions
