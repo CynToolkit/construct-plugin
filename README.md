@@ -49,140 +49,207 @@ The main files you may want to look at would be instance.js
 ## Actions
 | Action | Description | Params
 | --- | --- | --- |
-| Initialize integration (synchronous) | Initialize the Pipelab integration (synchronous) | Tag             *(string)* <br> |
+| Initialize integration | Initialize the Pipelab integration | Tag             *(string)* <br> |
 | Initialize integration | Initialize the Pipelab integration |  |
-| Append file (synchronous) | Appends the contents to the file. (synchronous) | Path             *(string)* <br>Contents             *(string)* <br>Tag             *(string)* <br> |
+| Initialize integration | Initialize the Pipelab integration | Tag             *(string)* <br> |
+| Append file | Appends the contents to the file. | Path             *(string)* <br>Contents             *(string)* <br>Tag             *(string)* <br> |
 | Append file | Appends the contents to the file. | Path             *(string)* <br>Contents             *(string)* <br> |
-| Copy file (synchronous) | Copies the file. (synchronous) | Source             *(string)* <br>Destination             *(string)* <br>Overwrite             *(boolean)* <br>Tag             *(string)* <br> |
+| Append file | Appends the contents to the file. | Path             *(string)* <br>Contents             *(string)* <br>Tag             *(string)* <br> |
+| Copy file | Copies the file. | Source             *(string)* <br>Destination             *(string)* <br>Overwrite             *(boolean)* <br>Tag             *(string)* <br> |
 | Copy file | Copies the file. | Source             *(string)* <br>Destination             *(string)* <br>Overwrite             *(boolean)* <br> |
-| Fetch file size (synchronous) | Fetch the size of the file. (synchronous) | Path             *(string)* <br>Tag             *(string)* <br> |
+| Copy file | Copies the file. | Source             *(string)* <br>Destination             *(string)* <br>Overwrite             *(boolean)* <br>Tag             *(string)* <br> |
+| Fetch file size | Fetch the size of the file. | Path             *(string)* <br>Tag             *(string)* <br> |
 | Fetch file size | Fetch the size of the file. | Path             *(string)* <br> |
-| Create folder (synchronous) | Creates the folder. (synchronous) | Path             *(string)* <br>Recursive             *(boolean)* <br>Tag             *(string)* <br> |
+| Fetch file size | Fetch the size of the file. | Path             *(string)* <br>Tag             *(string)* <br> |
+| Create folder | Creates the folder. | Path             *(string)* <br>Recursive             *(boolean)* <br>Tag             *(string)* <br> |
 | Create folder | Creates the folder. | Path             *(string)* <br>Recursive             *(boolean)* <br> |
-| Delete file (synchronous) | Deletes the file. (synchronous) | Path             *(string)* <br>Recursive             *(boolean)* <br>Tag             *(string)* <br> |
+| Create folder | Creates the folder. | Path             *(string)* <br>Recursive             *(boolean)* <br>Tag             *(string)* <br> |
+| Delete file | Deletes the file. | Path             *(string)* <br>Recursive             *(boolean)* <br>Tag             *(string)* <br> |
 | Delete file | Deletes the file. | Path             *(string)* <br>Recursive             *(boolean)* <br> |
-| List files (synchronous) | Load a list of files in a given folder. Use expressions after this action to get the count and file names (synchronous) | Path             *(string)* <br>Recursive             *(boolean)* <br>Tag             *(string)* <br> |
+| Delete file | Deletes the file. | Path             *(string)* <br>Recursive             *(boolean)* <br>Tag             *(string)* <br> |
+| List files | Load a list of files in a given folder. Use expressions after this action to get the count and file names | Path             *(string)* <br>Recursive             *(boolean)* <br>Tag             *(string)* <br> |
 | List files | Load a list of files in a given folder. Use expressions after this action to get the count and file names | Path             *(string)* <br>Recursive             *(boolean)* <br> |
-| Move file (synchronous) | Moves the file. (synchronous) | Source             *(string)* <br>Destination             *(string)* <br>Overwrite             *(boolean)* <br>Tag             *(string)* <br> |
+| List files | Load a list of files in a given folder. Use expressions after this action to get the count and file names | Path             *(string)* <br>Recursive             *(boolean)* <br>Tag             *(string)* <br> |
+| Move file | Moves the file. | Source             *(string)* <br>Destination             *(string)* <br>Overwrite             *(boolean)* <br>Tag             *(string)* <br> |
 | Move file | Moves the file. | Source             *(string)* <br>Destination             *(string)* <br>Overwrite             *(boolean)* <br> |
-| Open browser (synchronous) | Opens the browser. (synchronous) | URL             *(string)* <br>Tag             *(string)* <br> |
+| Move file | Moves the file. | Source             *(string)* <br>Destination             *(string)* <br>Overwrite             *(boolean)* <br>Tag             *(string)* <br> |
+| Open browser | Opens the browser. | URL             *(string)* <br>Tag             *(string)* <br> |
 | Open browser | Opens the browser. | URL             *(string)* <br> |
-| Read binary file (synchronous) | Reads a file into a Binary Data object. Triggers 'On binary file read' when completes. (synchronous) | Path             *(string)* <br>Destination             *(object)* <br>Tag             *(string)* <br> |
+| Open browser | Opens the browser. | URL             *(string)* <br>Tag             *(string)* <br> |
+| Read binary file | Reads a file into a Binary Data object. Triggers 'On binary file read' when completes. | Path             *(string)* <br>Destination             *(object)* <br>Tag             *(string)* <br> |
 | Read binary file | Reads a file into a Binary Data object. Triggers 'On binary file read' when completes. | Path             *(string)* <br>Destination             *(object)* <br> |
-| Rename file (synchronous) | Renames the file. (synchronous) | Existing file             *(string)* <br>New name             *(string)* <br>Overwrite             *(boolean)* <br>Tag             *(string)* <br> |
+| Read binary file | Reads a file into a Binary Data object. Triggers 'On binary file read' when completes. | Path             *(string)* <br>Destination             *(object)* <br>Tag             *(string)* <br> |
+| Rename file | Renames the file. | Existing file             *(string)* <br>New name             *(string)* <br>Overwrite             *(boolean)* <br>Tag             *(string)* <br> |
 | Rename file | Renames the file. | Existing file             *(string)* <br>New name             *(string)* <br>Overwrite             *(boolean)* <br> |
-| Run file (synchronous) | Runs the file. (synchronous) | Path             *(string)* <br>Tag             *(string)* <br> |
+| Rename file | Renames the file. | Existing file             *(string)* <br>New name             *(string)* <br>Overwrite             *(boolean)* <br>Tag             *(string)* <br> |
+| Run file | Runs the file. | Path             *(string)* <br>Tag             *(string)* <br> |
 | Run file | Runs the file. | Path             *(string)* <br> |
-| Shell open (synchronous) | Opens the file in the shell. (synchronous) | Path             *(string)* <br>Tag             *(string)* <br> |
+| Run file | Runs the file. | Path             *(string)* <br>Tag             *(string)* <br> |
+| Shell open | Opens the file in the shell. | Path             *(string)* <br>Tag             *(string)* <br> |
 | Shell open | Opens the file in the shell. | Path             *(string)* <br> |
-| Explorer open (synchronous) | Opens the path in the explorer. (synchronous) | Path             *(string)* <br>Tag             *(string)* <br> |
+| Shell open | Opens the file in the shell. | Path             *(string)* <br>Tag             *(string)* <br> |
+| Explorer open | Opens the path in the explorer. | Path             *(string)* <br>Tag             *(string)* <br> |
 | Explorer open | Opens the path in the explorer. | Path             *(string)* <br> |
-| Write binary file (synchronous) | Writes the binary file. (synchronous) | Path             *(string)* <br>Source             *(object)* <br>Tag             *(string)* <br> |
+| Explorer open | Opens the path in the explorer. | Path             *(string)* <br>Tag             *(string)* <br> |
+| Write binary file | Writes the binary file. | Path             *(string)* <br>Source             *(object)* <br>Tag             *(string)* <br> |
 | Write binary file | Writes the binary file. | Path             *(string)* <br>Source             *(object)* <br> |
-| Write text file (synchronous) | Writes the text file. (synchronous) | Path             *(string)* <br>Contents             *(string)* <br>Tag             *(string)* <br> |
+| Write binary file | Writes the binary file. | Path             *(string)* <br>Source             *(object)* <br>Tag             *(string)* <br> |
+| Write text file | Writes the text file. | Path             *(string)* <br>Contents             *(string)* <br>Tag             *(string)* <br> |
 | Write text file | Writes the text file. | Path             *(string)* <br>Contents             *(string)* <br> |
-| Write text file (synchronous) | Writes the text file. (synchronous) | Path             *(string)* <br>Contents             *(string)* <br>Tag             *(string)* <br> |
+| Write text file | Writes the text file. | Path             *(string)* <br>Contents             *(string)* <br>Tag             *(string)* <br> |
+| Write text file | Writes the text file. | Path             *(string)* <br>Contents             *(string)* <br>Tag             *(string)* <br> |
 | Write text file | Writes the text file. | Path             *(string)* <br>Contents             *(string)* <br> |
-| Read text file (synchronous) | Reads the text file. (synchronous) | Path             *(string)* <br>Tag             *(string)* <br> |
+| Write text file | Writes the text file. | Path             *(string)* <br>Contents             *(string)* <br>Tag             *(string)* <br> |
+| Read text file | Reads the text file. | Path             *(string)* <br>Tag             *(string)* <br> |
 | Read text file | Reads the text file. | Path             *(string)* <br> |
-| Check if the path exist (synchronous) | Check if the path exist. (synchronous) | Path             *(string)* <br>Tag             *(string)* <br> |
+| Read text file | Reads the text file. | Path             *(string)* <br>Tag             *(string)* <br> |
+| Check if the path exist | Check if the path exist. | Path             *(string)* <br>Tag             *(string)* <br> |
 | Check if the path exist | Check if the path exist. | Path             *(string)* <br> |
-| Show folder dialog (synchronous) | Show a folder dialog (synchronous) | Tag             *(string)* <br> |
+| Check if the path exist | Check if the path exist. | Path             *(string)* <br>Tag             *(string)* <br> |
+| Show folder dialog | Show a folder dialog | Tag             *(string)* <br> |
 | Show folder dialog | Show a folder dialog |  |
-| Show open dialog (synchronous) | Show an open dialog (synchronous) | Accept             *(string)* <br>Tag             *(string)* <br> |
+| Show folder dialog | Show a folder dialog | Tag             *(string)* <br> |
+| Show open dialog | Show an open dialog | Accept             *(string)* <br>Tag             *(string)* <br> |
 | Show open dialog | Show an open dialog | Accept             *(string)* <br> |
-| Show save dialog (synchronous) | Show a save dialog (synchronous) | Accept             *(string)* <br>Tag             *(string)* <br> |
+| Show open dialog | Show an open dialog | Accept             *(string)* <br>Tag             *(string)* <br> |
+| Show save dialog | Show a save dialog | Accept             *(string)* <br>Tag             *(string)* <br> |
 | Show save dialog | Show a save dialog | Accept             *(string)* <br> |
-| Maximize (synchronous) | Maximize the window (synchronous) | Tag             *(string)* <br> |
+| Show save dialog | Show a save dialog | Accept             *(string)* <br>Tag             *(string)* <br> |
+| Maximize | Maximize the window | Tag             *(string)* <br> |
 | Maximize | Maximize the window |  |
-| Minimize (synchronous) | Minimize the window (synchronous) | Tag             *(string)* <br> |
+| Maximize | Maximize the window | Tag             *(string)* <br> |
+| Minimize | Minimize the window | Tag             *(string)* <br> |
 | Minimize | Minimize the window |  |
-| Restore (synchronous) | Restore the window (i.e. show again after minimizing) (synchronous) | Tag             *(string)* <br> |
+| Minimize | Minimize the window | Tag             *(string)* <br> |
+| Restore | Restore the window (i.e. show again after minimizing) | Tag             *(string)* <br> |
 | Restore | Restore the window (i.e. show again after minimizing) |  |
-| Request attention (synchronous) | Start or stop requesting attention from the user, e.g. by flashing the title bar (depends on OS). (synchronous) | Mode             *(combo)* <br>Tag             *(string)* <br> |
+| Restore | Restore the window (i.e. show again after minimizing) | Tag             *(string)* <br> |
+| Request attention | Start or stop requesting attention from the user, e.g. by flashing the title bar (depends on OS). | Mode             *(combo)* <br>Tag             *(string)* <br> |
 | Request attention | Start or stop requesting attention from the user, e.g. by flashing the title bar (depends on OS). | Mode             *(combo)* <br> |
-| Set always on top (synchronous) | Enable or disable the window always being on top of other windows. (synchronous) | Mode             *(combo)* <br>Tag             *(string)* <br> |
+| Request attention | Start or stop requesting attention from the user, e.g. by flashing the title bar (depends on OS). | Mode             *(combo)* <br>Tag             *(string)* <br> |
+| Set always on top | Enable or disable the window always being on top of other windows. | Mode             *(combo)* <br>Tag             *(string)* <br> |
 | Set always on top | Enable or disable the window always being on top of other windows. | Mode             *(combo)* <br> |
-| Set height (synchronous) | Set the height of the window. (synchronous) | Height             *(number)* <br>Tag             *(string)* <br> |
+| Set always on top | Enable or disable the window always being on top of other windows. | Mode             *(combo)* <br>Tag             *(string)* <br> |
+| Set height | Set the height of the window. | Height             *(number)* <br>Tag             *(string)* <br> |
 | Set height | Set the height of the window. | Height             *(number)* <br> |
-| Set maximum size (synchronous) | Set the maximum size of the window. (synchronous) | Max width             *(number)* <br>Max height             *(number)* <br>Tag             *(string)* <br> |
+| Set height | Set the height of the window. | Height             *(number)* <br>Tag             *(string)* <br> |
+| Set maximum size | Set the maximum size of the window. | Max width             *(number)* <br>Max height             *(number)* <br>Tag             *(string)* <br> |
 | Set maximum size | Set the maximum size of the window. | Max width             *(number)* <br>Max height             *(number)* <br> |
-| Set minimum size (synchronous) | Set the minimum size of the window. (synchronous) | Max width             *(number)* <br>Max height             *(number)* <br>Tag             *(string)* <br> |
+| Set maximum size | Set the maximum size of the window. | Max width             *(number)* <br>Max height             *(number)* <br>Tag             *(string)* <br> |
+| Set minimum size | Set the minimum size of the window. | Max width             *(number)* <br>Max height             *(number)* <br>Tag             *(string)* <br> |
 | Set minimum size | Set the minimum size of the window. | Max width             *(number)* <br>Max height             *(number)* <br> |
-| Set resizable (synchronous) | Enable or disable the window resizing. (synchronous) | Resizable             *(combo)* <br>Tag             *(string)* <br> |
+| Set minimum size | Set the minimum size of the window. | Max width             *(number)* <br>Max height             *(number)* <br>Tag             *(string)* <br> |
+| Set resizable | Enable or disable the window resizing. | Resizable             *(combo)* <br>Tag             *(string)* <br> |
 | Set resizable | Enable or disable the window resizing. | Resizable             *(combo)* <br> |
-| Set title (synchronous) | Set the title of the window. (synchronous) | Title             *(string)* <br>Tag             *(string)* <br> |
+| Set resizable | Enable or disable the window resizing. | Resizable             *(combo)* <br>Tag             *(string)* <br> |
+| Set title | Set the title of the window. | Title             *(string)* <br>Tag             *(string)* <br> |
 | Set title | Set the title of the window. | Title             *(string)* <br> |
-| Set width (synchronous) | Set the width of the window. (synchronous) | Width             *(number)* <br>Tag             *(string)* <br> |
+| Set title | Set the title of the window. | Title             *(string)* <br>Tag             *(string)* <br> |
+| Set width | Set the width of the window. | Width             *(number)* <br>Tag             *(string)* <br> |
 | Set width | Set the width of the window. | Width             *(number)* <br> |
-| Set x (synchronous) | Set the x position of the window. (synchronous) | X             *(number)* <br>Tag             *(string)* <br> |
+| Set width | Set the width of the window. | Width             *(number)* <br>Tag             *(string)* <br> |
+| Set x | Set the x position of the window. | X             *(number)* <br>Tag             *(string)* <br> |
 | Set x | Set the x position of the window. | X             *(number)* <br> |
-| Set y (synchronous) | Set the y position of the window. (synchronous) | Y             *(number)* <br>Tag             *(string)* <br> |
+| Set x | Set the x position of the window. | X             *(number)* <br>Tag             *(string)* <br> |
+| Set y | Set the y position of the window. | Y             *(number)* <br>Tag             *(string)* <br> |
 | Set y | Set the y position of the window. | Y             *(number)* <br> |
-| Show dev tools (synchronous) | Show or hide the dev tools. (synchronous) | Show             *(combo)* <br>Tag             *(string)* <br> |
+| Set y | Set the y position of the window. | Y             *(number)* <br>Tag             *(string)* <br> |
+| Show dev tools | Show or hide the dev tools. | Show             *(combo)* <br>Tag             *(string)* <br> |
 | Show dev tools | Show or hide the dev tools. | Show             *(combo)* <br> |
-| Unmaximize (synchronous) | Unmaximize the window (synchronous) | Tag             *(string)* <br> |
+| Show dev tools | Show or hide the dev tools. | Show             *(combo)* <br>Tag             *(string)* <br> |
+| Unmaximize | Unmaximize the window | Tag             *(string)* <br> |
 | Unmaximize | Unmaximize the window |  |
-| Set Fullscreen (synchronous) | Change fullscreen state (synchronous) | Fullscreen             *(combo)* <br>Tag             *(string)* <br> |
+| Unmaximize | Unmaximize the window | Tag             *(string)* <br> |
+| Set Fullscreen | Change fullscreen state | Fullscreen             *(combo)* <br>Tag             *(string)* <br> |
 | Set Fullscreen | Change fullscreen state | Fullscreen             *(combo)* <br> |
-| Activate achievement (synchronous) | Activate a steam achievement (synchronous) | Achievement             *(string)* <br>Tag             *(string)* <br> |
+| Set Fullscreen | Change fullscreen state | Fullscreen             *(combo)* <br>Tag             *(string)* <br> |
+| Activate achievement | Activate a steam achievement | Achievement             *(string)* <br>Tag             *(string)* <br> |
 | Activate achievement | Activate a steam achievement | Achievement             *(string)* <br> |
-| Clear achievement (synchronous) | Clear a steam achievement (synchronous) | Achievement             *(string)* <br>Tag             *(string)* <br> |
+| Activate achievement | Activate a steam achievement | Achievement             *(string)* <br>Tag             *(string)* <br> |
+| Clear achievement | Clear a steam achievement | Achievement             *(string)* <br>Tag             *(string)* <br> |
 | Clear achievement | Clear a steam achievement | Achievement             *(string)* <br> |
-| Check achievement activation state (synchronous) | Check the activation state of a steam achievement (synchronous) | Achievement             *(string)* <br>Tag             *(string)* <br> |
+| Clear achievement | Clear a steam achievement | Achievement             *(string)* <br>Tag             *(string)* <br> |
+| Check achievement activation state | Check the activation state of a steam achievement | Achievement             *(string)* <br>Tag             *(string)* <br> |
 | Check achievement activation state | Check the activation state of a steam achievement | Achievement             *(string)* <br> |
-| Set rich presence (synchronous) | Set the rich presence of the local player. (synchronous) | Key             *(string)* <br>Value             *(string)* <br>Tag             *(string)* <br> |
+| Check achievement activation state | Check the activation state of a steam achievement | Achievement             *(string)* <br>Tag             *(string)* <br> |
+| Set rich presence | Set the rich presence of the local player. | Key             *(string)* <br>Value             *(string)* <br>Tag             *(string)* <br> |
 | Set rich presence | Set the rich presence of the local player. | Key             *(string)* <br>Value             *(string)* <br> |
-| Set activity (synchronous) | Set the discord activity (aka Rich presence). (synchronous) | Details             *(string)* <br>State             *(string)* <br>Start Timestamp             *(string)* <br>Large image key             *(string)* <br>Large image text             *(string)* <br>Small image key             *(string)* <br>Small image text             *(string)* <br>Tag             *(string)* <br> |
+| Set rich presence | Set the rich presence of the local player. | Key             *(string)* <br>Value             *(string)* <br>Tag             *(string)* <br> |
+| Set activity | Set the discord activity (aka Rich presence). | Details             *(string)* <br>State             *(string)* <br>Start Timestamp             *(string)* <br>Large image key             *(string)* <br>Large image text             *(string)* <br>Small image key             *(string)* <br>Small image text             *(string)* <br>Tag             *(string)* <br> |
 | Set activity | Set the discord activity (aka Rich presence). | Details             *(string)* <br>State             *(string)* <br>Start Timestamp             *(string)* <br>Large image key             *(string)* <br>Large image text             *(string)* <br>Small image key             *(string)* <br>Small image text             *(string)* <br> |
-| Upload score (synchronous) | Upload a score to a leaderboard (synchronous) | Leaderboard             *(string)* <br>Score             *(number)* <br>Upload type             *(combo)* <br>Tag             *(string)* <br> |
+| Set activity | Set the discord activity (aka Rich presence). | Details             *(string)* <br>State             *(string)* <br>Start Timestamp             *(string)* <br>Large image key             *(string)* <br>Large image text             *(string)* <br>Small image key             *(string)* <br>Small image text             *(string)* <br>Tag             *(string)* <br> |
+| Upload score | Upload a score to a leaderboard | Leaderboard             *(string)* <br>Score             *(number)* <br>Upload type             *(combo)* <br>Tag             *(string)* <br> |
 | Upload score | Upload a score to a leaderboard | Leaderboard             *(string)* <br>Score             *(number)* <br>Upload type             *(combo)* <br> |
-| Upload score with metadata (synchronous) | Upload a score to a leaderboard with metadata (synchronous) | Leaderboard             *(string)* <br>Score             *(number)* <br>Metadata             *(object)* <br>Upload type             *(combo)* <br>Tag             *(string)* <br> |
+| Upload score | Upload a score to a leaderboard | Leaderboard             *(string)* <br>Score             *(number)* <br>Upload type             *(combo)* <br>Tag             *(string)* <br> |
+| Upload score with metadata | Upload a score to a leaderboard with metadata | Leaderboard             *(string)* <br>Score             *(number)* <br>Metadata             *(object)* <br>Upload type             *(combo)* <br>Tag             *(string)* <br> |
 | Upload score with metadata | Upload a score to a leaderboard with metadata | Leaderboard             *(string)* <br>Score             *(number)* <br>Metadata             *(object)* <br>Upload type             *(combo)* <br> |
-| Download scores (synchronous) | Download scores from a leaderboard
+| Upload score with metadata | Upload a score to a leaderboard with metadata | Leaderboard             *(string)* <br>Score             *(number)* <br>Metadata             *(object)* <br>Upload type             *(combo)* <br>Tag             *(string)* <br> |
+| Download scores | Download scores from a leaderboard
 When Download type is Regular, offset are absolute.
-When Download type is Around the user, the offsets are the amount of entries around the user to fetch. (synchronous) | Leaderboard             *(string)* <br>Download type             *(combo)* <br>Start             *(number)* <br>End             *(number)* <br>Output             *(object)* <br>Tag             *(string)* <br> |
+When Download type is Around the user, the offsets are the amount of entries around the user to fetch. | Leaderboard             *(string)* <br>Download type             *(combo)* <br>Start             *(number)* <br>End             *(number)* <br>Output             *(object)* <br>Tag             *(string)* <br> |
 | Download scores | Download scores from a leaderboard
 When Download type is Regular, offset are absolute.
 When Download type is Around the user, the offsets are the amount of entries around the user to fetch. | Leaderboard             *(string)* <br>Download type             *(combo)* <br>Start             *(number)* <br>End             *(number)* <br>Output             *(object)* <br> |
-| Activate Steam overlay to web page (synchronous) | Activates Steam Overlay web browser directly to the specified URL (synchronous) | URL             *(string)* <br>Mode             *(combo)* <br>Tag             *(string)* <br> |
+| Download scores | Download scores from a leaderboard
+When Download type is Regular, offset are absolute.
+When Download type is Around the user, the offsets are the amount of entries around the user to fetch. | Leaderboard             *(string)* <br>Download type             *(combo)* <br>Start             *(number)* <br>End             *(number)* <br>Output             *(object)* <br>Tag             *(string)* <br> |
+| Activate Steam overlay to web page | Activates Steam Overlay web browser directly to the specified URL | URL             *(string)* <br>Mode             *(combo)* <br>Tag             *(string)* <br> |
 | Activate Steam overlay to web page | Activates Steam Overlay web browser directly to the specified URL | URL             *(string)* <br>Mode             *(combo)* <br> |
-| Activate Steam overlay to store (synchronous) | Activates the Steam Overlay to the Steam store page for the provided app (synchronous) | App ID             *(number)* <br>Flag             *(combo)* <br>Tag             *(string)* <br> |
+| Activate Steam overlay to web page | Activates Steam Overlay web browser directly to the specified URL | URL             *(string)* <br>Mode             *(combo)* <br>Tag             *(string)* <br> |
+| Activate Steam overlay to store | Activates the Steam Overlay to the Steam store page for the provided app | App ID             *(number)* <br>Flag             *(combo)* <br>Tag             *(string)* <br> |
 | Activate Steam overlay to store | Activates the Steam Overlay to the Steam store page for the provided app | App ID             *(number)* <br>Flag             *(combo)* <br> |
-| Trigger screenshot (synchronous) | Captures the current screen and saves to Steam screenshot library (synchronous) | Tag             *(string)* <br> |
+| Activate Steam overlay to store | Activates the Steam Overlay to the Steam store page for the provided app | App ID             *(number)* <br>Flag             *(combo)* <br>Tag             *(string)* <br> |
+| Trigger screenshot | Captures the current screen and saves to Steam screenshot library | Tag             *(string)* <br> |
 | Trigger screenshot | Captures the current screen and saves to Steam screenshot library |  |
-| Check DLC is installed (synchronous) | Checks if the user owns and has installed a specific DLC (synchronous) | DLC App ID             *(number)* <br>Tag             *(string)* <br> |
+| Trigger screenshot | Captures the current screen and saves to Steam screenshot library | Tag             *(string)* <br> |
+| Check DLC is installed | Checks if the user owns and has installed a specific DLC | DLC App ID             *(number)* <br>Tag             *(string)* <br> |
 | Check DLC is installed | Checks if the user owns and has installed a specific DLC | DLC App ID             *(number)* <br> |
-| Create workshop item (synchronous) | Creates a new workshop item for the specified Steam App ID and returns its ID (synchronous) | App ID             *(number)* <br>Tag             *(string)* <br> |
+| Check DLC is installed | Checks if the user owns and has installed a specific DLC | DLC App ID             *(number)* <br>Tag             *(string)* <br> |
+| Create workshop item | Creates a new workshop item for the specified Steam App ID and returns its ID | App ID             *(number)* <br>Tag             *(string)* <br> |
 | Create workshop item | Creates a new workshop item for the specified Steam App ID and returns its ID | App ID             *(number)* <br> |
-| Update workshop item (synchronous) | Updates content and metadata of a workshop item. Use the update flags to control which fields are updated. (synchronous) | App ID             *(number)* <br>Item ID             *(string)* <br>Update Title             *(boolean)* <br>Title             *(string)* <br>Update Description             *(boolean)* <br>Description             *(string)* <br>Update Content             *(boolean)* <br>Content Folder Path             *(string)* <br>Change Note             *(string)* <br>Update Preview             *(boolean)* <br>Preview Image Path             *(string)* <br>Update Tags             *(boolean)* <br>Tags             *(string)* <br>Update Visibility             *(boolean)* <br>Visibility             *(combo)* <br>Tag             *(string)* <br> |
+| Create workshop item | Creates a new workshop item for the specified Steam App ID and returns its ID | App ID             *(number)* <br>Tag             *(string)* <br> |
+| Update workshop item | Updates content and metadata of a workshop item. Use the update flags to control which fields are updated. | App ID             *(number)* <br>Item ID             *(string)* <br>Update Title             *(boolean)* <br>Title             *(string)* <br>Update Description             *(boolean)* <br>Description             *(string)* <br>Update Content             *(boolean)* <br>Content Folder Path             *(string)* <br>Change Note             *(string)* <br>Update Preview             *(boolean)* <br>Preview Image Path             *(string)* <br>Update Tags             *(boolean)* <br>Tags             *(string)* <br>Update Visibility             *(boolean)* <br>Visibility             *(combo)* <br>Tag             *(string)* <br> |
 | Update workshop item | Updates content and metadata of a workshop item. Use the update flags to control which fields are updated. | App ID             *(number)* <br>Item ID             *(string)* <br>Update Title             *(boolean)* <br>Title             *(string)* <br>Update Description             *(boolean)* <br>Description             *(string)* <br>Update Content             *(boolean)* <br>Content Folder Path             *(string)* <br>Change Note             *(string)* <br>Update Preview             *(boolean)* <br>Preview Image Path             *(string)* <br>Update Tags             *(boolean)* <br>Tags             *(string)* <br>Update Visibility             *(boolean)* <br>Visibility             *(combo)* <br> |
-| Get subscribed items with metadata (synchronous) | Gets all subscribed workshop items with their metadata and install info (synchronous) | Tag             *(string)* <br> |
+| Update workshop item | Updates content and metadata of a workshop item. Use the update flags to control which fields are updated. | App ID             *(number)* <br>Item ID             *(string)* <br>Update Title             *(boolean)* <br>Title             *(string)* <br>Update Description             *(boolean)* <br>Description             *(string)* <br>Update Content             *(boolean)* <br>Content Folder Path             *(string)* <br>Change Note             *(string)* <br>Update Preview             *(boolean)* <br>Preview Image Path             *(string)* <br>Update Tags             *(boolean)* <br>Tags             *(string)* <br>Update Visibility             *(boolean)* <br>Visibility             *(combo)* <br>Tag             *(string)* <br> |
+| Get subscribed items with metadata | Gets all subscribed workshop items with their metadata and install info | Tag             *(string)* <br> |
 | Get subscribed items with metadata | Gets all subscribed workshop items with their metadata and install info |  |
-| Download workshop item (synchronous) | Downloads or updates a workshop item (synchronous) | Item ID             *(string)* <br>High Priority             *(boolean)* <br>Tag             *(string)* <br> |
+| Get subscribed items with metadata | Gets all subscribed workshop items with their metadata and install info | Tag             *(string)* <br> |
+| Download workshop item | Downloads or updates a workshop item | Item ID             *(string)* <br>High Priority             *(boolean)* <br>Tag             *(string)* <br> |
 | Download workshop item | Downloads or updates a workshop item | Item ID             *(string)* <br>High Priority             *(boolean)* <br> |
-| Delete workshop item (synchronous) | Deletes a workshop item (synchronous) | Item ID             *(string)* <br>Tag             *(string)* <br> |
+| Download workshop item | Downloads or updates a workshop item | Item ID             *(string)* <br>High Priority             *(boolean)* <br>Tag             *(string)* <br> |
+| Delete workshop item | Deletes a workshop item | Item ID             *(string)* <br>Tag             *(string)* <br> |
 | Delete workshop item | Deletes a workshop item | Item ID             *(string)* <br> |
-| Subscribe to workshop item (synchronous) | Subscribes to a workshop item (synchronous) | Item ID             *(string)* <br>Tag             *(string)* <br> |
+| Delete workshop item | Deletes a workshop item | Item ID             *(string)* <br>Tag             *(string)* <br> |
+| Subscribe to workshop item | Subscribes to a workshop item | Item ID             *(string)* <br>Tag             *(string)* <br> |
 | Subscribe to workshop item | Subscribes to a workshop item | Item ID             *(string)* <br> |
-| Unsubscribe from workshop item (synchronous) | Unsubscribes from a workshop item (synchronous) | Item ID             *(string)* <br>Tag             *(string)* <br> |
+| Subscribe to workshop item | Subscribes to a workshop item | Item ID             *(string)* <br>Tag             *(string)* <br> |
+| Unsubscribe from workshop item | Unsubscribes from a workshop item | Item ID             *(string)* <br>Tag             *(string)* <br> |
 | Unsubscribe from workshop item | Unsubscribes from a workshop item | Item ID             *(string)* <br> |
-| Get workshop item state (synchronous) | Gets the state of a workshop item (synchronous) | Item ID             *(string)* <br>Tag             *(string)* <br> |
+| Unsubscribe from workshop item | Unsubscribes from a workshop item | Item ID             *(string)* <br>Tag             *(string)* <br> |
+| Get workshop item state | Gets the state of a workshop item | Item ID             *(string)* <br>Tag             *(string)* <br> |
 | Get workshop item state | Gets the state of a workshop item | Item ID             *(string)* <br> |
-| Get workshop item install info (synchronous) | Gets the install info of a workshop item (synchronous) | Item ID             *(string)* <br>Tag             *(string)* <br> |
+| Get workshop item state | Gets the state of a workshop item | Item ID             *(string)* <br>Tag             *(string)* <br> |
+| Get workshop item install info | Gets the install info of a workshop item | Item ID             *(string)* <br>Tag             *(string)* <br> |
 | Get workshop item install info | Gets the install info of a workshop item | Item ID             *(string)* <br> |
-| Get workshop item download info (synchronous) | Gets the download info of a workshop item (synchronous) | Item ID             *(string)* <br>Tag             *(string)* <br> |
+| Get workshop item install info | Gets the install info of a workshop item | Item ID             *(string)* <br>Tag             *(string)* <br> |
+| Get workshop item download info | Gets the download info of a workshop item | Item ID             *(string)* <br>Tag             *(string)* <br> |
 | Get workshop item download info | Gets the download info of a workshop item | Item ID             *(string)* <br> |
-| Get workshop item (synchronous) | Gets a workshop item's metadata (synchronous) | Item ID             *(string)* <br>Tag             *(string)* <br> |
+| Get workshop item download info | Gets the download info of a workshop item | Item ID             *(string)* <br>Tag             *(string)* <br> |
+| Get workshop item | Gets a workshop item's metadata | Item ID             *(string)* <br>Tag             *(string)* <br> |
 | Get workshop item | Gets a workshop item's metadata | Item ID             *(string)* <br> |
-| Get workshop items (synchronous) | Gets multiple workshop items' metadata (synchronous) | Item IDs             *(string)* <br>Tag             *(string)* <br> |
+| Get workshop item | Gets a workshop item's metadata | Item ID             *(string)* <br>Tag             *(string)* <br> |
+| Get workshop items | Gets multiple workshop items' metadata | Item IDs             *(string)* <br>Tag             *(string)* <br> |
 | Get workshop items | Gets multiple workshop items' metadata | Item IDs             *(string)* <br> |
-| Get subscribed items (synchronous) | Gets all subscribed workshop item IDs (synchronous) | Tag             *(string)* <br> |
+| Get workshop items | Gets multiple workshop items' metadata | Item IDs             *(string)* <br>Tag             *(string)* <br> |
+| Get subscribed items | Gets all subscribed workshop item IDs | Tag             *(string)* <br> |
 | Get subscribed items | Gets all subscribed workshop item IDs |  |
-| Get workshop item with metadata (synchronous) | Gets a workshop item with its metadata, state, install info, and download info (synchronous) | Item ID             *(string)* <br>Tag             *(string)* <br> |
+| Get subscribed items | Gets all subscribed workshop item IDs | Tag             *(string)* <br> |
+| Get workshop item with metadata | Gets a workshop item with its metadata, state, install info, and download info | Item ID             *(string)* <br>Tag             *(string)* <br> |
 | Get workshop item with metadata | Gets a workshop item with its metadata, state, install info, and download info | Item ID             *(string)* <br> |
-| Get workshop items with metadata (synchronous) | Gets multiple workshop items with their metadata, state, install info, and download info (synchronous) | Item IDs             *(string)* <br>Tag             *(string)* <br> |
+| Get workshop item with metadata | Gets a workshop item with its metadata, state, install info, and download info | Item ID             *(string)* <br>Tag             *(string)* <br> |
+| Get workshop items with metadata | Gets multiple workshop items with their metadata, state, install info, and download info | Item IDs             *(string)* <br>Tag             *(string)* <br> |
 | Get workshop items with metadata | Gets multiple workshop items with their metadata, state, install info, and download info | Item IDs             *(string)* <br> |
+| Get workshop items with metadata | Gets multiple workshop items with their metadata, state, install info, and download info | Item IDs             *(string)* <br>Tag             *(string)* <br> |
 
 
 ---
@@ -450,6 +517,7 @@ When Download type is Around the user, the offsets are the amount of entries aro
 | On "GetWorkshopItemsWithMetadata" error | Trigger when the "GetWorkshopItemsWithMetadata" failed to execute. | Tag *(string)* <br> |
 | On any "GetWorkshopItemsWithMetadata" error | Trigger when any of the "GetWorkshopItemsWithMetadata" failed to execute. |  |
 | Is engine | Return true if the engine running the app is the one selected | Engine *(combo)* <br> |
+| Is Pipelab | Return true if the Pipelab is used to run the game |  |
 | Is initialized | Returns true if the Pipelab integration has been initialized |  |
 | Is full screen | Returns true if the window is in full screen mode. | State *(combo)* <br> |
 | Last checked path exists | Returns true if the last checked path exists. |  |

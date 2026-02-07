@@ -25,7 +25,7 @@ const ACEGenerator = (name, data) => {
   const { ...act } = data
 
   const syncParams = ([
-    ...act.params ?? [],
+    ...(act.params ?? []),
     tagParameter,
   ])
 
@@ -33,15 +33,24 @@ const ACEGenerator = (name, data) => {
   const actions = /** @type {const} */ ({
     [`${name}Sync`]: ({
       ...act,
-      forward: `_${name}Sync`,
+      forward: `_${name}`,
       params: syncParams,
-      description: `${act.description} (synchronous)`,
-      displayText: `${act.displayText} ([b]{${act.params?.length}}[/b]) (synchronous)`,
-      listName: `${act.listName} (synchronous)`,
+      displayText: `[b]DEPRECATED[/b] - ${act.displayText} (tag "{${act.params?.length}}")`,
+      isDeprecated: true,
     }),
     [name]: ({
       ...act,
       forward: `_${name}`,
+      displayText: `[b]DEPRECATED[/b] - ${act.displayText}`,
+      isAsync: true,
+      isDeprecated: true,
+    }),
+    [`${name}V2`]: ({
+      ...act,
+      forward: `_${name}`,
+      params: syncParams,
+      displayText: `${act.displayText} (tag {${act.params?.length}})`,
+      isDeprecated: act.deprecated,
       isAsync: true,
     }),
   })
@@ -1892,6 +1901,17 @@ const Config = /** @type {const} */({
         }
       ],
       listName: "Is engine",
+    },
+    IsPipelab: {
+      category: "general",
+      forward: "_IsPipelab",
+      highlight: true,
+      deprecated: false,
+      description: "Return true if the Pipelab is used to run the game",
+      displayText: "Is Pipelab",
+      params: [
+      ],
+      listName: "Is Pipelab",
     },
 
     IsInitialized: {
