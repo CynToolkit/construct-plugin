@@ -7,3 +7,4 @@ node_modules/
 src/c3/
 .env
 .vscode/settings.json
+src/ts-defs

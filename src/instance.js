@@ -225,11 +225,11 @@ const defaultSteamId = {
 
 // Simple path utility for POSIX-style path operations
 const posixPath = {
-  dirname: (path) => {
+  dirname: (/** @type {string} */ path) => {
     const lastSlash = path.lastIndexOf('/');
     return lastSlash === -1 ? '.' : path.substring(0, lastSlash);
   },
-  join: (dirname, filename) => {
+  join: (/** @type {string} */ dirname, /** @type {string} */ filename) => {
     return dirname.endsWith('/') ? dirname + filename : dirname + '/' + filename;
   }
 };
@@ -245,14 +245,33 @@ let config = {}
  * @typedef {string | undefined} Tag
  */
 
+/**
+ * @typedef {'electron' | 'tauri'} Engine
+ */
+
+/**
+ * @typedef {Object} PipelabInfos
+ *
+ * @property {boolean} isPipelab
+ * @property {Engine} engine
+ */
+
 /** @type {import('./sdk.js').GetInstanceJSFn} */
 function getInstanceJs(parentClass, addonTriggers, C3) {
   // @ts-ignore
   return class Pipelab extends parentClass {
+    /**
+     * @type {any}
+     */
     _additionalLoadPromises = []
 
     /** @type {SDK.IObjectInstance | undefined} */
     _inst;
+
+    /**
+     * @type {PipelabInfos | undefined}
+     */
+    pipelabInfos;
 
     /** @type {WebSocketClient | undefined} */
     WebSocketClient;
@@ -349,7 +368,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
 
     /** @type {import("./sdk.js").IsFullScreenState} */
     _fullscreenState = 0;
-
+    _lastOverlayState = false;
     /** @type {{accountId: number, steamId32: string, steamId64: string}} */
     _steam_SteamId = defaultSteamId
     /** @type {import('@pipelab/core').NamespacedFunctionReturnType<'localplayer', 'getName'>} */
@@ -383,6 +402,21 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     _ActivateToStoreErrorValue = ''
     /** @type {boolean} */
     _ActivateToStoreResultValue = false
+
+    /** @type {string} */
+    _GetSteamUILanguageErrorValue = ''
+    /** @type {string} */
+    _GetSteamUILanguageResultValue = ''
+
+    /** @type {string} */
+    _GetAvailableGameLanguagesErrorValue = ''
+    /** @type {string} */
+    _GetAvailableGameLanguagesResultValue = ''
+
+    /** @type {string} */
+    _GetCurrentGameLanguageErrorValue = ''
+    /** @type {string} */
+    _GetCurrentGameLanguageResultValue = ''
 
     /**
      * Description
@@ -465,6 +499,14 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
       this.addDOMMessageHandler('fullscreen-state-changed', (data) => {
         this._fullscreenState = data.state
       })
+
+      this?.addLoadPromise?.(
+        this.postToDOMAsync("get-infos")
+          .then(
+            data => {
+              this.pipelabInfos = data
+            })
+      );
     }
 
     async unsupportedEngine() {
@@ -546,7 +588,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
 
     // Acts
 
-    _InitializeBase = this.wrap(super._Initialize, async (/** @type {Tag} */ tag) => {
+    _Initialize = this.wrap(super._Initialize, async (/** @type {Tag} */ tag) => {
       console.info('Pipelab v' + config.version)
       console.info('SDK ' + sdk)
       try {
@@ -567,6 +609,16 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         // Handle through runtime
         this.ws.on('/window/fullscreen-state', async (/** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').FullscreenState, 'input'>} */ data) => {
           this._fullscreenState = fullscreenPipelabStateToC3State(data.body.state)
+        })
+
+        // Overlay
+        this.ws.on('/steam/overlay-activated', async (data) => {
+          this._lastOverlayState = data.body.active;
+          if (this._lastOverlayState) {
+            await this._triggerAsync(C3.Plugins.pipelabv2.Cnds.OnOverlayActivated);
+          } else {
+            await this._triggerAsync(C3.Plugins.pipelabv2.Cnds.OnOverlayDeactivated);
+          }
         })
 
         await this.ws.connect();
@@ -753,10 +805,8 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
       }
 
     }, this.unsupportedEngine, true, true)
-    _Initialize = this._InitializeBase
-    _InitializeSync = this._InitializeBase
 
-    _WriteTextFileBase = this.wrap(super._WriteTextFile, async (
+    _WriteTextFile = this.wrap(super._WriteTextFile, async (
       /** @type {string} */ path,
       /** @type {string} */ contents,
       /** @type {Tag} */ tag,
@@ -775,7 +825,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         const response = await this.ws?.sendAndWaitForResponse(order)
         this._WriteTextFileResultValue = true
         this._WriteTextFileErrorValue = ''
-        await this.trigger("tag", [
+        await this.trigger(tag, [
           C3.Plugins.pipelabv2.Cnds.OnWriteTextFileSuccess,
           C3.Plugins.pipelabv2.Cnds.OnAnyWriteTextFileSuccess,
         ])
@@ -791,12 +841,10 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         console.error(e)
       }
     }, this.unsupportedEngine)
-    _WriteTextFile = this._WriteTextFileBase
-    _WriteTextFileSync = this._WriteTextFileBase
-    _WriteText = this._WriteTextFileBase
-    _WriteTextSync = this._WriteTextFileBase
+    _WriteText = this._WriteTextFile
 
-    _ReadTextFileBase = this.wrap(super._ReadTextFile, async (
+
+    _ReadTextFile = this.wrap(super._ReadTextFile, async (
       /** @type {string} */ path,
       /** @type {Tag} */ tag,
     ) => {
@@ -834,10 +882,8 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         console.error(e)
       }
     }, this.unsupportedEngine)
-    _ReadTextFile = this._ReadTextFileBase
-    _ReadTextFileSync = this._ReadTextFileBase
 
-    _CheckIfPathExistBase = this.wrap(super._CheckIfPathExist, async (
+    _CheckIfPathExist = this.wrap(super._CheckIfPathExist, async (
       /** @type {string} */ path,
       /** @type {Tag} */ tag,
     ) => {
@@ -875,10 +921,8 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         console.error(e)
       }
     }, this.unsupportedEngine)
-    _CheckIfPathExist = this._CheckIfPathExistBase
-    _CheckIfPathExistSync = this._CheckIfPathExistBase
 
-    _MaximizeBase = this.wrap(super._Maximize, async () => {
+    _Maximize = this.wrap(super._Maximize, async () => {
       /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageWindowMaximize, 'input'>} */
       const order = {
         url: '/window/maximize',
@@ -886,10 +930,8 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
 
       await this.ws?.sendAndWaitForResponse(order)
     }, this.unsupportedEngine)
-    _Maximize = this._MaximizeBase
-    _MaximizeSync = this._MaximizeBase
 
-    _MinimizeBase = this.wrap(super._Minimize, async () => {
+    _Minimize = this.wrap(super._Minimize, async () => {
       /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageWindowMinimize, 'input'>} */
       const order = {
         url: '/window/minimize',
@@ -897,10 +939,8 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
 
       await this.ws?.sendAndWaitForResponse(order)
     }, this.unsupportedEngine)
-    _Minimize = this._MinimizeBase
-    _MinimizeSync = this._MinimizeBase
 
-    _RestoreBase = this.wrap(super._Restore, async () => {
+    _Restore = this.wrap(super._Restore, async () => {
       /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageWindowRestore, 'input'>} */
       const order = {
         url: '/window/restore',
@@ -908,10 +948,8 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
 
       await this.ws?.sendAndWaitForResponse(order)
     }, this.unsupportedEngine)
-    _Restore = this._RestoreBase
-    _RestoreSync = this._RestoreBase
 
-    _RequestAttentionBase = this.wrap(super._RequestAttention, async (/** @type {number} */ mode) => {
+    _RequestAttention = this.wrap(super._RequestAttention, async (/** @type {number} */ mode) => {
       /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageRequestAttention, 'input'>} */
       const order = {
         url: '/window/request-attention',
@@ -921,10 +959,8 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
 
       // TODO: support stop
     }, this.unsupportedEngine)
-    _RequestAttention = this._RequestAttentionBase
-    _RequestAttentionSync = this._RequestAttentionBase
 
-    _SetAlwaysOnTopBase = this.wrap(super._SetAlwaysOnTop, async (/** @type {number} */ mode) => {
+    _SetAlwaysOnTop = this.wrap(super._SetAlwaysOnTop, async (/** @type {number} */ mode) => {
       /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageSetAlwaysOnTop, 'input'>} */
       const order = {
         url: '/window/set-always-on-top',
@@ -935,10 +971,8 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
 
       await this.ws?.sendAndWaitForResponse(order)
     }, this.unsupportedEngine)
-    _SetAlwaysOnTop = this._SetAlwaysOnTopBase
-    _SetAlwaysOnTopSync = this._SetAlwaysOnTopBase
 
-    _SetHeightBase = this.wrap(super._SetHeight, async (/** @type {number} */ height) => {
+    _SetHeight = this.wrap(super._SetHeight, async (/** @type {number} */ height) => {
       /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageSetHeight, 'input'>} */
       const order = {
         url: '/window/set-height',
@@ -949,10 +983,8 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
 
       await this.ws?.sendAndWaitForResponse(order)
     }, this.unsupportedEngine)
-    _SetHeight = this._SetHeightBase
-    _SetHeightSync = this._SetHeightBase
 
-    _SetMaximumSizeBase = this.wrap(super._SetMaximumSize, async (/** @type {number} */ width, /** @type {number} */ height) => {
+    _SetMaximumSize = this.wrap(super._SetMaximumSize, async (/** @type {number} */ width, /** @type {number} */ height) => {
       /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageSetMaximumSize, 'input'>} */
       const order = {
         url: '/window/set-maximum-size',
@@ -964,10 +996,8 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
 
       await this.ws?.sendAndWaitForResponse(order)
     }, this.unsupportedEngine)
-    _SetMaximumSize = this._SetMaximumSizeBase
-    _SetMaximumSizeSync = this._SetMaximumSizeBase
 
-    _SetMinimumSizeBase = this.wrap(super._SetMinimumSize, async (/** @type {number} */ width, /** @type {number} */ height) => {
+    _SetMinimumSize = this.wrap(super._SetMinimumSize, async (/** @type {number} */ width, /** @type {number} */ height) => {
       /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageSetMinimumSize, 'input'>} */
       const order = {
         url: '/window/set-minimum-size',
@@ -979,10 +1009,8 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
 
       await this.ws?.sendAndWaitForResponse(order)
     }, this.unsupportedEngine)
-    _SetMinimumSize = this._SetMinimumSizeBase
-    _SetMinimumSizeSync = this._SetMinimumSizeBase
 
-    _SetResizableBase = this.wrap(super._SetResizable, async (/** @type {number} */ resizable) => {
+    _SetResizable = this.wrap(super._SetResizable, async (/** @type {number} */ resizable) => {
       /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageSetResizable, 'input'>} */
       const order = {
         url: '/window/set-resizable',
@@ -993,10 +1021,8 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
 
       await this.ws?.sendAndWaitForResponse(order)
     }, this.unsupportedEngine)
-    _SetResizable = this._SetResizableBase
-    _SetResizableSync = this._SetResizableBase
 
-    _SetTitleBase = this.wrap(super._SetTitle, async (/** @type {string} */ title) => {
+    _SetTitle = this.wrap(super._SetTitle, async (/** @type {string} */ title) => {
       /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageSetTitle, 'input'>} */
       const order = {
         url: '/window/set-title',
@@ -1007,10 +1033,8 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
 
       await this.ws?.sendAndWaitForResponse(order)
     }, this.unsupportedEngine)
-    _SetTitle = this._SetTitleBase
-    _SetTitleSync = this._SetTitleBase
 
-    _SetWidthBase = this.wrap(super._SetWidth, async (/** @type {number} */ width) => {
+    _SetWidth = this.wrap(super._SetWidth, async (/** @type {number} */ width) => {
       /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageSetWidth, 'input'>} */
       const order = {
         url: '/window/set-width',
@@ -1021,10 +1045,8 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
 
       await this.ws?.sendAndWaitForResponse(order)
     }, this.unsupportedEngine)
-    _SetWidth = this._SetWidthBase
-    _SetWidthSync = this._SetWidthBase
 
-    _SetXBase = this.wrap(super._SetX, async (/** @type {number} */ x) => {
+    _SetX = this.wrap(super._SetX, async (/** @type {number} */ x) => {
       /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageSetX, 'input'>} */
       const order = {
         url: '/window/set-x',
@@ -1035,10 +1057,8 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
 
       await this.ws?.sendAndWaitForResponse(order)
     }, this.unsupportedEngine)
-    _SetX = this._SetXBase
-    _SetXSync = this._SetXBase
 
-    _SetYBase = this.wrap(super._SetY, async (/** @type {number} */ y) => {
+    _SetY = this.wrap(super._SetY, async (/** @type {number} */ y) => {
       /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageSetY, 'input'>} */
       const order = {
         url: '/window/set-y',
@@ -1049,10 +1069,8 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
 
       await this.ws?.sendAndWaitForResponse(order)
     }, this.unsupportedEngine)
-    _SetY = this._SetYBase
-    _SetYSync = this._SetYBase
 
-    _ShowDevToolsBase = this.wrap(super._ShowDevTools, async (/** @type {number} */ toggle) => {
+    _ShowDevTools = this.wrap(super._ShowDevTools, async (/** @type {number} */ toggle) => {
       /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageShowDevTools, 'input'>} */
       const order = {
         url: '/window/show-dev-tools',
@@ -1063,10 +1081,8 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
 
       await this.ws?.sendAndWaitForResponse(order)
     }, this.unsupportedEngine)
-    _ShowDevTools = this._ShowDevToolsBase
-    _ShowDevToolsSync = this._ShowDevToolsBase
 
-    _SetFullscreenBase = this.wrap(super._SetFullscreen, async (/** @type {number} */ toggle) => {
+    _SetFullscreen = this.wrap(super._SetFullscreen, async (/** @type {number} */ toggle) => {
       /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageSetFullscreen, 'input'>} */
       const order = {
         url: '/window/set-fullscreen',
@@ -1086,10 +1102,8 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         this.postToDOM('set-fullscreen', state)
       }
     })
-    _SetFullscreen = this._SetFullscreenBase
-    _SetFullscreenSync = this._SetFullscreenBase
 
-    _UnmaximizeBase = this.wrap(super._Unmaximize, async () => {
+    _Unmaximize = this.wrap(super._Unmaximize, async () => {
       /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageWindowUnmaximize, 'input'>} */
       const order = {
         url: '/window/unmaximize',
@@ -1097,10 +1111,8 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
 
       await this.ws?.sendAndWaitForResponse(order)
     }, this.unsupportedEngine)
-    _Unmaximize = this._UnmaximizeBase
-    _UnmaximizeSync = this._UnmaximizeBase
 
-    _ShowFolderDialogBase = this.wrap(super._ShowFolderDialog, async (
+    _ShowFolderDialog = this.wrap(super._ShowFolderDialog, async (
       /** @type {Tag} */ tag,
     ) => {
       try {
@@ -1136,10 +1148,8 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         console.error(e)
       }
     }, this.unsupportedEngine)
-    _ShowFolderDialog = this._ShowFolderDialogBase
-    _ShowFolderDialogSync = this._ShowFolderDialogBase
 
-    _ShowOpenDialogBase = this.wrap(super._ShowOpenDialog, async (
+    _ShowOpenDialog = this.wrap(super._ShowOpenDialog, async (
       /** @type {string} */ accept,
       /** @type {Tag} */ tag,
     ) => {
@@ -1192,10 +1202,8 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         console.error(e)
       }
     }, this.unsupportedEngine)
-    _ShowOpenDialog = this._ShowOpenDialogBase
-    _ShowOpenDialogSync = this._ShowOpenDialogBase
 
-    _ShowSaveDialogBase = this.wrap(super._ShowSaveDialog, async (
+    _ShowSaveDialog = this.wrap(super._ShowSaveDialog, async (
       /** @type {string} */ accept,
       /** @type {Tag} */ tag,
     ) => {
@@ -1249,10 +1257,8 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         console.error(e)
       }
     }, this.unsupportedEngine)
-    _ShowSaveDialog = this._ShowSaveDialogBase
-    _ShowSaveDialogSync = this._ShowSaveDialogBase
 
-    _AppendFileBase = this.wrap(super._AppendFile, async (
+    _AppendFile = this.wrap(super._AppendFile, async (
       /** @type {string} */ path,
       /** @type {string} */ contents,
       /** @type {Tag} */ tag,
@@ -1292,10 +1298,8 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         console.error(e)
       }
     }, this.unsupportedEngine)
-    _AppendFile = this._AppendFileBase
-    _AppendFileSync = this._AppendFileBase
 
-    _CopyFileBase = this.wrap(super._CopyFile, async (
+    _CopyFile = this.wrap(super._CopyFile, async (
       /** @type {string} */ source,
       /** @type {string} */ destination,
       /** @type {boolean} */ overwrite,
@@ -1335,10 +1339,8 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         console.error(e)
       }
     }, this.unsupportedEngine)
-    _CopyFile = this._CopyFileBase
-    _CopyFileSync = this._CopyFileBase
 
-    _CreateFolderBase = this.wrap(super._CreateFolder, async (
+    _CreateFolder = this.wrap(super._CreateFolder, async (
       /** @type {string} */ path,
       /** @type {boolean} */ recursive,
       /** @type {Tag} */ tag,
@@ -1376,10 +1378,8 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         console.error(e)
       }
     }, this.unsupportedEngine)
-    _CreateFolder = this._CreateFolderBase
-    _CreateFolderSync = this._CreateFolderBase
 
-    _DeleteFileBase = this.wrap(super._DeleteFile, async (
+    _DeleteFile = this.wrap(super._DeleteFile, async (
       /** @type {string} */ path,
       /** @type {boolean} */ recursive,
       /** @type {Tag} */ tag,
@@ -1416,10 +1416,8 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         console.error(e)
       }
     }, this.unsupportedEngine)
-    _DeleteFile = this._DeleteFileBase
-    _DeleteFileSync = this._DeleteFileBase
 
-    _ListFilesBase = this.wrap(super._ListFiles, async (
+    _ListFiles = this.wrap(super._ListFiles, async (
       /** @type {string} */ path,
       /** @type {boolean} */ recursive,
       /** @type {Tag} */ tag
@@ -1457,10 +1455,8 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         console.error(e)
       }
     }, this.unsupportedEngine)
-    _ListFiles = this._ListFilesBase
-    _ListFilesSync = this._ListFilesBase
 
-    _MoveFileBase = this.wrap(super._MoveFile, async (
+    _MoveFile = this.wrap(super._MoveFile, async (
       /** @type {string} */ source,
       /** @type {string} */ destination,
       /** @type {boolean} */ overwrite,
@@ -1499,16 +1495,12 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         console.error(e)
       }
     }, this.unsupportedEngine)
-    _MoveFile = this._MoveFileBase
-    _MoveFileSync = this._MoveFileBase
 
-    _OpenBrowserBase = this.wrap(super._OpenBrowser, async () => {
+    _OpenBrowser = this.wrap(super._OpenBrowser, async () => {
       throw new Error('"_OpenBrowser" Not implemented')
     }, this.unsupportedEngine)
-    _OpenBrowser = this._OpenBrowserBase
-    _OpenBrowserSync = this._OpenBrowserBase
 
-    _ReadBinaryFileBase = this.wrap(super._ReadBinaryFile, async (
+    _ReadBinaryFile = this.wrap(super._ReadBinaryFile, async (
       /** @type {string} */ path,
       /** @type {IObjectClass<IInstance>} */ destination,
       /** @type {Tag} */ tag,
@@ -1524,7 +1516,6 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
 
         const answer = await this.ws?.sendAndWaitForResponse(order)
 
-        const sdkInst = this.__GetBinaryDataSdkInstance(destination);
 
         if (!sdkInst) {
           throw new Error("SDK instance not found")
@@ -1556,10 +1547,8 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
       }
 
     }, this.unsupportedEngine)
-    _ReadBinaryFile = this._ReadBinaryFileBase
-    _ReadBinaryFileSync = this._ReadBinaryFileBase
 
-    _RenameFileBase = this.wrap(super._RenameFile, async (
+    _RenameFile = this.wrap(super._RenameFile, async (
       /** @type {string} */ source,
       /** @type {string} */ newFileName,
       /** @type {boolean} */ overwrite,
@@ -1602,10 +1591,8 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         console.error(e)
       }
     }, this.unsupportedEngine)
-    _RenameFile = this._RenameFileBase
-    _RenameFileSync = this._RenameFileBase
 
-    _RunFileBase = this.wrap(super._RunFile, async (
+    _RunFile = this.wrap(super._RunFile, async (
       /** @type {string} */ command,
       /** @type {Tag} */ tag
     ) => {
@@ -1643,10 +1630,8 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         console.error(e)
       }
     }, this.unsupportedEngine)
-    _RunFile = this._RunFileBase
-    _RunFileSync = this._RunFileBase
 
-    _ShellOpenBase = this.wrap(super._ShellOpen, async (
+    _ShellOpen = this.wrap(super._ShellOpen, async (
       /** @type {string} */ path,
       /** @type {Tag} */ tag
     ) => {
@@ -1683,10 +1668,8 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         console.error(e)
       }
     }, this.unsupportedEngine)
-    _ShellOpen = this._ShellOpenBase
-    _ShellOpenSync = this._ShellOpenBase
 
-    _ExplorerOpenBase = this.wrap(super._ExplorerOpen, async (
+    _ExplorerOpen = this.wrap(super._ExplorerOpen, async (
       /** @type {string} */ path,
       /** @type {Tag} */ tag
     ) => {
@@ -1723,8 +1706,6 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         console.error(e)
       }
     }, this.unsupportedEngine)
-    _ExplorerOpen = this._ExplorerOpenBase
-    _ExplorerOpenSync = this._ExplorerOpenBase
 
     /**
      * @param {IObjectClass<IInstance>} objectClass
@@ -1742,10 +1723,9 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
       return target
     }
 
-    _WriteBinaryFileBase = this.wrap(super._WriteBinaryFile, async (/** @type {string} */ path, /** @type {string} */ source) => {
+    _WriteBinaryFile = this.wrap(super._WriteBinaryFile, async (/** @type {string} */ path, /** @type {string} */ source) => {
       throw new Error('not supported')
 
-      // const sdkInst = this.__GetBinaryDataSdkInstance(source);
 
       // if (!sdkInst) {
       //   throw new Error("SDK instance not found")
@@ -1772,10 +1752,8 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
       //   this._currentTag = ''
       // }
     }, this.unsupportedEngine)
-    _WriteBinaryFile = this._WriteBinaryFileBase
-    _WriteBinaryFileSync = this._WriteBinaryFileBase
 
-    _FetchFileSizeBase = this.wrap(super._FetchFileSize, async (
+    _FetchFileSize = this.wrap(super._FetchFileSize, async (
       /** @type {string} */ path,
       /** @type {Tag} */ tag,
     ) => {
@@ -1816,10 +1794,8 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         console.error(e)
       }
     })
-    _FetchFileSize = this._FetchFileSizeBase
-    _FetchFileSizeSync = this._FetchFileSizeBase
 
-    _ActivateAchievementBase = this.wrap(super._ActivateAchievement, async (
+    _ActivateAchievement = this.wrap(super._ActivateAchievement, async (
       /** @type {string} */ achievement,
       /** @type {Tag} */ tag
     ) => {
@@ -1855,10 +1831,8 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         }
       }
     }, this.unsupportedEngine)
-    _ActivateAchievement = this._ActivateAchievementBase
-    _ActivateAchievementSync = this._ActivateAchievementBase
 
-    _ClearAchievementBase = this.wrap(super._ClearAchievement, async (
+    _ClearAchievement = this.wrap(super._ClearAchievement, async (
       /** @type {string} */ achievement,
       /** @type {Tag} */ tag
     ) => {
@@ -1895,10 +1869,8 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         console.error(e)
       }
     }, this.unsupportedEngine)
-    _ClearAchievement = this._ClearAchievementBase
-    _ClearAchievementSync = this._ClearAchievementBase
 
-    _CheckAchievementActivationStateBase = this.wrap(super._CheckAchievementActivationState, async (
+    _CheckAchievementActivationState = this.wrap(super._CheckAchievementActivationState, async (
       /** @type {string} */ achievement,
       /** @type {Tag} */ tag
     ) => {
@@ -1935,10 +1907,8 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         }
       }
     }, () => false)
-    _CheckAchievementActivationState = this._CheckAchievementActivationStateBase
-    _CheckAchievementActivationStateSync = this._CheckAchievementActivationStateBase
 
-    _LeaderboardUploadScoreBase = this.wrap(super._LeaderboardUploadScore, async (
+    _LeaderboardUploadScore = this.wrap(super._LeaderboardUploadScore, async (
       /** @type {string} */ name,
       /** @type {number} */ score,
       /** @type {string} */ type,
@@ -1977,10 +1947,8 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         }
       }
     }, this.unsupportedEngine)
-    _LeaderboardUploadScore = this._LeaderboardUploadScoreBase
-    _LeaderboardUploadScoreSync = this._LeaderboardUploadScoreBase
 
-    _LeaderboardUploadScoreWithMetadataBase = this.wrap(super._LeaderboardUploadScoreWithMetadata, async (
+    _LeaderboardUploadScoreWithMetadata = this.wrap(super._LeaderboardUploadScoreWithMetadata, async (
       /** @type {string} */ name,
       /** @type {number} */ score,
       /** @type {IObjectType<IArrayInstance>} */ metadata,
@@ -2035,10 +2003,8 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         }
       }
     }, this.unsupportedEngine)
-    _LeaderboardUploadScoreWithMetadata = this._LeaderboardUploadScoreWithMetadataBase
-    _LeaderboardUploadScoreWithMetadataSync = this._LeaderboardUploadScoreWithMetadataBase
 
-    _LeaderboardDownloadScoreBase = this.wrap(super._LeaderboardDownloadScore, async (
+    _LeaderboardDownloadScore = this.wrap(super._LeaderboardDownloadScore, async (
       /** @type {string} */ leaderboard,
       /** @type {number} */ downloadType,
       /** @type {number} */ start,
@@ -2083,10 +2049,8 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         }
       }
     }, this.unsupportedEngine)
-    _LeaderboardDownloadScore = this._LeaderboardDownloadScoreBase
-    _LeaderboardDownloadScoreSync = this._LeaderboardDownloadScoreBase
 
-    _SetRichPresenceBase = this.wrap(super._SetRichPresence, async (
+    _SetRichPresence = this.wrap(super._SetRichPresence, async (
       /** @type {string} */ key,
       /** @type {string} */ value,
       /** @type {Tag} */ tag
@@ -2123,10 +2087,8 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         }
       }
     }, this.unsupportedEngine)
-    _SetRichPresence = this._SetRichPresenceBase
-    _SetRichPresenceSync = this._SetRichPresenceBase
 
-    _DiscordSetActivityBase = this.wrap(super._SetRichPresence, async (
+    _DiscordSetActivity = this.wrap(super._SetRichPresence, async (
       /** @type {string} */ details,
       /** @type {string} */ state,
       /** @type {string} */ startTimestamp,
@@ -2172,10 +2134,8 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         }
       }
     }, this.unsupportedEngine)
-    _DiscordSetActivitySync = this._DiscordSetActivityBase
-    _DiscordSetActivity = this._DiscordSetActivityBase
 
-    _ActivateToWebPageBase = this.wrap(super._ActivateToWebPage, async (
+    _ActivateToWebPage = this.wrap(super._ActivateToWebPage, async (
       /** @type {string} */ url,
       /** @type {number} */ mode,
       /** @type {Tag} */ tag
@@ -2198,7 +2158,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         if (answer?.body.success === false) {
           throw new Error('Failed')
         }
-        this._ActivateToWebPageResultValue = answer?.body.success
+        this._ActivateToWebPageResultValue = answer?.body.success ?? false
         this._ActivateToWebPageErrorValue = ''
 
         await this.trigger(tag, [
@@ -2216,10 +2176,8 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         }
       }
     }, this.unsupportedEngine)
-    _ActivateToWebPage = this._ActivateToWebPageBase
-    _ActivateToWebPageSync = this._ActivateToWebPageBase
 
-    _ActivateToStoreBase = this.wrap(super._ActivateToStore, async (
+    _ActivateToStore = this.wrap(super._ActivateToStore, async (
       /** @type {number} */ appId,
       /** @type {number} */ flag,
       /** @type {Tag} */ tag
@@ -2242,7 +2200,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         if (answer?.body.success === false) {
           throw new Error('Failed')
         }
-        this._ActivateToStoreResultValue = answer?.body.success
+        this._ActivateToStoreResultValue = answer?.body.success ?? false
         this._ActivateToStoreErrorValue = ''
 
         await this.trigger(tag, [
@@ -2260,11 +2218,119 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         }
       }
     }, this.unsupportedEngine)
-    _ActivateToStore = this._ActivateToStoreBase
-    _ActivateToStoreSync = this._ActivateToStoreBase
+
+    _GetSteamUILanguage = this.wrap(super._GetSteamUILanguage, async (
+      /** @type {Tag} */ tag
+    ) => {
+      try {
+        /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').SteamRaw<'utils', 'steamUILanguage'>, 'input'>} */
+        const order = {
+          url: '/steam/raw',
+          body: {
+            namespace: 'utils',
+            method: 'getSteamUiLanguage',
+            args: [],
+          },
+        };
+        const answer = await this.ws?.sendAndWaitForResponse(order);
+        if (answer?.body.success === false) {
+          throw new Error('Failed')
+        }
+        this._GetSteamUILanguageResultValue = answer?.body.data ?? ''
+        this._GetSteamUILanguageErrorValue = ''
+
+        await this.trigger(tag, [
+          C3.Plugins.pipelabv2.Cnds.OnGetSteamUILanguageSuccess,
+          C3.Plugins.pipelabv2.Cnds.OnAnyGetSteamUILanguageSuccess
+        ])
+      } catch (e) {
+        if (e instanceof Error) {
+          this._GetSteamUILanguageErrorValue = e.message
+          this._GetSteamUILanguageResultValue = ''
+          await this.trigger(tag, [
+            C3.Plugins.pipelabv2.Cnds.OnGetSteamUILanguageError,
+            C3.Plugins.pipelabv2.Cnds.OnAnyGetSteamUILanguageError
+          ])
+        }
+      }
+    }, this.unsupportedEngine)
+
+    _GetAvailableGameLanguages = this.wrap(super._GetAvailableGameLanguages, async (
+      /** @type {Tag} */ tag
+    ) => {
+      try {
+        /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').SteamRaw<'apps', 'availableGameLanguages'>, 'input'>} */
+        const order = {
+          url: '/steam/raw',
+          body: {
+            namespace: 'apps',
+            method: 'availableGameLanguages',
+            args: [],
+          },
+        };
+        const answer = await this.ws?.sendAndWaitForResponse(order);
+        if (answer?.body.success === false) {
+          throw new Error('Failed')
+        }
+        // Assuming it returns an array of strings, join them
+        const data = answer?.body.data;
+        this._GetAvailableGameLanguagesResultValue = Array.isArray(data) ? data.join(',') : (data ?? '')
+        this._GetAvailableGameLanguagesErrorValue = ''
+
+        await this.trigger(tag, [
+          C3.Plugins.pipelabv2.Cnds.OnGetAvailableGameLanguagesSuccess,
+          C3.Plugins.pipelabv2.Cnds.OnAnyGetAvailableGameLanguagesSuccess
+        ])
+      } catch (e) {
+        if (e instanceof Error) {
+          this._GetAvailableGameLanguagesErrorValue = e.message
+          this._GetAvailableGameLanguagesResultValue = ''
+          await this.trigger(tag, [
+            C3.Plugins.pipelabv2.Cnds.OnGetAvailableGameLanguagesError,
+            C3.Plugins.pipelabv2.Cnds.OnAnyGetAvailableGameLanguagesError
+          ])
+        }
+      }
+    }, this.unsupportedEngine)
+
+    _GetCurrentGameLanguage = this.wrap(super._GetCurrentGameLanguage, async (
+      /** @type {Tag} */ tag
+    ) => {
+      try {
+        /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').SteamRaw<'apps', 'currentGameLanguage'>, 'input'>} */
+        const order = {
+          url: '/steam/raw',
+          body: {
+            namespace: 'apps',
+            method: 'currentGameLanguage',
+            args: [],
+          },
+        };
+        const answer = await this.ws?.sendAndWaitForResponse(order);
+        if (answer?.body.success === false) {
+          throw new Error('Failed')
+        }
+        this._GetCurrentGameLanguageResultValue = answer?.body.data ?? ''
+        this._GetCurrentGameLanguageErrorValue = ''
+
+        await this.trigger(tag, [
+          C3.Plugins.pipelabv2.Cnds.OnGetCurrentGameLanguageSuccess,
+          C3.Plugins.pipelabv2.Cnds.OnAnyGetCurrentGameLanguageSuccess
+        ])
+      } catch (e) {
+        if (e instanceof Error) {
+          this._GetCurrentGameLanguageErrorValue = e.message
+          this._GetCurrentGameLanguageResultValue = ''
+          await this.trigger(tag, [
+            C3.Plugins.pipelabv2.Cnds.OnGetCurrentGameLanguageError,
+            C3.Plugins.pipelabv2.Cnds.OnAnyGetCurrentGameLanguageError
+          ])
+        }
+      }
+    }, this.unsupportedEngine)
 
     // Steam Screenshots
-    _TriggerScreenshotBase = this.wrap(super._TriggerScreenshot, async (
+    _TriggerScreenshot = this.wrap(super._TriggerScreenshot, async (
       /** @type {Tag} */ tag
     ) => {
       try {
@@ -2299,8 +2365,6 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         }
       }
     }, this.unsupportedEngine)
-    _TriggerScreenshot = this._TriggerScreenshotBase
-    _TriggerScreenshotSync = this._TriggerScreenshotBase
 
     // Save Screenshot from URL
     _SaveScreenshotFromURLBase = this.wrap(super._SaveScreenshotFromURL, async (
@@ -2311,19 +2375,19 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         // Load the image from URL and convert to base64
         const img = new Image();
         img.crossOrigin = 'anonymous';
-        
+
         const imageLoaded = new Promise((resolve, reject) => {
           img.onload = () => resolve(img);
           img.onerror = (e) => reject(new Error('Failed to load image from URL'));
         });
-        
+
         img.src = url;
         await imageLoaded;
-        
+
         // Get dimensions
         const width = img.naturalWidth;
         const height = img.naturalHeight;
-        
+
         // Convert to base64 data URL
         const canvas = document.createElement('canvas');
         canvas.width = width;
@@ -2334,7 +2398,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         }
         ctx.drawImage(img, 0, 0);
         const dataUrl = canvas.toDataURL('image/png');
-        
+
         const order = {
           url: '/steam/screenshots/save',
           body: {
@@ -2412,7 +2476,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     _AddScreenshotToLibrarySync = this._AddScreenshotToLibraryBase
 
     // Steam DLC
-    _CheckDLCIsInstalledBase = this.wrap(super._CheckDLCIsInstalled, async (
+    _CheckDLCIsInstalled = this.wrap(super._CheckDLCIsInstalled, async (
       /** @type {number} */ appId,
       /** @type {Tag} */ tag
     ) => {
@@ -2448,8 +2512,6 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         }
       }
     }, this.unsupportedEngine)
-    _CheckDLCIsInstalled = this._CheckDLCIsInstalledBase
-    _CheckDLCIsInstalledSync = this._CheckDLCIsInstalledBase
 
     // Steam Workshop
     /** @type {Map<string, any>} */
@@ -2506,7 +2568,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
       return answer?.body.data
     }
 
-    _CreateWorkshopItemBase = this.wrap(super._CreateWorkshopItem, async (
+    _CreateWorkshopItem = this.wrap(super._CreateWorkshopItem, async (
       /** @type {number} */ appID,
       /** @type {Tag} */ tag
     ) => {
@@ -2547,10 +2609,8 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         }
       }
     }, this.unsupportedEngine)
-    _CreateWorkshopItem = this._CreateWorkshopItemBase
-    _CreateWorkshopItemSync = this._CreateWorkshopItemBase
 
-    _UpdateWorkshopItemBase = this.wrap(super._UpdateWorkshopItem, async (
+    _UpdateWorkshopItem = this.wrap(super._UpdateWorkshopItem, async (
       /** @type {number} */ appID,
       /** @type {string} */ itemId,
       /** @type {boolean} */ updateTitle,
@@ -2638,10 +2698,8 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         }
       }
     }, this.unsupportedEngine)
-    _UpdateWorkshopItem = this._UpdateWorkshopItemBase
-    _UpdateWorkshopItemSync = this._UpdateWorkshopItemBase
 
-    _GetSubscribedItemsWithMetadataBase = this.wrap(super._GetSubscribedItemsWithMetadata, async (
+    _GetSubscribedItemsWithMetadata = this.wrap(super._GetSubscribedItemsWithMetadata, async (
       /** @type {Tag} */ tag
     ) => {
       try {
@@ -2728,10 +2786,8 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         }
       }
     }, this.unsupportedEngine)
-    _GetSubscribedItemsWithMetadata = this._GetSubscribedItemsWithMetadataBase
-    _GetSubscribedItemsWithMetadataSync = this._GetSubscribedItemsWithMetadataBase
 
-    _DownloadWorkshopItemBase = this.wrap(super._DownloadWorkshopItem, async (
+    _DownloadWorkshopItem = this.wrap(super._DownloadWorkshopItem, async (
       /** @type {string} */ itemId,
       /** @type {boolean} */ highPriority,
       /** @type {Tag} */ tag
@@ -2767,10 +2823,8 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         }
       }
     }, this.unsupportedEngine)
-    _DownloadWorkshopItem = this._DownloadWorkshopItemBase
-    _DownloadWorkshopItemSync = this._DownloadWorkshopItemBase
 
-    _DeleteWorkshopItemBase = this.wrap(super._DeleteWorkshopItem, async (
+    _DeleteWorkshopItem = this.wrap(super._DeleteWorkshopItem, async (
       /** @type {string} */ itemId,
       /** @type {Tag} */ tag
     ) => {
@@ -2803,10 +2857,8 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         }
       }
     }, this.unsupportedEngine)
-    _DeleteWorkshopItem = this._DeleteWorkshopItemBase
-    _DeleteWorkshopItemSync = this._DeleteWorkshopItemBase
 
-    _SubscribeWorkshopItemBase = this.wrap(super._SubscribeWorkshopItem, async (
+    _SubscribeWorkshopItem = this.wrap(super._SubscribeWorkshopItem, async (
       /** @type {string} */ itemId,
       /** @type {Tag} */ tag
     ) => {
@@ -2839,10 +2891,8 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         }
       }
     }, this.unsupportedEngine)
-    _SubscribeWorkshopItem = this._SubscribeWorkshopItemBase
-    _SubscribeWorkshopItemSync = this._SubscribeWorkshopItemBase
 
-    _UnsubscribeWorkshopItemBase = this.wrap(super._UnsubscribeWorkshopItem, async (
+    _UnsubscribeWorkshopItem = this.wrap(super._UnsubscribeWorkshopItem, async (
       /** @type {string} */ itemId,
       /** @type {Tag} */ tag
     ) => {
@@ -2875,10 +2925,8 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         }
       }
     }, this.unsupportedEngine)
-    _UnsubscribeWorkshopItem = this._UnsubscribeWorkshopItemBase
-    _UnsubscribeWorkshopItemSync = this._UnsubscribeWorkshopItemBase
 
-    _GetWorkshopItemStateBase = this.wrap(super._GetWorkshopItemState, async (
+    _GetWorkshopItemState = this.wrap(super._GetWorkshopItemState, async (
       /** @type {string} */ itemId,
       /** @type {Tag} */ tag
     ) => {
@@ -2898,7 +2946,6 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         this._GetWorkshopItemStateErrorValue = ''
 
         // Update or create item in map with state data
-        const existingItem = this._workshopItemsMap.get(itemId)
         if (existingItem) {
           existingItem.state = state
         } else {
@@ -2920,10 +2967,8 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         }
       }
     }, this.unsupportedEngine)
-    _GetWorkshopItemState = this._GetWorkshopItemStateBase
-    _GetWorkshopItemStateSync = this._GetWorkshopItemStateBase
 
-    _GetWorkshopItemInstallInfoBase = this.wrap(super._GetWorkshopItemInstallInfo, async (
+    _GetWorkshopItemInstallInfo = this.wrap(super._GetWorkshopItemInstallInfo, async (
       /** @type {string} */ itemId,
       /** @type {Tag} */ tag
     ) => {
@@ -2944,7 +2989,6 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         this._GetWorkshopItemInstallInfoErrorValue = ''
 
         // Update or create item in map with install info
-        const existingItem = this._workshopItemsMap.get(itemId)
         if (existingItem) {
           existingItem.installInfo = installInfo
         } else {
@@ -2966,10 +3010,8 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         }
       }
     }, this.unsupportedEngine)
-    _GetWorkshopItemInstallInfo = this._GetWorkshopItemInstallInfoBase
-    _GetWorkshopItemInstallInfoSync = this._GetWorkshopItemInstallInfoBase
 
-    _GetWorkshopItemDownloadInfoBase = this.wrap(super._GetWorkshopItemDownloadInfo, async (
+    _GetWorkshopItemDownloadInfo = this.wrap(super._GetWorkshopItemDownloadInfo, async (
       /** @type {string} */ itemId,
       /** @type {Tag} */ tag
     ) => {
@@ -2990,7 +3032,6 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         this._GetWorkshopItemDownloadInfoErrorValue = ''
 
         // Update or create item in map with download info
-        const existingItem = this._workshopItemsMap.get(itemId)
         if (existingItem) {
           existingItem.downloadInfo = downloadInfo
         } else {
@@ -3012,10 +3053,8 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         }
       }
     }, this.unsupportedEngine)
-    _GetWorkshopItemDownloadInfo = this._GetWorkshopItemDownloadInfoBase
-    _GetWorkshopItemDownloadInfoSync = this._GetWorkshopItemDownloadInfoBase
 
-    _GetWorkshopItemBase = this.wrap(super._GetWorkshopItem, async (
+    _GetWorkshopItem = this.wrap(super._GetWorkshopItem, async (
       /** @type {string} */ itemId,
       /** @type {Tag} */ tag
     ) => {
@@ -3036,7 +3075,6 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
 
         if (item) {
           const itemIdStr = item.publishedFileId.toString()
-          const existingItem = this._workshopItemsMap.get(itemIdStr)
           if (existingItem) {
             this._workshopItemsMap.set(itemIdStr, { ...existingItem, ...item })
           } else {
@@ -3059,10 +3097,8 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         }
       }
     }, this.unsupportedEngine)
-    _GetWorkshopItem = this._GetWorkshopItemBase
-    _GetWorkshopItemSync = this._GetWorkshopItemBase
 
-    _GetWorkshopItemsBase = this.wrap(super._GetWorkshopItems, async (
+    _GetWorkshopItems = this.wrap(super._GetWorkshopItems, async (
       /** @type {string} */ itemIds,
       /** @type {Tag} */ tag
     ) => {
@@ -3096,7 +3132,6 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         for (const item of items) {
           if (!item) continue
           const itemIdStr = item.publishedFileId.toString()
-          const existingItem = this._workshopItemsMap.get(itemIdStr)
           if (existingItem) {
             this._workshopItemsMap.set(itemIdStr, { ...existingItem, ...item })
           } else {
@@ -3119,10 +3154,8 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         }
       }
     }, this.unsupportedEngine)
-    _GetWorkshopItems = this._GetWorkshopItemsBase
-    _GetWorkshopItemsSync = this._GetWorkshopItemsBase
 
-    _GetSubscribedWorkshopItemsBase = this.wrap(super._GetSubscribedWorkshopItems, async (
+    _GetSubscribedWorkshopItems = this.wrap(super._GetSubscribedWorkshopItems, async (
       /** @type {Tag} */ tag
     ) => {
       try {
@@ -3159,10 +3192,8 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         }
       }
     }, this.unsupportedEngine)
-    _GetSubscribedWorkshopItems = this._GetSubscribedWorkshopItemsBase
-    _GetSubscribedWorkshopItemsSync = this._GetSubscribedWorkshopItemsBase
 
-    _GetWorkshopItemWithMetadataBase = this.wrap(super._GetWorkshopItemWithMetadata, async (
+    _GetWorkshopItemWithMetadata = this.wrap(super._GetWorkshopItemWithMetadata, async (
       /** @type {string} */ itemId,
       /** @type {Tag} */ tag
     ) => {
@@ -3219,10 +3250,8 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         }
       }
     }, this.unsupportedEngine)
-    _GetWorkshopItemWithMetadata = this._GetWorkshopItemWithMetadataBase
-    _GetWorkshopItemWithMetadataSync = this._GetWorkshopItemWithMetadataBase
 
-    _GetWorkshopItemsWithMetadataBase = this.wrap(super._GetWorkshopItemsWithMetadata, async (
+    _GetWorkshopItemsWithMetadata = this.wrap(super._GetWorkshopItemsWithMetadata, async (
       /** @type {string} */ itemIds,
       /** @type {Tag} */ tag
     ) => {
@@ -3293,8 +3322,6 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         }
       }
     }, this.unsupportedEngine)
-    _GetWorkshopItemsWithMetadata = this._GetWorkshopItemsWithMetadataBase
-    _GetWorkshopItemsWithMetadataSync = this._GetWorkshopItemsWithMetadataBase
 
     // #region Cnds
     _OnInitializeSuccess = this.wrap(super._OnInitializeSuccess, (/** @type {Tag} */ tag) => {
@@ -3670,6 +3697,29 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     _OnActivateToStoreError = this.wrap(super._OnActivateToStoreError, (/** @type {Tag} */ tag) => this._currentTag === tag)
     _OnAnyActivateToStoreError = this.wrap(super._OnAnyActivateToStoreError, () => true)
 
+    _OnGetSteamUILanguageSuccess = this.wrap(super._OnGetSteamUILanguageSuccess, (/** @type {Tag} */ tag) => this._currentTag === tag)
+    _OnAnyGetSteamUILanguageSuccess = this.wrap(super._OnAnyGetSteamUILanguageSuccess, () => true)
+    _OnGetSteamUILanguageError = this.wrap(super._OnGetSteamUILanguageError, (/** @type {Tag} */ tag) => this._currentTag === tag)
+    _OnAnyGetSteamUILanguageError = this.wrap(super._OnAnyGetSteamUILanguageError, () => true)
+
+    _OnGetAvailableGameLanguagesSuccess = this.wrap(super._OnGetAvailableGameLanguagesSuccess, (/** @type {Tag} */ tag) => this._currentTag === tag)
+    _OnAnyGetAvailableGameLanguagesSuccess = this.wrap(super._OnAnyGetAvailableGameLanguagesSuccess, () => true)
+    _OnGetAvailableGameLanguagesError = this.wrap(super._OnGetAvailableGameLanguagesError, (/** @type {Tag} */ tag) => this._currentTag === tag)
+    _OnAnyGetAvailableGameLanguagesError = this.wrap(super._OnAnyGetAvailableGameLanguagesError, () => true)
+
+    _OnGetCurrentGameLanguageSuccess = this.wrap(super._OnGetCurrentGameLanguageSuccess, (/** @type {Tag} */ tag) => this._currentTag === tag)
+    _OnAnyGetCurrentGameLanguageSuccess = this.wrap(super._OnAnyGetCurrentGameLanguageSuccess, () => true)
+    _OnGetCurrentGameLanguageError = this.wrap(super._OnGetCurrentGameLanguageError, (/** @type {Tag} */ tag) => this._currentTag === tag)
+    _OnAnyGetCurrentGameLanguageError = this.wrap(super._OnAnyGetCurrentGameLanguageError, () => true)
+
+    _OnOverlayActivated = this.wrap(super._OnOverlayActivated, () => {
+      return true;
+    })
+
+    _OnOverlayDeactivated = this.wrap(super._OnOverlayDeactivated, () => {
+      return true;
+    })
+
     _OnTriggerScreenshotSuccess = this.wrap(super._OnTriggerScreenshotSuccess, (/** @type {Tag} */ tag) => this._currentTag === tag)
     _OnAnyTriggerScreenshotSuccess = this.wrap(super._OnAnyTriggerScreenshotSuccess, () => true)
     _OnTriggerScreenshotError = this.wrap(super._OnTriggerScreenshotError, (/** @type {Tag} */ tag) => this._currentTag === tag)
@@ -3903,9 +3953,15 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     })
 
     _IsEngine = this.exprs(super._IsEngine, (engine) => {
-      if (engine === 0 && this._engine === 'electron') return true
-      if (engine === 1 && this._engine === 'tauri') return true
+      const _engine = this.pipelabInfos?.engine ?? ''
+
+      if (engine === 0) return _engine === 'electron'
+      if (engine === 1) return _engine === 'tauri'
       return false
+    })
+
+    _IsPipelab = this.exprs(super._IsPipelab, () => {
+      return this.pipelabInfos?.isPipelab ?? false
     })
 
     _LastPathExists = this.exprs(super._LastPathExists, () => {
@@ -3945,6 +4001,10 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     })
     _SteamAppId = this.exprs(super._SteamAppId, () => {
       return this._steam_AppId
+    })
+
+    _IsOverlayActive = this.wrap(super._IsOverlayActive, () => {
+      return this._lastOverlayState ? 1 : 0
     })
 
     _InitializeError = this.exprs(super._InitializeError, () => {
@@ -4240,6 +4300,27 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     })
     _ActivateToStoreResult = this.exprs(super._ActivateToStoreResult, () => {
       return this._ActivateToStoreResultValue
+    })
+
+    _GetSteamUILanguageError = this.exprs(super._GetSteamUILanguageError, () => {
+      return this._GetSteamUILanguageErrorValue
+    })
+    _GetSteamUILanguageResult = this.exprs(super._GetSteamUILanguageResult, () => {
+      return this._GetSteamUILanguageResultValue
+    })
+
+    _GetAvailableGameLanguagesError = this.exprs(super._GetAvailableGameLanguagesError, () => {
+      return this._GetAvailableGameLanguagesErrorValue
+    })
+    _GetAvailableGameLanguagesResult = this.exprs(super._GetAvailableGameLanguagesResult, () => {
+      return this._GetAvailableGameLanguagesResultValue
+    })
+
+    _GetCurrentGameLanguageError = this.exprs(super._GetCurrentGameLanguageError, () => {
+      return this._GetCurrentGameLanguageErrorValue
+    })
+    _GetCurrentGameLanguageResult = this.exprs(super._GetCurrentGameLanguageResult, () => {
+      return this._GetCurrentGameLanguageResultValue
     })
 
     _TriggerScreenshotError = this.exprs(super._TriggerScreenshotError, () => {

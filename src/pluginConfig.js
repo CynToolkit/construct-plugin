@@ -25,7 +25,7 @@ const ACEGenerator = (name, data) => {
   const { ...act } = data
 
   const syncParams = ([
-    ...act.params ?? [],
+    ...(act.params ?? []),
     tagParameter,
   ])
 
@@ -33,15 +33,24 @@ const ACEGenerator = (name, data) => {
   const actions = /** @type {const} */ ({
     [`${name}Sync`]: ({
       ...act,
-      forward: `_${name}Sync`,
+      forward: `_${name}`,
       params: syncParams,
-      description: `${act.description} (synchronous)`,
-      displayText: `${act.displayText} ([b]{${act.params?.length}}[/b]) (synchronous)`,
-      listName: `${act.listName} (synchronous)`,
+      displayText: `[b]DEPRECATED[/b] - ${act.displayText} (tag "{${act.params?.length}}")`,
+      isDeprecated: true,
     }),
     [name]: ({
       ...act,
       forward: `_${name}`,
+      displayText: `[b]DEPRECATED[/b] - ${act.displayText}`,
+      isAsync: true,
+      isDeprecated: true,
+    }),
+    [`${name}V2`]: ({
+      ...act,
+      forward: `_${name}`,
+      params: syncParams,
+      displayText: `${act.displayText} (tag {${act.params?.length}})`,
+      isDeprecated: act.deprecated,
       isAsync: true,
     }),
   })
@@ -1212,6 +1221,36 @@ const ActivateToStore = ACEGenerator("ActivateToStore", /** @type {const} */({
   description: "Activates the Steam Overlay to the Steam store page for the provided app",
 }))
 
+const GetSteamUILanguage = ACEGenerator("GetSteamUILanguage", /** @type {const} */({
+  category: "steam",
+  highlight: false,
+  deprecated: false,
+  params: [],
+  listName: "Get Steam UI language",
+  displayText: "Get Steam UI language",
+  description: "Get the language of the Steam UI",
+}))
+
+const GetAvailableGameLanguages = ACEGenerator("GetAvailableGameLanguages", /** @type {const} */({
+  category: "steam",
+  highlight: false,
+  deprecated: false,
+  params: [],
+  listName: "Get available game languages",
+  displayText: "Get available game languages",
+  description: "Get a list of available languages for the game",
+}))
+
+const GetCurrentGameLanguage = ACEGenerator("GetCurrentGameLanguage", /** @type {const} */({
+  category: "steam",
+  highlight: false,
+  deprecated: false,
+  params: [],
+  listName: "Get current game language",
+  displayText: "Get current game language",
+  description: "Get the current language of the game",
+}))
+
 // Steam Screenshots
 const TriggerScreenshot = ACEGenerator("TriggerScreenshot", /** @type {const} */({
   category: "steam",
@@ -1845,6 +1884,9 @@ const Config = /** @type {const} */({
     ...LeaderboardDownloadScore.actions,
     ...ActivateToWebPage.actions,
     ...ActivateToStore.actions,
+    ...GetSteamUILanguage.actions,
+    ...GetAvailableGameLanguages.actions,
+    ...GetCurrentGameLanguage.actions,
     ...TriggerScreenshot.actions,
     ...SaveScreenshotFromURL.actions,
     ...AddScreenshotToLibrary.actions,
@@ -1914,6 +1956,31 @@ const Config = /** @type {const} */({
     ...LeaderboardDownloadScore.conditions,
     ...ActivateToWebPage.conditions,
     ...ActivateToStore.conditions,
+    ...GetSteamUILanguage.conditions,
+    ...GetAvailableGameLanguages.conditions,
+    ...GetCurrentGameLanguage.conditions,
+    OnOverlayActivated: {
+      category: "steam",
+      forward: "_OnOverlayActivated",
+      highlight: false,
+      deprecated: false,
+      description: "Triggered when the Steam overlay is activated.",
+      displayText: "On overlay activated",
+      listName: "On overlay activated",
+      isTrigger: true,
+      params: []
+    },
+    OnOverlayDeactivated: {
+      category: "steam",
+      forward: "_OnOverlayDeactivated",
+      highlight: false,
+      deprecated: false,
+      description: "Triggered when the Steam overlay is deactivated.",
+      displayText: "On overlay deactivated",
+      listName: "On overlay deactivated",
+      isTrigger: true,
+      params: []
+    },
     ...TriggerScreenshot.conditions,
     ...SaveScreenshotFromURL.conditions,
     ...AddScreenshotToLibrary.conditions,
@@ -1953,6 +2020,17 @@ const Config = /** @type {const} */({
         }
       ],
       listName: "Is engine",
+    },
+    IsPipelab: {
+      category: "general",
+      forward: "_IsPipelab",
+      highlight: true,
+      deprecated: false,
+      description: "Return true if the Pipelab is used to run the game",
+      displayText: "Is Pipelab",
+      params: [
+      ],
+      listName: "Is Pipelab",
     },
 
     IsInitialized: {
@@ -2004,6 +2082,16 @@ const Config = /** @type {const} */({
       isInvertible: true,
       isTrigger: false,
     },
+    IsOverlayActive: {
+      category: "steam",
+      forward: "_IsOverlayActive",
+      highlight: false,
+      isInvertible: true,
+      displayText: "Is overlay active",
+      listName: "Is overlay active",
+      params: [],
+      description: "Return true if the Steam overlay is currently active.",
+    },
   },
   Exps: {
     ...Initialize.expressions,
@@ -2054,6 +2142,9 @@ const Config = /** @type {const} */({
     ...LeaderboardDownloadScore.expressions,
     ...ActivateToWebPage.expressions,
     ...ActivateToStore.expressions,
+    ...GetSteamUILanguage.expressions,
+    ...GetAvailableGameLanguages.expressions,
+    ...GetCurrentGameLanguage.expressions,
     ...TriggerScreenshot.expressions,
     ...SaveScreenshotFromURL.expressions,
     ...AddScreenshotToLibrary.expressions,
