@@ -151,6 +151,10 @@ When Download type is Around the user, the offsets are the amount of entries aro
 | Activate Steam overlay to store | Activates the Steam Overlay to the Steam store page for the provided app | App ID             *(number)* <br>Flag             *(combo)* <br> |
 | Trigger screenshot (synchronous) | Captures the current screen and saves to Steam screenshot library (synchronous) | Tag             *(string)* <br> |
 | Trigger screenshot | Captures the current screen and saves to Steam screenshot library |  |
+| Save screenshot from URL (synchronous) | Saves an image from a URL as a Steam screenshot. The image will be loaded, converted to base64, and its dimensions calculated automatically. (synchronous) | URL             *(string)* <br>Tag             *(string)* <br> |
+| Save screenshot from URL | Saves an image from a URL as a Steam screenshot. The image will be loaded, converted to base64, and its dimensions calculated automatically. | URL             *(string)* <br> |
+| Add screenshot to library (synchronous) | Adds an existing screenshot file to the Steam screenshot library. Returns the handle of the screenshot. (synchronous) | Filename             *(string)* <br>Thumbnail Filename             *(string)* <br>Width             *(number)* <br>Height             *(number)* <br>Tag             *(string)* <br> |
+| Add screenshot to library | Adds an existing screenshot file to the Steam screenshot library. Returns the handle of the screenshot. | Filename             *(string)* <br>Thumbnail Filename             *(string)* <br>Width             *(number)* <br>Height             *(number)* <br> |
 | Check DLC is installed (synchronous) | Checks if the user owns and has installed a specific DLC (synchronous) | DLC App ID             *(number)* <br>Tag             *(string)* <br> |
 | Check DLC is installed | Checks if the user owns and has installed a specific DLC | DLC App ID             *(number)* <br> |
 | Create workshop item (synchronous) | Creates a new workshop item for the specified Steam App ID and returns its ID (synchronous) | App ID             *(number)* <br>Tag             *(string)* <br> |
@@ -385,6 +389,14 @@ When Download type is Around the user, the offsets are the amount of entries aro
 | On any "TriggerScreenshot" success | Trigger when any of the "TriggerScreenshot" are executed with success. |  |
 | On "TriggerScreenshot" error | Trigger when the "TriggerScreenshot" failed to execute. | Tag *(string)* <br> |
 | On any "TriggerScreenshot" error | Trigger when any of the "TriggerScreenshot" failed to execute. |  |
+| On "SaveScreenshotFromURL" success | Trigger when the "SaveScreenshotFromURL" is executed with success. | Tag *(string)* <br> |
+| On any "SaveScreenshotFromURL" success | Trigger when any of the "SaveScreenshotFromURL" are executed with success. |  |
+| On "SaveScreenshotFromURL" error | Trigger when the "SaveScreenshotFromURL" failed to execute. | Tag *(string)* <br> |
+| On any "SaveScreenshotFromURL" error | Trigger when any of the "SaveScreenshotFromURL" failed to execute. |  |
+| On "AddScreenshotToLibrary" success | Trigger when the "AddScreenshotToLibrary" is executed with success. | Tag *(string)* <br> |
+| On any "AddScreenshotToLibrary" success | Trigger when any of the "AddScreenshotToLibrary" are executed with success. |  |
+| On "AddScreenshotToLibrary" error | Trigger when the "AddScreenshotToLibrary" failed to execute. | Tag *(string)* <br> |
+| On any "AddScreenshotToLibrary" error | Trigger when any of the "AddScreenshotToLibrary" failed to execute. |  |
 | On "CheckDLCIsInstalled" success | Trigger when the "CheckDLCIsInstalled" is executed with success. | Tag *(string)* <br> |
 | On any "CheckDLCIsInstalled" success | Trigger when any of the "CheckDLCIsInstalled" are executed with success. |  |
 | On "CheckDLCIsInstalled" error | Trigger when the "CheckDLCIsInstalled" failed to execute. | Tag *(string)* <br> |
@@ -557,6 +569,10 @@ When Download type is Around the user, the offsets are the amount of entries aro
 | ActivateToStoreResult | The result of the "ActivateToStore last call" | string |  | 
 | TriggerScreenshotError | The error of the "TriggerScreenshot last call" | string |  | 
 | TriggerScreenshotResult | The result of the "TriggerScreenshot last call" | string |  | 
+| SaveScreenshotFromURLError | The error of the "SaveScreenshotFromURL last call" | string |  | 
+| SaveScreenshotFromURLResult | The result of the "SaveScreenshotFromURL last call" | string |  | 
+| AddScreenshotToLibraryError | The error of the "AddScreenshotToLibrary last call" | string |  | 
+| AddScreenshotToLibraryResult | The result of the "AddScreenshotToLibrary last call" | string |  | 
 | CheckDLCIsInstalledError | The error of the "CheckDLCIsInstalled last call" | string |  | 
 | CheckDLCIsInstalledResult | The result of the "CheckDLCIsInstalled last call" | string |  | 
 | CreateWorkshopItemError | The error of the "CreateWorkshopItem last call" | string |  | 

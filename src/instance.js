@@ -2302,6 +2302,115 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     _TriggerScreenshot = this._TriggerScreenshotBase
     _TriggerScreenshotSync = this._TriggerScreenshotBase
 
+    // Save Screenshot from URL
+    _SaveScreenshotFromURLBase = this.wrap(super._SaveScreenshotFromURL, async (
+      /** @type {string} */ url,
+      /** @type {Tag} */ tag
+    ) => {
+      try {
+        // Load the image from URL and convert to base64
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        
+        const imageLoaded = new Promise((resolve, reject) => {
+          img.onload = () => resolve(img);
+          img.onerror = (e) => reject(new Error('Failed to load image from URL'));
+        });
+        
+        img.src = url;
+        await imageLoaded;
+        
+        // Get dimensions
+        const width = img.naturalWidth;
+        const height = img.naturalHeight;
+        
+        // Convert to base64 data URL
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+          throw new Error('Failed to get canvas context');
+        }
+        ctx.drawImage(img, 0, 0);
+        const dataUrl = canvas.toDataURL('image/png');
+        
+        const order = {
+          url: '/steam/screenshots/save',
+          body: {
+            dataUrl,
+            width,
+            height,
+          },
+        };
+        const answer = await this.ws?.sendAndWaitForResponse(order);
+        if (answer?.body.success === false) {
+          throw new Error(answer?.body.error || 'Failed to save screenshot')
+        }
+        this._SaveScreenshotFromURLResultValue = answer?.body.data ?? ''
+        this._SaveScreenshotFromURLErrorValue = ''
+
+        await this.trigger(tag, [
+          C3.Plugins.pipelabv2.Cnds.OnSaveScreenshotFromURLSuccess,
+          C3.Plugins.pipelabv2.Cnds.OnAnySaveScreenshotFromURLSuccess
+        ])
+      } catch (e) {
+        if (e instanceof Error) {
+          this._SaveScreenshotFromURLErrorValue = e.message
+          this._SaveScreenshotFromURLResultValue = ''
+          await this.trigger(tag, [
+            C3.Plugins.pipelabv2.Cnds.OnSaveScreenshotFromURLError,
+            C3.Plugins.pipelabv2.Cnds.OnAnySaveScreenshotFromURLError
+          ])
+        }
+      }
+    }, this.unsupportedEngine)
+    _SaveScreenshotFromURL = this._SaveScreenshotFromURLBase
+    _SaveScreenshotFromURLSync = this._SaveScreenshotFromURLBase
+
+    // Add Screenshot to Library
+    _AddScreenshotToLibraryBase = this.wrap(super._AddScreenshotToLibrary, async (
+      /** @type {string} */ filename,
+      /** @type {string} */ thumbnailFilename,
+      /** @type {number} */ width,
+      /** @type {number} */ height,
+      /** @type {Tag} */ tag
+    ) => {
+      try {
+        /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').SteamRaw<'screenshots', 'addScreenshotToLibrary'>, 'input'>} */
+        const order = {
+          url: '/steam/raw',
+          body: {
+            namespace: 'screenshots',
+            method: 'addScreenshotToLibrary',
+            args: [filename, thumbnailFilename || null, width, height],
+          },
+        };
+        const answer = await this.ws?.sendAndWaitForResponse(order);
+        if (answer?.body.success === false) {
+          throw new Error(answer?.body.error || 'Failed to add screenshot to library')
+        }
+        this._AddScreenshotToLibraryResultValue = answer?.body.data ?? -1
+        this._AddScreenshotToLibraryErrorValue = ''
+
+        await this.trigger(tag, [
+          C3.Plugins.pipelabv2.Cnds.OnAddScreenshotToLibrarySuccess,
+          C3.Plugins.pipelabv2.Cnds.OnAnyAddScreenshotToLibrarySuccess
+        ])
+      } catch (e) {
+        if (e instanceof Error) {
+          this._AddScreenshotToLibraryErrorValue = e.message
+          this._AddScreenshotToLibraryResultValue = -1
+          await this.trigger(tag, [
+            C3.Plugins.pipelabv2.Cnds.OnAddScreenshotToLibraryError,
+            C3.Plugins.pipelabv2.Cnds.OnAnyAddScreenshotToLibraryError
+          ])
+        }
+      }
+    }, this.unsupportedEngine)
+    _AddScreenshotToLibrary = this._AddScreenshotToLibraryBase
+    _AddScreenshotToLibrarySync = this._AddScreenshotToLibraryBase
+
     // Steam DLC
     _CheckDLCIsInstalledBase = this.wrap(super._CheckDLCIsInstalled, async (
       /** @type {number} */ appId,
@@ -3566,6 +3675,16 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     _OnTriggerScreenshotError = this.wrap(super._OnTriggerScreenshotError, (/** @type {Tag} */ tag) => this._currentTag === tag)
     _OnAnyTriggerScreenshotError = this.wrap(super._OnAnyTriggerScreenshotError, () => true)
 
+    _OnSaveScreenshotFromURLSuccess = this.wrap(super._OnSaveScreenshotFromURLSuccess, (/** @type {Tag} */ tag) => this._currentTag === tag)
+    _OnAnySaveScreenshotFromURLSuccess = this.wrap(super._OnAnySaveScreenshotFromURLSuccess, () => true)
+    _OnSaveScreenshotFromURLError = this.wrap(super._OnSaveScreenshotFromURLError, (/** @type {Tag} */ tag) => this._currentTag === tag)
+    _OnAnySaveScreenshotFromURLError = this.wrap(super._OnAnySaveScreenshotFromURLError, () => true)
+
+    _OnAddScreenshotToLibrarySuccess = this.wrap(super._OnAddScreenshotToLibrarySuccess, (/** @type {Tag} */ tag) => this._currentTag === tag)
+    _OnAnyAddScreenshotToLibrarySuccess = this.wrap(super._OnAnyAddScreenshotToLibrarySuccess, () => true)
+    _OnAddScreenshotToLibraryError = this.wrap(super._OnAddScreenshotToLibraryError, (/** @type {Tag} */ tag) => this._currentTag === tag)
+    _OnAnyAddScreenshotToLibraryError = this.wrap(super._OnAnyAddScreenshotToLibraryError, () => true)
+
     _OnCheckDLCIsInstalledSuccess = this.wrap(super._OnCheckDLCIsInstalledSuccess, (/** @type {Tag} */ tag) => this._currentTag === tag)
     _OnAnyCheckDLCIsInstalledSuccess = this.wrap(super._OnAnyCheckDLCIsInstalledSuccess, () => true)
     _OnCheckDLCIsInstalledError = this.wrap(super._OnCheckDLCIsInstalledError, (/** @type {Tag} */ tag) => this._currentTag === tag)
@@ -4128,6 +4247,20 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     })
     _TriggerScreenshotResult = this.exprs(super._TriggerScreenshotResult, () => {
       return this._TriggerScreenshotResultValue
+    })
+
+    _SaveScreenshotFromURLError = this.exprs(super._SaveScreenshotFromURLError, () => {
+      return this._SaveScreenshotFromURLErrorValue
+    })
+    _SaveScreenshotFromURLResult = this.exprs(super._SaveScreenshotFromURLResult, () => {
+      return this._SaveScreenshotFromURLResultValue
+    })
+
+    _AddScreenshotToLibraryError = this.exprs(super._AddScreenshotToLibraryError, () => {
+      return this._AddScreenshotToLibraryErrorValue
+    })
+    _AddScreenshotToLibraryResult = this.exprs(super._AddScreenshotToLibraryResult, () => {
+      return this._AddScreenshotToLibraryResultValue
     })
 
     _CheckDLCIsInstalledError = this.exprs(super._CheckDLCIsInstalledError, () => {
