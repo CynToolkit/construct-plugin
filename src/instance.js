@@ -2367,7 +2367,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     }, this.unsupportedEngine)
 
     // Save Screenshot from URL
-    _SaveScreenshotFromURLBase = this.wrap(super._SaveScreenshotFromURL, async (
+    _SaveScreenshotFromURL = this.wrap(super._SaveScreenshotFromURL, async (
       /** @type {string} */ url,
       /** @type {Tag} */ tag
     ) => {
@@ -2429,11 +2429,9 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         }
       }
     }, this.unsupportedEngine)
-    _SaveScreenshotFromURL = this._SaveScreenshotFromURLBase
-    _SaveScreenshotFromURLSync = this._SaveScreenshotFromURLBase
 
     // Add Screenshot to Library
-    _AddScreenshotToLibraryBase = this.wrap(super._AddScreenshotToLibrary, async (
+    _AddScreenshotToLibrary = this.wrap(super._AddScreenshotToLibrary, async (
       /** @type {string} */ filename,
       /** @type {string} */ thumbnailFilename,
       /** @type {number} */ width,
@@ -2472,8 +2470,6 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         }
       }
     }, this.unsupportedEngine)
-    _AddScreenshotToLibrary = this._AddScreenshotToLibraryBase
-    _AddScreenshotToLibrarySync = this._AddScreenshotToLibraryBase
 
     // Steam DLC
     _CheckDLCIsInstalled = this.wrap(super._CheckDLCIsInstalled, async (
