@@ -960,6 +960,59 @@ const CheckAchievementActivationState = ACEGenerator("CheckAchievementActivation
   displayText: "Check achievement [b]{0}[/b] activation state",
   description: "Check the activation state of a steam achievement",
 }))
+const GetFriends = ACEGenerator("GetFriends", /** @type {const} */({
+  category: "steam",
+  highlight: false,
+  deprecated: false,
+  params: [
+    {
+      id: 'flags',
+      desc: "The flags to filter friends by.",
+      name: "Flags",
+      type: 'combo',
+      items: [
+        { "none": "None" },
+        { "blocked": "Blocked" },
+        { "friendshipRequested": "Friendship requested" },
+        { "immediate": "Immediate" },
+        { "clanMember": "Clan member" },
+        { "onGameServer": "On game server" },
+        { "requestingFriendship": "Requesting friendship" },
+        { "requestingInfo": "Requesting info" },
+        { "all": "All" },
+      ]
+    },
+    {
+      id: 'output',
+      desc: "The output object",
+      name: "Output",
+      type: 'object',
+      allowedPluginIds: ["Json"]
+    },
+  ],
+  listName: "Get friends",
+  displayText: "Get friends (flags: {0}) into {1}",
+  description: "Get an array of friends matching the provided flags.",
+}))
+
+const GetFriendName = ACEGenerator("GetFriendName", /** @type {const} */({
+  category: "steam",
+  highlight: false,
+  deprecated: false,
+  params: [
+    {
+      id: 'steamId64',
+      desc: "The Steam ID of the friend.",
+      name: "Steam ID",
+      type: 'string',
+      initialValue: "\"\"",
+    }
+  ],
+  listName: "Get friend name",
+  displayText: "Get friend name of [b]{0}[/b]",
+  description: "Get the persona name of a friend.",
+}))
+
 const SetRichPresence = ACEGenerator("SetRichPresence", /** @type {const} */({
   category: "steam",
   displayText: "Set rich presence {0} to {1}",
@@ -1718,6 +1771,7 @@ const Config = /** @type {const} */({
   githubUrl: "https://github.com/CynToolkit/construct-plugin", // displays latest release version in auto-generated docs
   icon: "icon.png", // defaults to "icon.svg" if omitted
   type: "object", // world, object, dom
+  // @ts-expect-error - TODO: fix types
   domSideScripts: [
     "dom.js"
   ],
@@ -1906,6 +1960,8 @@ const Config = /** @type {const} */({
     ...GetSubscribedWorkshopItems.actions,
     ...GetWorkshopItemWithMetadata.actions,
     ...GetWorkshopItemsWithMetadata.actions,
+    ...GetFriends.actions,
+    ...GetFriendName.actions,
   },
   Cnds: {
     ...Initialize.conditions,
@@ -1959,6 +2015,8 @@ const Config = /** @type {const} */({
     ...GetSteamUILanguage.conditions,
     ...GetAvailableGameLanguages.conditions,
     ...GetCurrentGameLanguage.conditions,
+    ...GetFriends.conditions,
+    ...GetFriendName.conditions,
     OnOverlayActivated: {
       category: "steam",
       forward: "_OnOverlayActivated",
@@ -2510,6 +2568,8 @@ const Config = /** @type {const} */({
       ],
       description: "Get the total download progress of a workshop item",
     },
+    ...GetFriends.expressions,
+    ...GetFriendName.expressions,
 
     // command line
     ArgumentAt: {
@@ -2915,6 +2975,134 @@ const Config = /** @type {const} */({
       deprecated: false,
       returnType: 'number',
       description: "Get the currently used Steam App ID.",
+    },
+    SteamIsOffline: {
+      category: "steam",
+      forward: "_SteamIsOffline",
+      highlight: false,
+      deprecated: false,
+      returnType: 'number',
+      params: [
+        {
+          id: 'state',
+          desc: "The steam persona state to check.",
+          name: "State",
+          type: 'number',
+        }
+      ],
+      description: "Return 1 if the provided steam state is Offline (0).",
+    },
+    SteamIsOnline: {
+      category: "steam",
+      forward: "_SteamIsOnline",
+      highlight: false,
+      deprecated: false,
+      returnType: 'number',
+      params: [
+        {
+          id: 'state',
+          desc: "The steam persona state to check.",
+          name: "State",
+          type: 'number',
+        }
+      ],
+      description: "Return 1 if the provided steam state is Online (1).",
+    },
+    SteamIsBusy: {
+      category: "steam",
+      forward: "_SteamIsBusy",
+      highlight: false,
+      deprecated: false,
+      returnType: 'number',
+      params: [
+        {
+          id: 'state',
+          desc: "The steam persona state to check.",
+          name: "State",
+          type: 'number',
+        }
+      ],
+      description: "Return 1 if the provided steam state is Busy (2).",
+    },
+    SteamIsAway: {
+      category: "steam",
+      forward: "_SteamIsAway",
+      highlight: false,
+      deprecated: false,
+      returnType: 'number',
+      params: [
+        {
+          id: 'state',
+          desc: "The steam persona state to check.",
+          name: "State",
+          type: 'number',
+        }
+      ],
+      description: "Return 1 if the provided steam state is Away (3).",
+    },
+    SteamIsSnooze: {
+      category: "steam",
+      forward: "_SteamIsSnooze",
+      highlight: false,
+      deprecated: false,
+      returnType: 'number',
+      params: [
+        {
+          id: 'state',
+          desc: "The steam persona state to check.",
+          name: "State",
+          type: 'number',
+        }
+      ],
+      description: "Return 1 if the provided steam state is Snooze (4).",
+    },
+    SteamIsLookingToTrade: {
+      category: "steam",
+      forward: "_SteamIsLookingToTrade",
+      highlight: false,
+      deprecated: false,
+      returnType: 'number',
+      params: [
+        {
+          id: 'state',
+          desc: "The steam persona state to check.",
+          name: "State",
+          type: 'number',
+        }
+      ],
+      description: "Return 1 if the provided steam state is Looking to Trade (5).",
+    },
+    SteamIsLookingToPlay: {
+      category: "steam",
+      forward: "_SteamIsLookingToPlay",
+      highlight: false,
+      deprecated: false,
+      returnType: 'number',
+      params: [
+        {
+          id: 'state',
+          desc: "The steam persona state to check.",
+          name: "State",
+          type: 'number',
+        }
+      ],
+      description: "Return 1 if the provided steam state is Looking to Play (6).",
+    },
+    SteamIsInvisible: {
+      category: "steam",
+      forward: "_SteamIsInvisible",
+      highlight: false,
+      deprecated: false,
+      returnType: 'number',
+      params: [
+        {
+          id: 'state',
+          desc: "The steam persona state to check.",
+          name: "State",
+          type: 'number',
+        }
+      ],
+      description: "Return 1 if the provided steam state is Invisible (7).",
     },
   },
 });

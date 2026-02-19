@@ -223,6 +223,18 @@ const defaultSteamId = {
   steamId64: '',
 }
 
+const friendFlagsMap = [
+  0x00,   // none
+  0x01,   // blocked
+  0x02,   // friendshipRequested
+  0x04,   // immediate
+  0x08,   // clanMember
+  0x10,   // onGameServer
+  0x80,   // requestingFriendship
+  0x100,  // requestingInfo
+  0xFFFF, // all
+];
+
 // Simple path utility for POSIX-style path operations
 const posixPath = {
   dirname: (/** @type {string} */ path) => {
@@ -417,6 +429,19 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     _GetCurrentGameLanguageErrorValue = ''
     /** @type {string} */
     _GetCurrentGameLanguageResultValue = ''
+
+    /** @type {any[]} */
+    _friendsList = []
+
+    /** @type {string} */
+    _GetFriendsErrorValue = ''
+    /** @type {string} */
+    _GetFriendsResultValue = ''
+
+    /** @type {string} */
+    _GetFriendNameErrorValue = ''
+    /** @type {string} */
+    _GetFriendNameResultValue = ''
 
     /**
      * Description
@@ -2329,6 +2354,86 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
       }
     }, this.unsupportedEngine)
 
+    _GetFriends = this.wrap(super._GetFriends, async (
+      /** @type {number} */ flagsIdx,
+      /** @type {IObjectType<IJSONInstance>} */ jsonObject,
+      /** @type {Tag} */ tag
+    ) => {
+      try {
+        const flags = friendFlagsMap[flagsIdx] ?? 0x00;
+        /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').SteamRaw<'friends', 'getFriends'>, 'input'>} */
+        const order = {
+          url: '/steam/raw',
+          body: {
+            namespace: 'friends',
+            method: 'getFriends',
+            args: [flags],
+          },
+        };
+        const answer = await this.ws?.sendAndWaitForResponse(order);
+        if (answer?.body.success === false) {
+          throw new Error('Failed')
+        }
+        this._friendsList = answer?.body.data ?? []
+        this._GetFriendsResultValue = JSON.stringify(this._friendsList)
+        this._GetFriendsErrorValue = ''
+
+        const jsonInstance = jsonObject.getFirstInstance()
+        jsonInstance?.setJsonDataCopy(answer?.body.data ?? [])
+
+        await this.trigger(tag, [
+          C3.Plugins.pipelabv2.Cnds.OnGetFriendsSuccess,
+          C3.Plugins.pipelabv2.Cnds.OnAnyGetFriendsSuccess
+        ])
+      } catch (e) {
+        if (e instanceof Error) {
+          this._GetFriendsErrorValue = e.message
+          this._friendsList = []
+          await this.trigger(tag, [
+            C3.Plugins.pipelabv2.Cnds.OnGetFriendsError,
+            C3.Plugins.pipelabv2.Cnds.OnAnyGetFriendsError
+          ])
+        }
+      }
+    }, this.unsupportedEngine)
+
+    _GetFriendName = this.wrap(super._GetFriendName, async (
+      /** @type {string} */ steamId64,
+      /** @type {Tag} */ tag
+    ) => {
+      try {
+        /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').SteamRaw<'friends', 'getFriendName'>, 'input'>} */
+        const order = {
+          url: '/steam/raw',
+          body: {
+            namespace: 'friends',
+            method: 'getFriendName',
+            args: [steamId64],
+          },
+        };
+        const answer = await this.ws?.sendAndWaitForResponse(order);
+        if (answer?.body.success === false) {
+          throw new Error('Failed')
+        }
+        this._GetFriendNameResultValue = answer?.body.data ?? ''
+        this._GetFriendNameErrorValue = ''
+
+        await this.trigger(tag, [
+          C3.Plugins.pipelabv2.Cnds.OnGetFriendNameSuccess,
+          C3.Plugins.pipelabv2.Cnds.OnAnyGetFriendNameSuccess
+        ])
+      } catch (e) {
+        if (e instanceof Error) {
+          this._GetFriendNameErrorValue = e.message
+          this._GetFriendNameResultValue = ''
+          await this.trigger(tag, [
+            C3.Plugins.pipelabv2.Cnds.OnGetFriendNameError,
+            C3.Plugins.pipelabv2.Cnds.OnAnyGetFriendNameError
+          ])
+        }
+      }
+    }, this.unsupportedEngine)
+
     // Steam Screenshots
     _TriggerScreenshot = this.wrap(super._TriggerScreenshot, async (
       /** @type {Tag} */ tag
@@ -3736,6 +3841,16 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     _OnCheckDLCIsInstalledError = this.wrap(super._OnCheckDLCIsInstalledError, (/** @type {Tag} */ tag) => this._currentTag === tag)
     _OnAnyCheckDLCIsInstalledError = this.wrap(super._OnAnyCheckDLCIsInstalledError, () => true)
 
+    _OnGetFriendsSuccess = this.wrap(super._OnGetFriendsSuccess, (/** @type {Tag} */ tag) => this._currentTag === tag)
+    _OnAnyGetFriendsSuccess = this.wrap(super._OnAnyGetFriendsSuccess, () => true)
+    _OnGetFriendsError = this.wrap(super._OnGetFriendsError, (/** @type {Tag} */ tag) => this._currentTag === tag)
+    _OnAnyGetFriendsError = this.wrap(super._OnAnyGetFriendsError, () => true)
+
+    _OnGetFriendNameSuccess = this.wrap(super._OnGetFriendNameSuccess, (/** @type {Tag} */ tag) => this._currentTag === tag)
+    _OnAnyGetFriendNameSuccess = this.wrap(super._OnAnyGetFriendNameSuccess, () => true)
+    _OnGetFriendNameError = this.wrap(super._OnGetFriendNameError, (/** @type {Tag} */ tag) => this._currentTag === tag)
+    _OnAnyGetFriendNameError = this.wrap(super._OnAnyGetFriendNameError, () => true)
+
     _OnCreateWorkshopItemSuccess = this.wrap(super._OnCreateWorkshopItemSuccess, (/** @type {Tag} */ tag) => this._currentTag === tag)
     _OnAnyCreateWorkshopItemSuccess = this.wrap(super._OnAnyCreateWorkshopItemSuccess, () => true)
     _OnCreateWorkshopItemError = this.wrap(super._OnCreateWorkshopItemError, (/** @type {Tag} */ tag) => this._currentTag === tag)
@@ -3997,6 +4112,38 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     })
     _SteamAppId = this.exprs(super._SteamAppId, () => {
       return this._steam_AppId
+    })
+
+    _SteamIsOffline = this.exprs(super._SteamIsOffline, (state) => {
+      return state === 0 ? 1 : 0
+    })
+
+    _SteamIsOnline = this.exprs(super._SteamIsOnline, (state) => {
+      return state === 1 ? 1 : 0
+    })
+
+    _SteamIsBusy = this.exprs(super._SteamIsBusy, (state) => {
+      return state === 2 ? 1 : 0
+    })
+
+    _SteamIsAway = this.exprs(super._SteamIsAway, (state) => {
+      return state === 3 ? 1 : 0
+    })
+
+    _SteamIsSnooze = this.exprs(super._SteamIsSnooze, (state) => {
+      return state === 4 ? 1 : 0
+    })
+
+    _SteamIsLookingToTrade = this.exprs(super._SteamIsLookingToTrade, (state) => {
+      return state === 5 ? 1 : 0
+    })
+
+    _SteamIsLookingToPlay = this.exprs(super._SteamIsLookingToPlay, (state) => {
+      return state === 6 ? 1 : 0
+    })
+
+    _SteamIsInvisible = this.exprs(super._SteamIsInvisible, (state) => {
+      return state === 7 ? 1 : 0
     })
 
     _IsOverlayActive = this.wrap(super._IsOverlayActive, () => {
@@ -4345,6 +4492,19 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     })
     _CheckDLCIsInstalledResult = this.exprs(super._CheckDLCIsInstalledResult, () => {
       return this._CheckDLCIsInstalledResultValue ?? 0
+    })
+
+    _GetFriendsError = this.exprs(super._GetFriendsError, () => {
+      return this._GetFriendsErrorValue
+    })
+    _GetFriendsResult = this.exprs(super._GetFriendsResult, () => {
+      return this._GetFriendsResultValue
+    })
+    _GetFriendNameError = this.exprs(super._GetFriendNameError, () => {
+      return this._GetFriendNameErrorValue
+    })
+    _GetFriendNameResult = this.exprs(super._GetFriendNameResult, () => {
+      return this._GetFriendNameResultValue
     })
 
     // Workshop expressions

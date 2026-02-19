@@ -36,7 +36,6 @@
     "electron": "35.0.3",
     "esbuild": "0.25.10",
     "lefthook": "1.11.3",
-    "steamworks.js": "0.4.0",
     "typescript": "5.8.2"
   }
 }

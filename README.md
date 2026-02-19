@@ -36,6 +36,8 @@ The build uses the pluginConfig file to generate everything else.
 The main files you may want to look at would be instance.js
 
 ## Examples Files
+- [discord](./examples/discord.c3p)
+</br>
 - [example](./examples/example.c3p)
 </br>
 - [steam](./examples/steam.c3p)
@@ -267,6 +269,12 @@ When Download type is Around the user, the offsets are the amount of entries aro
 | Get workshop items with metadata | Gets multiple workshop items with their metadata, state, install info, and download info | Item IDs             *(string)* <br>Tag             *(string)* <br> |
 | Get workshop items with metadata | Gets multiple workshop items with their metadata, state, install info, and download info | Item IDs             *(string)* <br> |
 | Get workshop items with metadata | Gets multiple workshop items with their metadata, state, install info, and download info | Item IDs             *(string)* <br>Tag             *(string)* <br> |
+| Get friends | Get an array of friends matching the provided flags. | Flags             *(combo)* <br>Output             *(object)* <br>Tag             *(string)* <br> |
+| Get friends | Get an array of friends matching the provided flags. | Flags             *(combo)* <br>Output             *(object)* <br> |
+| Get friends | Get an array of friends matching the provided flags. | Flags             *(combo)* <br>Output             *(object)* <br>Tag             *(string)* <br> |
+| Get friend name | Get the persona name of a friend. | Steam ID             *(string)* <br>Tag             *(string)* <br> |
+| Get friend name | Get the persona name of a friend. | Steam ID             *(string)* <br> |
+| Get friend name | Get the persona name of a friend. | Steam ID             *(string)* <br>Tag             *(string)* <br> |
 
 
 ---
@@ -477,6 +485,14 @@ When Download type is Around the user, the offsets are the amount of entries aro
 | On any "GetCurrentGameLanguage" success | Trigger when any of the "GetCurrentGameLanguage" are executed with success. |  |
 | On "GetCurrentGameLanguage" error | Trigger when the "GetCurrentGameLanguage" failed to execute. | Tag *(string)* <br> |
 | On any "GetCurrentGameLanguage" error | Trigger when any of the "GetCurrentGameLanguage" failed to execute. |  |
+| On "GetFriends" success | Trigger when the "GetFriends" is executed with success. | Tag *(string)* <br> |
+| On any "GetFriends" success | Trigger when any of the "GetFriends" are executed with success. |  |
+| On "GetFriends" error | Trigger when the "GetFriends" failed to execute. | Tag *(string)* <br> |
+| On any "GetFriends" error | Trigger when any of the "GetFriends" failed to execute. |  |
+| On "GetFriendName" success | Trigger when the "GetFriendName" is executed with success. | Tag *(string)* <br> |
+| On any "GetFriendName" success | Trigger when any of the "GetFriendName" are executed with success. |  |
+| On "GetFriendName" error | Trigger when the "GetFriendName" failed to execute. | Tag *(string)* <br> |
+| On any "GetFriendName" error | Trigger when any of the "GetFriendName" failed to execute. |  |
 | On overlay activated | Triggered when the Steam overlay is activated. |  |
 | On overlay deactivated | Triggered when the Steam overlay is deactivated. |  |
 | On "TriggerScreenshot" success | Trigger when the "TriggerScreenshot" is executed with success. | Tag *(string)* <br> |
@@ -729,6 +745,10 @@ When Download type is Around the user, the offsets are the amount of entries aro
 | WorkshopItemTimestamp | Get the install timestamp of a workshop item | number | Item ID *(string)* <br> | 
 | WorkshopItemDownloadCurrent | Get the current download progress of a workshop item | number | Item ID *(string)* <br> | 
 | WorkshopItemDownloadTotal | Get the total download progress of a workshop item | number | Item ID *(string)* <br> | 
+| GetFriendsError | The error of the "GetFriends last call" | string |  | 
+| GetFriendsResult | The result of the "GetFriends last call" | string |  | 
+| GetFriendNameError | The error of the "GetFriendName last call" | string |  | 
+| GetFriendNameResult | The result of the "GetFriendName last call" | string |  | 
 | ArgumentAt | Get the argument at the given index. | string | Index *(number)* <br> | 
 | ArgumentCount | Get the number of arguments. | number |  | 
 | AppFolderURL | Return the URL of the folder of the current app. | string |  | 
@@ -774,6 +794,14 @@ When Download type is Around the user, the offsets are the amount of entries aro
 | SteamIpCountry | Get the Steam IP country. | string |  | 
 | SteamIsRunningOnSteamDeck | Return true if the app is running on a Steam Deck. | number |  | 
 | SteamAppId | Get the currently used Steam App ID. | number |  | 
+| SteamIsOffline | Return 1 if the provided steam state is Offline (0). | number | State *(number)* <br> | 
+| SteamIsOnline | Return 1 if the provided steam state is Online (1). | number | State *(number)* <br> | 
+| SteamIsBusy | Return 1 if the provided steam state is Busy (2). | number | State *(number)* <br> | 
+| SteamIsAway | Return 1 if the provided steam state is Away (3). | number | State *(number)* <br> | 
+| SteamIsSnooze | Return 1 if the provided steam state is Snooze (4). | number | State *(number)* <br> | 
+| SteamIsLookingToTrade | Return 1 if the provided steam state is Looking to Trade (5). | number | State *(number)* <br> | 
+| SteamIsLookingToPlay | Return 1 if the provided steam state is Looking to Play (6). | number | State *(number)* <br> | 
+| SteamIsInvisible | Return 1 if the provided steam state is Invisible (7). | number | State *(number)* <br> | 
 
 ## Paths
 **ProjectFilesFolder**: Direct path to your games's content
