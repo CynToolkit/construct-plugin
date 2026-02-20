@@ -1,4 +1,4 @@
-<img src="./src/icon.svg" width="100" /><br>
+<img src="./examples/cover.png" width="150" /><br>
 # Pipelab <br>
 A plugin that integrate with Pipelab <br>
 <br>

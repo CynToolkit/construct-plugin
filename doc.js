@@ -124,7 +124,6 @@ if (fs.existsSync(exampleFolderPath)) {
         readme.push(`<img src="./examples/${image}" width="200" />`);
       }
     });
-    readme.push(`</br>`);
   });
 }
 
@@ -168,8 +167,6 @@ Object.keys(config.Acts).forEach((/** @type {keyof typeof config.Acts} */ key) =
       paramString += `${param.name}             *(${param.type})* <br>`;
     });
   }
-
-  console.log('action', action)
 
   if (!action.isDeprecated) {
     readme.push(
