@@ -159,7 +159,7 @@ readme.push(`## Actions`);
 readme.push(`| Action | Description | Params`);
 readme.push(`| --- | --- | --- |`);
 
-Object.keys(config.Acts).forEach((key) => {
+Object.keys(config.Acts).forEach((/** @type {keyof typeof config.Acts} */ key) => {
   const action = config.Acts[key];
 
   let paramString = "";
@@ -169,9 +169,13 @@ Object.keys(config.Acts).forEach((key) => {
     });
   }
 
-  readme.push(
-    `| ${action.listName} | ${action.description} | ${paramString} |`
-  );
+  console.log('action', action)
+
+  if (!action.isDeprecated) {
+    readme.push(
+      `| ${action.listName} | ${action.description} | ${paramString} |`
+    );
+  }
 });
 readme.push(``);
 
@@ -203,7 +207,7 @@ readme.push(`## Conditions`);
 readme.push(`| Condition | Description | Params`);
 readme.push(`| --- | --- | --- |`);
 
-Object.keys(config.Cnds).forEach((key) => {
+Object.keys(config.Cnds).forEach((/** @type {keyof typeof config.Cnds} */ key) => {
   const condition = config.Cnds[key];
 
   let paramString = "";
@@ -213,9 +217,11 @@ Object.keys(config.Cnds).forEach((key) => {
     });
   }
 
-  readme.push(
-    `| ${condition.listName} | ${condition.description} | ${paramString} |`
-  );
+  if (!condition.isDeprecated) {
+    readme.push(
+      `| ${condition.listName} | ${condition.description} | ${paramString} |`
+    );
+  }
 });
 readme.push(``);
 
@@ -249,7 +255,7 @@ readme.push(`## Expressions`);
 readme.push(`| Expression | Description | Return Type | Params`);
 readme.push(`| --- | --- | --- | --- |`);
 
-Object.keys(config.Exps).forEach((key) => {
+Object.keys(config.Exps).forEach((/** @type {keyof typeof config.Exps} */ key) => {
   const expression = config.Exps[key];
 
   let paramString = "";
@@ -259,9 +265,11 @@ Object.keys(config.Exps).forEach((key) => {
     });
   }
 
-  readme.push(
-    `| ${key} | ${expression.description} | ${expression.returnType} | ${paramString} | `
-  );
+  if (!expression.isDeprecated) {
+    readme.push(
+      `| ${key} | ${expression.description} | ${expression.returnType} | ${paramString} | `
+    );
+  }
 });
 readme.push(``);
 readme.push(`## Paths`);

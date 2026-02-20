@@ -59,6 +59,7 @@ const ACEGenerator = (name, data) => {
     [`On${name}Success`]: ({
       category: act.category,
       deprecated: act.deprecated,
+      isDeprecated: act.deprecated,
       highlight: act.highlight,
       description: `Trigger when the \"${name}\" is executed with success.`,
       displayText: `On "${name}" success ([b]{0}[/b])`,
@@ -72,6 +73,7 @@ const ACEGenerator = (name, data) => {
     [`OnAny${name}Success`]: ({
       category: act.category,
       deprecated: act.deprecated,
+      isDeprecated: act.deprecated,
       highlight: act.highlight,
       description: `Trigger when any of the \"${name}\" are executed with success.`,
       displayText: `On any "${name}" success`,
@@ -84,6 +86,7 @@ const ACEGenerator = (name, data) => {
     [`On${name}Error`]: ({
       category: act.category,
       deprecated: act.deprecated,
+      isDeprecated: act.deprecated,
       highlight: act.highlight,
       description: `Trigger when the \"${name}\" failed to execute.`,
       displayText: `On "${name}" error ([b]{0}[/b])`,
@@ -97,6 +100,7 @@ const ACEGenerator = (name, data) => {
     [`OnAny${name}Error`]: ({
       category: act.category,
       deprecated: act.deprecated,
+      isDeprecated: act.deprecated,
       highlight: act.highlight,
       description: `Trigger when any of the \"${name}\" failed to execute.`,
       displayText: `On any "${name}" error`,
@@ -114,6 +118,7 @@ const ACEGenerator = (name, data) => {
       description: `The error of the "${name} last call"`,
       returnType: 'string',
       deprecated: act.deprecated,
+      isDeprecated: act.deprecated,
       highlight: act.highlight,
       forward: `_${name}Error`,
     }),
@@ -122,6 +127,7 @@ const ACEGenerator = (name, data) => {
       description: `The result of the "${name} last call"`,
       returnType: 'string',
       deprecated: act.deprecated,
+      isDeprecated: act.deprecated,
       highlight: act.highlight,
       forward: `_${name}Result`,
     }),
