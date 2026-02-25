@@ -1194,7 +1194,7 @@ const DiscordSetActivity = ACEGenerator("DiscordSetActivity", /** @type {const} 
       id: 'startTimestamp',
       desc: "The timestamp the activity started (ex: 1742458171).",
       name: "Start Timestamp",
-      type: 'string',
+      type: 'any',
     },
     {
       id: 'largeImageKey',
