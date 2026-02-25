@@ -16,6 +16,7 @@ Download Latest Version : [Version: 2.7.0](https://github.com/CynToolkit/constru
 - [Conditions](#conditions)
 - [Expressions](#expressions)
 - [Paths](#paths)
+- [Recommended Save Location](#recommended-save-location)
 ---
 ## Usage
 To build the addon, run the following commands:
@@ -603,7 +604,6 @@ When Download type is Around the user, the offsets are the amount of entries aro
 | ProjectFilesFolder | Return the folder of the project files. | string |  | 
 | ProjectFilesFolderURL | Return the URL of the folder of the project files. | string |  | 
 | ReadFile | Return the contents of the file. | string |  | 
-| UserFolder | Return the current User's folder | string |  | 
 | HomeFolder | Return the current Home folder | string |  | 
 | AppDataFolder | Return the current AppDataFolder folder | string |  | 
 | LocalAppDataFolder | Return the current AppDataFolder folder | string |  | 
@@ -648,109 +648,88 @@ When Download type is Around the user, the offsets are the amount of entries aro
 | SteamIsLookingToPlay | Return 1 if the provided steam state is Looking to Play (6). | number | State *(number)* <br> | 
 | SteamIsInvisible | Return 1 if the provided steam state is Invisible (7). | number | State *(number)* <br> | 
 
+
+---
 ## Paths
-**ProjectFilesFolder**: Direct path to your games's content
-- Windows: `C:/Users/quent/AppData/Local/Temp/f0e3c24c1443adce014e5924d5f47e1b571c92e0f29d11d4/build/out/Pipelab-win32-x64/resources/app.asar/src/app`
-- Linux: 
-- MacOS: 
+### HomeFolder
+User home directory
+- **Windows**: `C:/Users/user`
+- **Linux**: `/home/user`
+- **macOS**: `/Users/user`
 
-UserFolder: 
-- Windows: ``
-- Linux: 
-- MacOS: 
+### AppDataFolder
+Application configuration data
+- **Windows**: `C:/Users/user/AppData/Roaming`
+- **Linux**: `/home/user/.config`
+- **macOS**: `/Users/user/Library/Application Support`
 
-HomeFolder: 
-- Windows: C:/Users/quent
-- Linux: 
-- MacOS: 
+### LocalAppDataFolder
+Local application data
+- **Windows**: `C:/Users/user/AppData/Local`
+- **Linux**: `/home/user/.local/share`
+- **macOS**: `/Users/user/Library/Application Support`
 
-AppDataFolder: 
-- Windows: C:/Users/quent/AppData/Roaming
-- Linux: 
-- MacOS: 
+### UserDataFolder
+App-specific data (Roaming)
+- **Windows**: `C:/Users/user/AppData/Roaming/com.pipelab.app`
+- **Linux**: `/home/user/.config/com.pipelab.app`
+- **macOS**: `/Users/user/Library/Application Support/com.pipelab.app`
 
-LocalAppDataFolder: 
-- Windows: ``
-- Linux: 
-- MacOS: 
+### LocalUserDataFolder
+App-specific data (Local)
+- **Windows**: `C:/Users/user/AppData/Local/com.pipelab.app`
+- **Linux**: `/home/user/.local/share/com.pipelab.app`
+- **macOS**: `/Users/user/Library/Application Support/com.pipelab.app`
 
-UserDataFolder: 
-- Windows: C:/Users/quent/AppData/Roaming/app
-- Linux: 
-- MacOS: 
+### AppFolder
+Application installation directory
+- **Windows**: `C:/Program Files/Pipelab/resources/app`
+- **Linux**: `/tmp/pipelab/.../Pipelab-linux-x64/resources/app`
+- **macOS**: `/Applications/Pipelab.app/Contents/Resources/app`
 
-LocalUserDataFolder: 
-- Windows: ``
-- Linux: 
-- MacOS: 
+### ProjectFilesFolder
+Direct path to your game's content
+- **Windows**: `.../resources/app.asar/src/app`
+- **Linux**: `/tmp/pipelab/.../resources/app/src/app`
+- **macOS**: `/Applications/Pipelab.app/Contents/Resources/app/src/app`
 
-SessionDataFolder: 
-- Windows: ``
-- Linux: 
-- MacOS: 
+### CrashDumpsFolder
+Crash reports storage
+- **Windows**: `C:/Users/user/AppData/Roaming/com.pipelab.app/Crashpad`
+- **Linux**: `/home/user/.config/cache_com.pipelab.app/Crashpad`
+- **macOS**: `/Users/user/Library/Application Support/com.pipelab.app/Crashpad`
 
-TempFolder: 
-- Windows: ``
-- Linux: 
-- MacOS: 
+### DesktopFolder
+User desktop
+- **Windows**: `C:/Users/user/Desktop`
+- **Linux**: `/home/user/Desktop`
+- **macOS**: `/Users/user/Desktop`
 
-ExeFolder: 
-- Windows: ``
-- Linux: 
-- MacOS: 
+### DocumentsFolder
+User documents
+- **Windows**: `C:/Users/user/Documents`
+- **Linux**: `/home/user/Documents`
+- **macOS**: `/Users/user/Documents`
 
-ModuleFolder: 
-- Windows: ``
-- Linux: 
-- MacOS: 
+### DownloadsFolder
+User downloads
+- **Windows**: `C:/Users/user/Downloads`
+- **Linux**: `/home/user/Downloads`
+- **macOS**: `/Users/user/Downloads`
 
-DesktopFolder: 
-- Windows: ``
-- Linux: 
-- MacOS: 
+### LogsFolder
+Application logs
+- **Windows**: `C:/Users/user/AppData/Roaming/com.pipelab.app/logs`
+- **Linux**: `/home/user/.config/com.pipelab.app/logs`
+- **macOS**: `/Users/user/Library/Logs/com.pipelab.app`
 
-DocumentsFolder: 
-- Windows: ``
-- Linux: 
-- MacOS: 
 
-DownloadsFolder: 
-- Windows: ``
-- Linux: 
-- MacOS: 
+## Recommended Save Location
+For game saves and persistent data, especially when considering **Steam Cloud Sync**, it is highly recommended to use the **LocalUserDataFolder**.
 
-MusicFolder: 
-- Windows: ``
-- Linux: 
-- MacOS: 
-
-PicturesFolder: 
-- Windows: ``
-- Linux: 
-- MacOS: 
-
-VideosFolder: 
-- Windows: ``
-- Linux: 
-- MacOS: 
-
-RecentFolder: 
-- Windows: ``
-- Linux: 
-- MacOS: 
-
-LogsFolder: 
-- Windows: ``
-- Linux: 
-- MacOS: 
-
-CrashDumpsFolder: 
-- Windows: C:/Users/quent/AppData/Roaming/app/Crashpad
-- Linux: 
-- MacOS: 
-
-AppFolder: 
-- Windows: 
-- Linux: 
-- MacOS: 
-
+### Why?
+- **Standardization**: It follows the industry standard for each platform:
+  - **Windows**: Uses `AppData/Local`, the correct place for large or frequent writes like game saves (unlike `Roaming`, which can slow down network logins).
+  - **Linux**: Uses `~/.local/share`, adhering to the XDG Base Directory Specification for persistent data.
+  - **macOS**: Uses `~/Library/Application Support`, the standard location for app-specific data.
+- **Cloud Sync Compatibility**: Steam Cloud and other services are easily configured to watch these standard directories.

@@ -2675,6 +2675,7 @@ const Config = /** @type {const} */({
       forward: "_UserFolder",
       highlight: false,
       deprecated: true,
+      isDeprecated: true,
       returnType: 'string',
       isVariadicParameters: false,
       description: "Return the current User's folder",
