@@ -157,6 +157,10 @@ When Download type is Around the user, the offsets are the amount of entries aro
 | Add screenshot to library | Adds an existing screenshot file to the Steam screenshot library. Returns the handle of the screenshot. | Filename             *(string)* <br>Thumbnail Filename             *(string)* <br>Width             *(number)* <br>Height             *(number)* <br> |
 | Check DLC is installed (synchronous) | Checks if the user owns and has installed a specific DLC (synchronous) | DLC App ID             *(number)* <br>Tag             *(string)* <br> |
 | Check DLC is installed | Checks if the user owns and has installed a specific DLC | DLC App ID             *(number)* <br> |
+| Show gamepad text input (synchronous) | Shows the Steam gamepad text input dialog. Returns the entered text, or null if cancelled or could not show. (synchronous) | Input Mode             *(combo)* <br>Line Mode             *(combo)* <br>Description             *(string)* <br>Max Characters             *(number)* <br>Existing Text             *(string)* <br>Tag             *(string)* <br> |
+| Show gamepad text input | Shows the Steam gamepad text input dialog. Returns the entered text, or null if cancelled or could not show. | Input Mode             *(combo)* <br>Line Mode             *(combo)* <br>Description             *(string)* <br>Max Characters             *(number)* <br>Existing Text             *(string)* <br> |
+| Show floating gamepad text input (synchronous) | Shows the Steam floating gamepad text input. Returns true if shown, otherwise false. (synchronous) | Keyboard Mode             *(combo)* <br>X             *(number)* <br>Y             *(number)* <br>Width             *(number)* <br>Height             *(number)* <br>Tag             *(string)* <br> |
+| Show floating gamepad text input | Shows the Steam floating gamepad text input. Returns true if shown, otherwise false. | Keyboard Mode             *(combo)* <br>X             *(number)* <br>Y             *(number)* <br>Width             *(number)* <br>Height             *(number)* <br> |
 | Create workshop item (synchronous) | Creates a new workshop item for the specified Steam App ID and returns its ID (synchronous) | App ID             *(number)* <br>Tag             *(string)* <br> |
 | Create workshop item | Creates a new workshop item for the specified Steam App ID and returns its ID | App ID             *(number)* <br> |
 | Update workshop item (synchronous) | Updates content and metadata of a workshop item. Use the update flags to control which fields are updated. (synchronous) | App ID             *(number)* <br>Item ID             *(string)* <br>Update Title             *(boolean)* <br>Title             *(string)* <br>Update Description             *(boolean)* <br>Description             *(string)* <br>Update Content             *(boolean)* <br>Content Folder Path             *(string)* <br>Change Note             *(string)* <br>Update Preview             *(boolean)* <br>Preview Image Path             *(string)* <br>Update Tags             *(boolean)* <br>Tags             *(string)* <br>Update Visibility             *(boolean)* <br>Visibility             *(combo)* <br>Tag             *(string)* <br> |
@@ -401,6 +405,14 @@ When Download type is Around the user, the offsets are the amount of entries aro
 | On any "CheckDLCIsInstalled" success | Trigger when any of the "CheckDLCIsInstalled" are executed with success. |  |
 | On "CheckDLCIsInstalled" error | Trigger when the "CheckDLCIsInstalled" failed to execute. | Tag *(string)* <br> |
 | On any "CheckDLCIsInstalled" error | Trigger when any of the "CheckDLCIsInstalled" failed to execute. |  |
+| On "ShowGamepadTextInput" success | Trigger when the "ShowGamepadTextInput" is executed with success. | Tag *(string)* <br> |
+| On any "ShowGamepadTextInput" success | Trigger when any of the "ShowGamepadTextInput" are executed with success. |  |
+| On "ShowGamepadTextInput" error | Trigger when the "ShowGamepadTextInput" failed to execute. | Tag *(string)* <br> |
+| On any "ShowGamepadTextInput" error | Trigger when any of the "ShowGamepadTextInput" failed to execute. |  |
+| On "ShowFloatingGamepadTextInput" success | Trigger when the "ShowFloatingGamepadTextInput" is executed with success. | Tag *(string)* <br> |
+| On any "ShowFloatingGamepadTextInput" success | Trigger when any of the "ShowFloatingGamepadTextInput" are executed with success. |  |
+| On "ShowFloatingGamepadTextInput" error | Trigger when the "ShowFloatingGamepadTextInput" failed to execute. | Tag *(string)* <br> |
+| On any "ShowFloatingGamepadTextInput" error | Trigger when any of the "ShowFloatingGamepadTextInput" failed to execute. |  |
 | On "CreateWorkshopItem" success | Trigger when the "CreateWorkshopItem" is executed with success. | Tag *(string)* <br> |
 | On any "CreateWorkshopItem" success | Trigger when any of the "CreateWorkshopItem" are executed with success. |  |
 | On "CreateWorkshopItem" error | Trigger when the "CreateWorkshopItem" failed to execute. | Tag *(string)* <br> |
@@ -575,6 +587,10 @@ When Download type is Around the user, the offsets are the amount of entries aro
 | AddScreenshotToLibraryResult | The result of the "AddScreenshotToLibrary last call" | string |  | 
 | CheckDLCIsInstalledError | The error of the "CheckDLCIsInstalled last call" | string |  | 
 | CheckDLCIsInstalledResult | The result of the "CheckDLCIsInstalled last call" | string |  | 
+| ShowGamepadTextInputError | The error of the "ShowGamepadTextInput last call" | string |  | 
+| ShowGamepadTextInputResult | The result of the "ShowGamepadTextInput last call" | string |  | 
+| ShowFloatingGamepadTextInputError | The error of the "ShowFloatingGamepadTextInput last call" | string |  | 
+| ShowFloatingGamepadTextInputResult | The result of the "ShowFloatingGamepadTextInput last call" | string |  | 
 | CreateWorkshopItemError | The error of the "CreateWorkshopItem last call" | string |  | 
 | CreateWorkshopItemResult | The result of the "CreateWorkshopItem last call" | string |  | 
 | UpdateWorkshopItemError | The error of the "UpdateWorkshopItem last call" | string |  | 
