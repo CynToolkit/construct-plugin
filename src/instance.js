@@ -2614,6 +2614,93 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
       }
     }, this.unsupportedEngine)
 
+    // Steam Gamepad Text Input
+    _ShowGamepadTextInputBase = this.wrap(super._ShowGamepadTextInput, async (
+      /** @type {number} */ inputMode,
+      /** @type {number} */ inputLineMode,
+      /** @type {string} */ description,
+      /** @type {number} */ maxCharacters,
+      /** @type {string} */ existingText,
+      /** @type {Tag} */ tag
+    ) => {
+      try {
+        /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').SteamRaw<'input', 'showGamepadTextInput'>, 'input'>} */
+        const order = {
+          url: '/steam/raw',
+          body: {
+            namespace: 'input',
+            method: 'showGamepadTextInput',
+            args: [inputMode, inputLineMode, description, maxCharacters, existingText || undefined],
+          },
+        };
+        const answer = await this.ws?.sendAndWaitForResponse(order);
+        if (answer?.body.success === false) {
+          throw new Error('Failed')
+        }
+        this._ShowGamepadTextInputResultValue = answer?.body.data ?? null
+        this._ShowGamepadTextInputErrorValue = ''
+
+        await this.trigger(tag, [
+          C3.Plugins.pipelabv2.Cnds.OnShowGamepadTextInputSuccess,
+          C3.Plugins.pipelabv2.Cnds.OnAnyShowGamepadTextInputSuccess
+        ])
+      } catch (e) {
+        if (e instanceof Error) {
+          this._ShowGamepadTextInputErrorValue = e.message
+          this._ShowGamepadTextInputResultValue = null
+          await this.trigger(tag, [
+            C3.Plugins.pipelabv2.Cnds.OnShowGamepadTextInputError,
+            C3.Plugins.pipelabv2.Cnds.OnAnyShowGamepadTextInputError
+          ])
+        }
+      }
+    }, this.unsupportedEngine)
+    _ShowGamepadTextInput = this._ShowGamepadTextInputBase
+    _ShowGamepadTextInputSync = this._ShowGamepadTextInputBase
+
+    _ShowFloatingGamepadTextInputBase = this.wrap(super._ShowFloatingGamepadTextInput, async (
+      /** @type {number} */ keyboardMode,
+      /** @type {number} */ x,
+      /** @type {number} */ y,
+      /** @type {number} */ width,
+      /** @type {number} */ height,
+      /** @type {Tag} */ tag
+    ) => {
+      try {
+        /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').SteamRaw<'input', 'showFloatingGamepadTextInput'>, 'input'>} */
+        const order = {
+          url: '/steam/raw',
+          body: {
+            namespace: 'input',
+            method: 'showFloatingGamepadTextInput',
+            args: [keyboardMode, x, y, width, height],
+          },
+        };
+        const answer = await this.ws?.sendAndWaitForResponse(order);
+        if (answer?.body.success === false) {
+          throw new Error('Failed')
+        }
+        this._ShowFloatingGamepadTextInputResultValue = answer?.body.data ? 1 : 0
+        this._ShowFloatingGamepadTextInputErrorValue = ''
+
+        await this.trigger(tag, [
+          C3.Plugins.pipelabv2.Cnds.OnShowFloatingGamepadTextInputSuccess,
+          C3.Plugins.pipelabv2.Cnds.OnAnyShowFloatingGamepadTextInputSuccess
+        ])
+      } catch (e) {
+        if (e instanceof Error) {
+          this._ShowFloatingGamepadTextInputErrorValue = e.message
+          this._ShowFloatingGamepadTextInputResultValue = 0
+          await this.trigger(tag, [
+            C3.Plugins.pipelabv2.Cnds.OnShowFloatingGamepadTextInputError,
+            C3.Plugins.pipelabv2.Cnds.OnAnyShowFloatingGamepadTextInputError
+          ])
+        }
+      }
+    }, this.unsupportedEngine)
+    _ShowFloatingGamepadTextInput = this._ShowFloatingGamepadTextInputBase
+    _ShowFloatingGamepadTextInputSync = this._ShowFloatingGamepadTextInputBase
+
     // Steam Workshop
     /** @type {Map<string, any>} */
     _workshopItemsMap = new Map()
@@ -3851,6 +3938,16 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     _OnGetFriendNameError = this.wrap(super._OnGetFriendNameError, (/** @type {Tag} */ tag) => this._currentTag === tag)
     _OnAnyGetFriendNameError = this.wrap(super._OnAnyGetFriendNameError, () => true)
 
+    _OnShowGamepadTextInputSuccess = this.wrap(super._OnShowGamepadTextInputSuccess, (/** @type {Tag} */ tag) => this._currentTag === tag)
+    _OnAnyShowGamepadTextInputSuccess = this.wrap(super._OnAnyShowGamepadTextInputSuccess, () => true)
+    _OnShowGamepadTextInputError = this.wrap(super._OnShowGamepadTextInputError, (/** @type {Tag} */ tag) => this._currentTag === tag)
+    _OnAnyShowGamepadTextInputError = this.wrap(super._OnAnyShowGamepadTextInputError, () => true)
+
+    _OnShowFloatingGamepadTextInputSuccess = this.wrap(super._OnShowFloatingGamepadTextInputSuccess, (/** @type {Tag} */ tag) => this._currentTag === tag)
+    _OnAnyShowFloatingGamepadTextInputSuccess = this.wrap(super._OnAnyShowFloatingGamepadTextInputSuccess, () => true)
+    _OnShowFloatingGamepadTextInputError = this.wrap(super._OnShowFloatingGamepadTextInputError, (/** @type {Tag} */ tag) => this._currentTag === tag)
+    _OnAnyShowFloatingGamepadTextInputError = this.wrap(super._OnAnyShowFloatingGamepadTextInputError, () => true)
+
     _OnCreateWorkshopItemSuccess = this.wrap(super._OnCreateWorkshopItemSuccess, (/** @type {Tag} */ tag) => this._currentTag === tag)
     _OnAnyCreateWorkshopItemSuccess = this.wrap(super._OnAnyCreateWorkshopItemSuccess, () => true)
     _OnCreateWorkshopItemError = this.wrap(super._OnCreateWorkshopItemError, (/** @type {Tag} */ tag) => this._currentTag === tag)
@@ -4505,6 +4602,20 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     })
     _GetFriendNameResult = this.exprs(super._GetFriendNameResult, () => {
       return this._GetFriendNameResultValue
+    })
+
+    _ShowGamepadTextInputError = this.exprs(super._ShowGamepadTextInputError, () => {
+      return this._ShowGamepadTextInputErrorValue
+    })
+    _ShowGamepadTextInputResult = this.exprs(super._ShowGamepadTextInputResult, () => {
+      return this._ShowGamepadTextInputResultValue ?? ''
+    })
+
+    _ShowFloatingGamepadTextInputError = this.exprs(super._ShowFloatingGamepadTextInputError, () => {
+      return this._ShowFloatingGamepadTextInputErrorValue
+    })
+    _ShowFloatingGamepadTextInputResult = this.exprs(super._ShowFloatingGamepadTextInputResult, () => {
+      return this._ShowFloatingGamepadTextInputResultValue ?? 0
     })
 
     // Workshop expressions
