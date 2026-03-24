@@ -25,7 +25,7 @@ const ACEGenerator = (name, data) => {
   const { ...act } = data
 
   const syncParams = ([
-    ...act.params ?? [],
+    ...(act.params ?? []),
     tagParameter,
   ])
 
@@ -33,15 +33,24 @@ const ACEGenerator = (name, data) => {
   const actions = /** @type {const} */ ({
     [`${name}Sync`]: ({
       ...act,
-      forward: `_${name}Sync`,
+      forward: `_${name}`,
       params: syncParams,
-      description: `${act.description} (synchronous)`,
-      displayText: `${act.displayText} ([b]{${act.params?.length}}[/b]) (synchronous)`,
-      listName: `${act.listName} (synchronous)`,
+      displayText: `[b]DEPRECATED[/b] - ${act.displayText} (tag "{${act.params?.length}}")`,
+      isDeprecated: true,
     }),
     [name]: ({
       ...act,
       forward: `_${name}`,
+      displayText: `[b]DEPRECATED[/b] - ${act.displayText}`,
+      isAsync: true,
+      isDeprecated: true,
+    }),
+    [`${name}V2`]: ({
+      ...act,
+      forward: `_${name}`,
+      params: syncParams,
+      displayText: `${act.displayText} (tag {${act.params?.length}})`,
+      isDeprecated: act.deprecated,
       isAsync: true,
     }),
   })
@@ -50,6 +59,7 @@ const ACEGenerator = (name, data) => {
     [`On${name}Success`]: ({
       category: act.category,
       deprecated: act.deprecated,
+      isDeprecated: act.deprecated,
       highlight: act.highlight,
       description: `Trigger when the \"${name}\" is executed with success.`,
       displayText: `On "${name}" success ([b]{0}[/b])`,
@@ -63,6 +73,7 @@ const ACEGenerator = (name, data) => {
     [`OnAny${name}Success`]: ({
       category: act.category,
       deprecated: act.deprecated,
+      isDeprecated: act.deprecated,
       highlight: act.highlight,
       description: `Trigger when any of the \"${name}\" are executed with success.`,
       displayText: `On any "${name}" success`,
@@ -75,6 +86,7 @@ const ACEGenerator = (name, data) => {
     [`On${name}Error`]: ({
       category: act.category,
       deprecated: act.deprecated,
+      isDeprecated: act.deprecated,
       highlight: act.highlight,
       description: `Trigger when the \"${name}\" failed to execute.`,
       displayText: `On "${name}" error ([b]{0}[/b])`,
@@ -88,6 +100,7 @@ const ACEGenerator = (name, data) => {
     [`OnAny${name}Error`]: ({
       category: act.category,
       deprecated: act.deprecated,
+      isDeprecated: act.deprecated,
       highlight: act.highlight,
       description: `Trigger when any of the \"${name}\" failed to execute.`,
       displayText: `On any "${name}" error`,
@@ -105,6 +118,7 @@ const ACEGenerator = (name, data) => {
       description: `The error of the "${name} last call"`,
       returnType: 'string',
       deprecated: act.deprecated,
+      isDeprecated: act.deprecated,
       highlight: act.highlight,
       forward: `_${name}Error`,
     }),
@@ -113,6 +127,7 @@ const ACEGenerator = (name, data) => {
       description: `The result of the "${name} last call"`,
       returnType: 'string',
       deprecated: act.deprecated,
+      isDeprecated: act.deprecated,
       highlight: act.highlight,
       forward: `_${name}Result`,
     }),
@@ -951,6 +966,59 @@ const CheckAchievementActivationState = ACEGenerator("CheckAchievementActivation
   displayText: "Check achievement [b]{0}[/b] activation state",
   description: "Check the activation state of a steam achievement",
 }))
+const GetFriends = ACEGenerator("GetFriends", /** @type {const} */({
+  category: "steam",
+  highlight: false,
+  deprecated: false,
+  params: [
+    {
+      id: 'flags',
+      desc: "The flags to filter friends by.",
+      name: "Flags",
+      type: 'combo',
+      items: [
+        { "none": "None" },
+        { "blocked": "Blocked" },
+        { "friendshipRequested": "Friendship requested" },
+        { "immediate": "Immediate" },
+        { "clanMember": "Clan member" },
+        { "onGameServer": "On game server" },
+        { "requestingFriendship": "Requesting friendship" },
+        { "requestingInfo": "Requesting info" },
+        { "all": "All" },
+      ]
+    },
+    {
+      id: 'output',
+      desc: "The output object",
+      name: "Output",
+      type: 'object',
+      allowedPluginIds: ["Json"]
+    },
+  ],
+  listName: "Get friends",
+  displayText: "Get friends (flags: {0}) into {1}",
+  description: "Get an array of friends matching the provided flags.",
+}))
+
+const GetFriendName = ACEGenerator("GetFriendName", /** @type {const} */({
+  category: "steam",
+  highlight: false,
+  deprecated: false,
+  params: [
+    {
+      id: 'steamId64',
+      desc: "The Steam ID of the friend.",
+      name: "Steam ID",
+      type: 'string',
+      initialValue: "\"\"",
+    }
+  ],
+  listName: "Get friend name",
+  displayText: "Get friend name of [b]{0}[/b]",
+  description: "Get the persona name of a friend.",
+}))
+
 const SetRichPresence = ACEGenerator("SetRichPresence", /** @type {const} */({
   category: "steam",
   displayText: "Set rich presence {0} to {1}",
@@ -1126,7 +1194,7 @@ const DiscordSetActivity = ACEGenerator("DiscordSetActivity", /** @type {const} 
       id: 'startTimestamp',
       desc: "The timestamp the activity started (ex: 1742458171).",
       name: "Start Timestamp",
-      type: 'string',
+      type: 'any',
     },
     {
       id: 'largeImageKey',
@@ -1210,6 +1278,36 @@ const ActivateToStore = ACEGenerator("ActivateToStore", /** @type {const} */({
   listName: "Activate Steam overlay to store",
   displayText: "Activate Steam overlay to store for app [b]{0}[/b] (flag: {1})",
   description: "Activates the Steam Overlay to the Steam store page for the provided app",
+}))
+
+const GetSteamUILanguage = ACEGenerator("GetSteamUILanguage", /** @type {const} */({
+  category: "steam",
+  highlight: false,
+  deprecated: false,
+  params: [],
+  listName: "Get Steam UI language",
+  displayText: "Get Steam UI language",
+  description: "Get the language of the Steam UI",
+}))
+
+const GetAvailableGameLanguages = ACEGenerator("GetAvailableGameLanguages", /** @type {const} */({
+  category: "steam",
+  highlight: false,
+  deprecated: false,
+  params: [],
+  listName: "Get available game languages",
+  displayText: "Get available game languages",
+  description: "Get a list of available languages for the game",
+}))
+
+const GetCurrentGameLanguage = ACEGenerator("GetCurrentGameLanguage", /** @type {const} */({
+  category: "steam",
+  highlight: false,
+  deprecated: false,
+  params: [],
+  listName: "Get current game language",
+  displayText: "Get current game language",
+  description: "Get the current language of the game",
 }))
 
 // Steam Screenshots
@@ -1679,6 +1777,7 @@ const Config = /** @type {const} */({
   githubUrl: "https://github.com/CynToolkit/construct-plugin", // displays latest release version in auto-generated docs
   icon: "icon.png", // defaults to "icon.svg" if omitted
   type: "object", // world, object, dom
+  // @ts-expect-error - TODO: fix types
   domSideScripts: [
     "dom.js"
   ],
@@ -1845,6 +1944,9 @@ const Config = /** @type {const} */({
     ...LeaderboardDownloadScore.actions,
     ...ActivateToWebPage.actions,
     ...ActivateToStore.actions,
+    ...GetSteamUILanguage.actions,
+    ...GetAvailableGameLanguages.actions,
+    ...GetCurrentGameLanguage.actions,
     ...TriggerScreenshot.actions,
     ...SaveScreenshotFromURL.actions,
     ...AddScreenshotToLibrary.actions,
@@ -1864,6 +1966,8 @@ const Config = /** @type {const} */({
     ...GetSubscribedWorkshopItems.actions,
     ...GetWorkshopItemWithMetadata.actions,
     ...GetWorkshopItemsWithMetadata.actions,
+    ...GetFriends.actions,
+    ...GetFriendName.actions,
   },
   Cnds: {
     ...Initialize.conditions,
@@ -1914,6 +2018,33 @@ const Config = /** @type {const} */({
     ...LeaderboardDownloadScore.conditions,
     ...ActivateToWebPage.conditions,
     ...ActivateToStore.conditions,
+    ...GetSteamUILanguage.conditions,
+    ...GetAvailableGameLanguages.conditions,
+    ...GetCurrentGameLanguage.conditions,
+    ...GetFriends.conditions,
+    ...GetFriendName.conditions,
+    OnOverlayActivated: {
+      category: "steam",
+      forward: "_OnOverlayActivated",
+      highlight: false,
+      deprecated: false,
+      description: "Triggered when the Steam overlay is activated.",
+      displayText: "On overlay activated",
+      listName: "On overlay activated",
+      isTrigger: true,
+      params: []
+    },
+    OnOverlayDeactivated: {
+      category: "steam",
+      forward: "_OnOverlayDeactivated",
+      highlight: false,
+      deprecated: false,
+      description: "Triggered when the Steam overlay is deactivated.",
+      displayText: "On overlay deactivated",
+      listName: "On overlay deactivated",
+      isTrigger: true,
+      params: []
+    },
     ...TriggerScreenshot.conditions,
     ...SaveScreenshotFromURL.conditions,
     ...AddScreenshotToLibrary.conditions,
@@ -1953,6 +2084,17 @@ const Config = /** @type {const} */({
         }
       ],
       listName: "Is engine",
+    },
+    IsPipelab: {
+      category: "general",
+      forward: "_IsPipelab",
+      highlight: true,
+      deprecated: false,
+      description: "Return true if the Pipelab is used to run the game",
+      displayText: "Is Pipelab",
+      params: [
+      ],
+      listName: "Is Pipelab",
     },
 
     IsInitialized: {
@@ -2004,6 +2146,16 @@ const Config = /** @type {const} */({
       isInvertible: true,
       isTrigger: false,
     },
+    IsOverlayActive: {
+      category: "steam",
+      forward: "_IsOverlayActive",
+      highlight: false,
+      isInvertible: true,
+      displayText: "Is overlay active",
+      listName: "Is overlay active",
+      params: [],
+      description: "Return true if the Steam overlay is currently active.",
+    },
   },
   Exps: {
     ...Initialize.expressions,
@@ -2054,6 +2206,9 @@ const Config = /** @type {const} */({
     ...LeaderboardDownloadScore.expressions,
     ...ActivateToWebPage.expressions,
     ...ActivateToStore.expressions,
+    ...GetSteamUILanguage.expressions,
+    ...GetAvailableGameLanguages.expressions,
+    ...GetCurrentGameLanguage.expressions,
     ...TriggerScreenshot.expressions,
     ...SaveScreenshotFromURL.expressions,
     ...AddScreenshotToLibrary.expressions,
@@ -2419,6 +2574,8 @@ const Config = /** @type {const} */({
       ],
       description: "Get the total download progress of a workshop item",
     },
+    ...GetFriends.expressions,
+    ...GetFriendName.expressions,
 
     // command line
     ArgumentAt: {
@@ -2518,6 +2675,7 @@ const Config = /** @type {const} */({
       forward: "_UserFolder",
       highlight: false,
       deprecated: true,
+      isDeprecated: true,
       returnType: 'string',
       isVariadicParameters: false,
       description: "Return the current User's folder",
@@ -2824,6 +2982,134 @@ const Config = /** @type {const} */({
       deprecated: false,
       returnType: 'number',
       description: "Get the currently used Steam App ID.",
+    },
+    SteamIsOffline: {
+      category: "steam",
+      forward: "_SteamIsOffline",
+      highlight: false,
+      deprecated: false,
+      returnType: 'number',
+      params: [
+        {
+          id: 'state',
+          desc: "The steam persona state to check.",
+          name: "State",
+          type: 'number',
+        }
+      ],
+      description: "Return 1 if the provided steam state is Offline (0).",
+    },
+    SteamIsOnline: {
+      category: "steam",
+      forward: "_SteamIsOnline",
+      highlight: false,
+      deprecated: false,
+      returnType: 'number',
+      params: [
+        {
+          id: 'state',
+          desc: "The steam persona state to check.",
+          name: "State",
+          type: 'number',
+        }
+      ],
+      description: "Return 1 if the provided steam state is Online (1).",
+    },
+    SteamIsBusy: {
+      category: "steam",
+      forward: "_SteamIsBusy",
+      highlight: false,
+      deprecated: false,
+      returnType: 'number',
+      params: [
+        {
+          id: 'state',
+          desc: "The steam persona state to check.",
+          name: "State",
+          type: 'number',
+        }
+      ],
+      description: "Return 1 if the provided steam state is Busy (2).",
+    },
+    SteamIsAway: {
+      category: "steam",
+      forward: "_SteamIsAway",
+      highlight: false,
+      deprecated: false,
+      returnType: 'number',
+      params: [
+        {
+          id: 'state',
+          desc: "The steam persona state to check.",
+          name: "State",
+          type: 'number',
+        }
+      ],
+      description: "Return 1 if the provided steam state is Away (3).",
+    },
+    SteamIsSnooze: {
+      category: "steam",
+      forward: "_SteamIsSnooze",
+      highlight: false,
+      deprecated: false,
+      returnType: 'number',
+      params: [
+        {
+          id: 'state',
+          desc: "The steam persona state to check.",
+          name: "State",
+          type: 'number',
+        }
+      ],
+      description: "Return 1 if the provided steam state is Snooze (4).",
+    },
+    SteamIsLookingToTrade: {
+      category: "steam",
+      forward: "_SteamIsLookingToTrade",
+      highlight: false,
+      deprecated: false,
+      returnType: 'number',
+      params: [
+        {
+          id: 'state',
+          desc: "The steam persona state to check.",
+          name: "State",
+          type: 'number',
+        }
+      ],
+      description: "Return 1 if the provided steam state is Looking to Trade (5).",
+    },
+    SteamIsLookingToPlay: {
+      category: "steam",
+      forward: "_SteamIsLookingToPlay",
+      highlight: false,
+      deprecated: false,
+      returnType: 'number',
+      params: [
+        {
+          id: 'state',
+          desc: "The steam persona state to check.",
+          name: "State",
+          type: 'number',
+        }
+      ],
+      description: "Return 1 if the provided steam state is Looking to Play (6).",
+    },
+    SteamIsInvisible: {
+      category: "steam",
+      forward: "_SteamIsInvisible",
+      highlight: false,
+      deprecated: false,
+      returnType: 'number',
+      params: [
+        {
+          id: 'state',
+          desc: "The steam persona state to check.",
+          name: "State",
+          type: 'number',
+        }
+      ],
+      description: "Return 1 if the provided steam state is Invisible (7).",
     },
   },
 });

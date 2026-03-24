@@ -12,10 +12,11 @@
 
       this.AddRuntimeMessageHandlers([
         ["set-fullscreen", (e) => this._OnSetFullscreen(
-            /** @type {import("./sdk.js").PostFullscreenState} */
-            e
+          /** @type {import("./sdk.js").PostFullscreenState} */
+          e
         )],
         ["get-fullscreen-state", () => this._OnGetFullscreenState()],
+        ["get-infos", () => this._NotifyInfos()],
       ]);
 
       // Initialize fullscreen state
@@ -55,6 +56,13 @@
 
     _NotifyFullscreenStateChanged() {
       this.PostToRuntime("fullscreen-state-changed", this._fullscreenState);
+    }
+
+    _NotifyInfos() {
+      return {
+        engine: globalThis.pipelabEngine,
+        isPipelab: !!globalThis.pipelabEngine,
+      };
     }
   };
 

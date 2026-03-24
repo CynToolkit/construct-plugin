@@ -10,7 +10,7 @@
   },
   "name": "@pipelab/construct-plugin",
   "description": "Pipelab construct plugin",
-  "version": "2.5.1",
+  "version": "2.7.2",
   "packageManager": "pnpm@9.10.0",
   "type": "module",
   "scripts": {
@@ -36,7 +36,6 @@
     "electron": "35.0.3",
     "esbuild": "0.25.10",
     "lefthook": "1.11.3",
-    "steamworks.js": "0.4.0",
     "typescript": "5.8.2"
   }
 }

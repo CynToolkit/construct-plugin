@@ -592,7 +592,6 @@ try {
       write: false,
     })
 
-    console.log('pluginTranspiled', pluginTranspiled)
 
     const file = pluginTranspiled.outputFiles[0].text;
 

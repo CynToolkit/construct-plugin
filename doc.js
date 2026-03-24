@@ -74,6 +74,7 @@ readme.push(`- [Actions](#actions)`);
 readme.push(`- [Conditions](#conditions)`);
 readme.push(`- [Expressions](#expressions)`);
 readme.push(`- [Paths](#paths)`);
+readme.push(`- [Recommended Save Location](#recommended-save-location)`);
 
 readme.push(`---`);
 readme.push(`## Usage`);
@@ -124,7 +125,6 @@ if (fs.existsSync(exampleFolderPath)) {
         readme.push(`<img src="./examples/${image}" width="200" />`);
       }
     });
-    readme.push(`</br>`);
   });
 }
 
@@ -159,7 +159,7 @@ readme.push(`## Actions`);
 readme.push(`| Action | Description | Params`);
 readme.push(`| --- | --- | --- |`);
 
-Object.keys(config.Acts).forEach((key) => {
+Object.keys(config.Acts).forEach((/** @type {keyof typeof config.Acts} */ key) => {
   const action = config.Acts[key];
 
   let paramString = "";
@@ -169,9 +169,11 @@ Object.keys(config.Acts).forEach((key) => {
     });
   }
 
-  readme.push(
-    `| ${action.listName} | ${action.description} | ${paramString} |`
-  );
+  if (!action.isDeprecated) {
+    readme.push(
+      `| ${action.listName} | ${action.description} | ${paramString} |`
+    );
+  }
 });
 readme.push(``);
 
@@ -203,7 +205,7 @@ readme.push(`## Conditions`);
 readme.push(`| Condition | Description | Params`);
 readme.push(`| --- | --- | --- |`);
 
-Object.keys(config.Cnds).forEach((key) => {
+Object.keys(config.Cnds).forEach((/** @type {keyof typeof config.Cnds} */ key) => {
   const condition = config.Cnds[key];
 
   let paramString = "";
@@ -213,9 +215,11 @@ Object.keys(config.Cnds).forEach((key) => {
     });
   }
 
-  readme.push(
-    `| ${condition.listName} | ${condition.description} | ${paramString} |`
-  );
+  if (!condition.isDeprecated) {
+    readme.push(
+      `| ${condition.listName} | ${condition.description} | ${paramString} |`
+    );
+  }
 });
 readme.push(``);
 
@@ -249,7 +253,7 @@ readme.push(`## Expressions`);
 readme.push(`| Expression | Description | Return Type | Params`);
 readme.push(`| --- | --- | --- | --- |`);
 
-Object.keys(config.Exps).forEach((key) => {
+Object.keys(config.Exps).forEach((/** @type {keyof typeof config.Exps} */ key) => {
   const expression = config.Exps[key];
 
   let paramString = "";
@@ -259,139 +263,52 @@ Object.keys(config.Exps).forEach((key) => {
     });
   }
 
-  readme.push(
-    `| ${key} | ${expression.description} | ${expression.returnType} | ${paramString} | `
-  );
+  if (!expression.isDeprecated) {
+    readme.push(
+      `| ${key} | ${expression.description} | ${expression.returnType} | ${paramString} | `
+    );
+  }
 });
 readme.push(``);
+readme.push(``);
+readme.push(`---`);
 readme.push(`## Paths`);
 
-readme.push('**ProjectFilesFolder**: Direct path to your games\'s content')
-readme.push('- Windows: `C:/Users/quent/AppData/Local/Temp/f0e3c24c1443adce014e5924d5f47e1b571c92e0f29d11d4/build/out/Pipelab-win32-x64/resources/app.asar/src/app`')
-readme.push('- Linux: ')
-readme.push('- MacOS: ')
-readme.push('')
+const pathMappings = [
+  { name: "HomeFolder", desc: "User home directory", win: "C:/Users/user", linux: "/home/user", mac: "/Users/user" },
+  { name: "AppDataFolder", desc: "Application configuration data", win: "C:/Users/user/AppData/Roaming", linux: "/home/user/.config", mac: "/Users/user/Library/Application Support" },
+  { name: "LocalAppDataFolder", desc: "Local application data", win: "C:/Users/user/AppData/Local", linux: "/home/user/.local/share", mac: "/Users/user/Library/Application Support" },
+  { name: "UserDataFolder", desc: "App-specific data (Roaming)", win: "C:/Users/user/AppData/Roaming/com.pipelab.app", linux: "/home/user/.config/com.pipelab.app", mac: "/Users/user/Library/Application Support/com.pipelab.app" },
+  { name: "LocalUserDataFolder", desc: "App-specific data (Local)", win: "C:/Users/user/AppData/Local/com.pipelab.app", linux: "/home/user/.local/share/com.pipelab.app", mac: "/Users/user/Library/Application Support/com.pipelab.app" },
+  { name: "AppFolder", desc: "Application installation directory", win: "C:/Program Files/Pipelab/resources/app", linux: "/tmp/pipelab/.../Pipelab-linux-x64/resources/app", mac: "/Applications/Pipelab.app/Contents/Resources/app" },
+  { name: "ProjectFilesFolder", desc: "Direct path to your game's content", win: ".../resources/app.asar/src/app", linux: "/tmp/pipelab/.../resources/app/src/app", mac: "/Applications/Pipelab.app/Contents/Resources/app/src/app" },
+  { name: "CrashDumpsFolder", desc: "Crash reports storage", win: "C:/Users/user/AppData/Roaming/com.pipelab.app/Crashpad", linux: "/home/user/.config/cache_com.pipelab.app/Crashpad", mac: "/Users/user/Library/Application Support/com.pipelab.app/Crashpad" },
+  { name: "DesktopFolder", desc: "User desktop", win: "C:/Users/user/Desktop", linux: "/home/user/Desktop", mac: "/Users/user/Desktop" },
+  { name: "DocumentsFolder", desc: "User documents", win: "C:/Users/user/Documents", linux: "/home/user/Documents", mac: "/Users/user/Documents" },
+  { name: "DownloadsFolder", desc: "User downloads", win: "C:/Users/user/Downloads", linux: "/home/user/Downloads", mac: "/Users/user/Downloads" },
+  { name: "LogsFolder", desc: "Application logs", win: "C:/Users/user/AppData/Roaming/com.pipelab.app/logs", linux: "/home/user/.config/com.pipelab.app/logs", mac: "/Users/user/Library/Logs/com.pipelab.app" }
+];
 
-readme.push('UserFolder: ')
-readme.push('- Windows: ``')
-readme.push('- Linux: ')
-readme.push('- MacOS: ')
-readme.push('')
+pathMappings.forEach(p => {
+  readme.push(`### ${p.name}`);
+  readme.push(`${p.desc}`);
+  readme.push(`- **Windows**: \`${p.win}\``);
+  readme.push(`- **Linux**: \`${p.linux}\``);
+  readme.push(`- **macOS**: \`${p.mac}\``);
+  readme.push(``);
+});
 
-readme.push('HomeFolder: ')
-readme.push('- Windows: C:/Users/quent')
-readme.push('- Linux: ')
-readme.push('- MacOS: ')
-readme.push('')
+readme.push(``);
 
-readme.push('AppDataFolder: ')
-readme.push('- Windows: C:/Users/quent/AppData/Roaming')
-readme.push('- Linux: ')
-readme.push('- MacOS: ')
-readme.push('')
-
-readme.push('LocalAppDataFolder: ')
-readme.push('- Windows: ``')
-readme.push('- Linux: ')
-readme.push('- MacOS: ')
-readme.push('')
-
-readme.push('UserDataFolder: ')
-readme.push('- Windows: C:/Users/quent/AppData/Roaming/app')
-readme.push('- Linux: ')
-readme.push('- MacOS: ')
-readme.push('')
-
-readme.push('LocalUserDataFolder: ')
-readme.push('- Windows: ``')
-readme.push('- Linux: ')
-readme.push('- MacOS: ')
-readme.push('')
-
-readme.push('SessionDataFolder: ')
-readme.push('- Windows: ``')
-readme.push('- Linux: ')
-readme.push('- MacOS: ')
-readme.push('')
-
-readme.push('TempFolder: ')
-readme.push('- Windows: ``')
-readme.push('- Linux: ')
-readme.push('- MacOS: ')
-readme.push('')
-
-readme.push('ExeFolder: ')
-readme.push('- Windows: ``')
-readme.push('- Linux: ')
-readme.push('- MacOS: ')
-readme.push('')
-
-readme.push('ModuleFolder: ')
-readme.push('- Windows: ``')
-readme.push('- Linux: ')
-readme.push('- MacOS: ')
-readme.push('')
-
-readme.push('DesktopFolder: ')
-readme.push('- Windows: ``')
-readme.push('- Linux: ')
-readme.push('- MacOS: ')
-readme.push('')
-
-readme.push('DocumentsFolder: ')
-readme.push('- Windows: ``')
-readme.push('- Linux: ')
-readme.push('- MacOS: ')
-readme.push('')
-
-readme.push('DownloadsFolder: ')
-readme.push('- Windows: ``')
-readme.push('- Linux: ')
-readme.push('- MacOS: ')
-readme.push('')
-
-readme.push('MusicFolder: ')
-readme.push('- Windows: ``')
-readme.push('- Linux: ')
-readme.push('- MacOS: ')
-readme.push('')
-
-readme.push('PicturesFolder: ')
-readme.push('- Windows: ``')
-readme.push('- Linux: ')
-readme.push('- MacOS: ')
-readme.push('')
-
-readme.push('VideosFolder: ')
-readme.push('- Windows: ``')
-readme.push('- Linux: ')
-readme.push('- MacOS: ')
-readme.push('')
-
-readme.push('RecentFolder: ')
-readme.push('- Windows: ``')
-readme.push('- Linux: ')
-readme.push('- MacOS: ')
-readme.push('')
-
-readme.push('LogsFolder: ')
-readme.push('- Windows: ``')
-readme.push('- Linux: ')
-readme.push('- MacOS: ')
-readme.push('')
-
-readme.push('CrashDumpsFolder: ')
-readme.push('- Windows: C:/Users/quent/AppData/Roaming/app/Crashpad')
-readme.push('- Linux: ')
-readme.push('- MacOS: ')
-readme.push('')
-
-readme.push('AppFolder: ')
-readme.push('- Windows: ')
-readme.push('- Linux: ')
-readme.push('- MacOS: ')
-readme.push('')
-
+readme.push(`## Recommended Save Location`);
+readme.push(`For game saves and persistent data, especially when considering **Steam Cloud Sync**, it is highly recommended to use the **LocalUserDataFolder**.`);
+readme.push(``);
+readme.push(`### Why?`);
+readme.push(`- **Standardization**: It follows the industry standard for each platform:`);
+readme.push(`  - **Windows**: Uses \`AppData/Local\`, the correct place for large or frequent writes like game saves (unlike \`Roaming\`, which can slow down network logins).`);
+readme.push(`  - **Linux**: Uses \`~/.local/share\`, adhering to the XDG Base Directory Specification for persistent data.`);
+readme.push(`  - **macOS**: Uses \`~/Library/Application Support\`, the standard location for app-specific data.`);
+readme.push(`- **Cloud Sync Compatibility**: Steam Cloud and other services are easily configured to watch these standard directories.`);
 readme.push(``);
 
 // Object.keys(config.Exps).forEach((key) => {
