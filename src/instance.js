@@ -2628,7 +2628,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         const order = {
           url: '/steam/raw',
           body: {
-            namespace: 'input',
+            namespace: 'utils',
             method: 'showGamepadTextInput',
             args: [inputMode, inputLineMode, description, maxCharacters, existingText || undefined],
           },
@@ -2671,7 +2671,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         const order = {
           url: '/steam/raw',
           body: {
-            namespace: 'input',
+            namespace: 'utils',
             method: 'showFloatingGamepadTextInput',
             args: [keyboardMode, x, y, width, height],
           },
