@@ -2615,7 +2615,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     }, this.unsupportedEngine)
 
     // Steam Gamepad Text Input
-    _ShowGamepadTextInputBase = this.wrap(super._ShowGamepadTextInput, async (
+    _ShowGamepadTextInput = this.wrap(super._ShowGamepadTextInput, async (
       /** @type {number} */ inputMode,
       /** @type {number} */ inputLineMode,
       /** @type {string} */ description,
@@ -2655,10 +2655,8 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         }
       }
     }, this.unsupportedEngine)
-    _ShowGamepadTextInput = this._ShowGamepadTextInputBase
-    _ShowGamepadTextInputSync = this._ShowGamepadTextInputBase
 
-    _ShowFloatingGamepadTextInputBase = this.wrap(super._ShowFloatingGamepadTextInput, async (
+    _ShowFloatingGamepadTextInput = this.wrap(super._ShowFloatingGamepadTextInput, async (
       /** @type {number} */ keyboardMode,
       /** @type {number} */ x,
       /** @type {number} */ y,
@@ -2698,8 +2696,6 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
         }
       }
     }, this.unsupportedEngine)
-    _ShowFloatingGamepadTextInput = this._ShowFloatingGamepadTextInputBase
-    _ShowFloatingGamepadTextInputSync = this._ShowFloatingGamepadTextInputBase
 
     // Steam Workshop
     /** @type {Map<string, any>} */
