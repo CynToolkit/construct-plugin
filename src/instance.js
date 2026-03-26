@@ -1128,6 +1128,18 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
       }
     })
 
+    _SetIgnoreMouseEvents = this.wrap(super._SetIgnoreMouseEvents, async (/** @type {boolean} */ ignore, /** @type {boolean} */ forward) => {
+      const order = {
+        url: '/window/set-ignore-mouse-events',
+        body: {
+          ignore,
+          forward,
+        }
+      }
+
+      await this.ws?.sendAndWaitForResponse(order)
+    }, this.unsupportedEngine)
+
     _Unmaximize = this.wrap(super._Unmaximize, async () => {
       /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageWindowUnmaximize, 'input'>} */
       const order = {
@@ -3815,6 +3827,15 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
       return true
     })
 
+    _OnSetIgnoreMouseEventsSuccess = this.wrap(super._OnSetIgnoreMouseEventsSuccess, (/** @type {Tag} */ tag) => this._currentTag === tag)
+    _OnAnySetIgnoreMouseEventsSuccess = this.wrap(super._OnAnySetIgnoreMouseEventsSuccess, () => {
+      return true
+    })
+    _OnSetIgnoreMouseEventsError = this.wrap(super._OnSetIgnoreMouseEventsError, (/** @type {Tag} */ tag) => this._currentTag === tag)
+    _OnAnySetIgnoreMouseEventsError = this.wrap(super._OnAnySetIgnoreMouseEventsError, () => {
+      return true
+    })
+
     _OnActivateAchievementSuccess = this.wrap(super._OnActivateAchievementSuccess, (/** @type {Tag} */ tag) => this._currentTag === tag)
     _OnAnyActivateAchievementSuccess = this.wrap(super._OnAnyActivateAchievementSuccess, () => true)
     _OnActivateAchievementError = this.wrap(super._OnActivateAchievementError, (/** @type {Tag} */ tag) => this._currentTag === tag)
@@ -4470,6 +4491,12 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     })
     _SetFullscreenResult = this.exprs(super._SetFullscreenResult, () => {
       return this._SetFullscreenResultValue
+    })
+    _SetIgnoreMouseEventsError = this.exprs(super._SetIgnoreMouseEventsError, () => {
+      return this._SetIgnoreMouseEventsErrorValue
+    })
+    _SetIgnoreMouseEventsResult = this.exprs(super._SetIgnoreMouseEventsResult, () => {
+      return this._SetIgnoreMouseEventsResultValue
     })
     _ActivateAchievementError = this.exprs(super._ActivateAchievementError, () => {
       return this._ActivateAchievementErrorValue

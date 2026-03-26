@@ -913,6 +913,31 @@ const SetFullscreen = ACEGenerator("SetFullscreen", /** @type {const} */({
   description: "Change fullscreen state",
 }))
 
+const SetIgnoreMouseEvents = ACEGenerator("SetIgnoreMouseEvents", /** @type {const} */({
+  category: "window",
+  highlight: false,
+  deprecated: false,
+  params: [
+    {
+      id: 'ignore',
+      desc: "Whether to ignore mouse events on the window.",
+      name: "Ignore",
+      type: 'boolean',
+      initialValue: 'false',
+    },
+    {
+      id: 'forward',
+      desc: "When mouse events are ignored, whether to still forward mouse move events to the window.",
+      name: "Forward",
+      type: 'boolean',
+      initialValue: 'false',
+    },
+  ],
+  listName: "Set ignore mouse events",
+  displayText: "Set ignore mouse events to {0} (forward: {1})",
+  description: "Set whether to ignore mouse events on the window, optionally forwarding them.",
+}))
+
 // steam
 const ActivateAchievement = ACEGenerator("ActivateAchievement", /** @type {const} */({
   category: "steam",
@@ -2038,6 +2063,7 @@ const Config = /** @type {const} */({
     ...ShowDevTools.actions,
     ...Unmaximize.actions,
     ...SetFullscreen.actions,
+    ...SetIgnoreMouseEvents.actions,
     ...ActivateAchievement.actions,
     ...ClearAchievement.actions,
     ...CheckAchievementActivationState.actions,
@@ -2114,6 +2140,7 @@ const Config = /** @type {const} */({
     ...ShowDevTools.conditions,
     ...Unmaximize.conditions,
     ...SetFullscreen.conditions,
+    ...SetIgnoreMouseEvents.conditions,
     ...ActivateAchievement.conditions,
     ...ClearAchievement.conditions,
     ...CheckAchievementActivationState.conditions,
@@ -2304,6 +2331,7 @@ const Config = /** @type {const} */({
     ...ShowDevTools.expressions,
     ...Unmaximize.expressions,
     ...SetFullscreen.expressions,
+    ...SetIgnoreMouseEvents.expressions,
     ...ActivateAchievement.expressions,
     ...ClearAchievement.expressions,
     ...CheckAchievementActivationState.expressions,

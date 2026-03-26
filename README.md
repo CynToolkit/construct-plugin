@@ -91,6 +91,7 @@ The main files you may want to look at would be instance.js
 | Show dev tools | Show or hide the dev tools. | Show             *(combo)* <br>Tag             *(string)* <br> |
 | Unmaximize | Unmaximize the window | Tag             *(string)* <br> |
 | Set Fullscreen | Change fullscreen state | Fullscreen             *(combo)* <br>Tag             *(string)* <br> |
+| Set ignore mouse events | Set whether to ignore mouse events on the window, optionally forwarding them. | Ignore             *(boolean)* <br>Forward             *(boolean)* <br>Tag             *(string)* <br> |
 | Activate achievement | Activate a steam achievement | Achievement             *(string)* <br>Tag             *(string)* <br> |
 | Clear achievement | Clear a steam achievement | Achievement             *(string)* <br>Tag             *(string)* <br> |
 | Check achievement activation state | Check the activation state of a steam achievement | Achievement             *(string)* <br>Tag             *(string)* <br> |
@@ -283,6 +284,10 @@ When Download type is Around the user, the offsets are the amount of entries aro
 | On any "SetFullscreen" success | Trigger when any of the "SetFullscreen" are executed with success. |  |
 | On "SetFullscreen" error | Trigger when the "SetFullscreen" failed to execute. | Tag *(string)* <br> |
 | On any "SetFullscreen" error | Trigger when any of the "SetFullscreen" failed to execute. |  |
+| On "SetIgnoreMouseEvents" success | Trigger when the "SetIgnoreMouseEvents" is executed with success. | Tag *(string)* <br> |
+| On any "SetIgnoreMouseEvents" success | Trigger when any of the "SetIgnoreMouseEvents" are executed with success. |  |
+| On "SetIgnoreMouseEvents" error | Trigger when the "SetIgnoreMouseEvents" failed to execute. | Tag *(string)* <br> |
+| On any "SetIgnoreMouseEvents" error | Trigger when any of the "SetIgnoreMouseEvents" failed to execute. |  |
 | On "ActivateAchievement" success | Trigger when the "ActivateAchievement" is executed with success. | Tag *(string)* <br> |
 | On any "ActivateAchievement" success | Trigger when any of the "ActivateAchievement" are executed with success. |  |
 | On "ActivateAchievement" error | Trigger when the "ActivateAchievement" failed to execute. | Tag *(string)* <br> |
@@ -515,6 +520,8 @@ When Download type is Around the user, the offsets are the amount of entries aro
 | UnmaximizeResult | The result of the "Unmaximize last call" | string |  | 
 | SetFullscreenError | The error of the "SetFullscreen last call" | string |  | 
 | SetFullscreenResult | The result of the "SetFullscreen last call" | string |  | 
+| SetIgnoreMouseEventsError | The error of the "SetIgnoreMouseEvents last call" | string |  | 
+| SetIgnoreMouseEventsResult | The result of the "SetIgnoreMouseEvents last call" | string |  | 
 | ActivateAchievementError | The error of the "ActivateAchievement last call" | string |  | 
 | ActivateAchievementResult | The result of the "ActivateAchievement last call" | string |  | 
 | ClearAchievementError | The error of the "ClearAchievement last call" | string |  | 
