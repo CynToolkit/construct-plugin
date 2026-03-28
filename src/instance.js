@@ -1128,16 +1128,35 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
       }
     })
 
-    _SetIgnoreMouseEvents = this.wrap(super._SetIgnoreMouseEvents, async (/** @type {boolean} */ ignore, /** @type {boolean} */ forward) => {
-      const order = {
-        url: '/window/set-ignore-mouse-events',
-        body: {
-          ignore,
-          forward,
+    _SetIgnoreMouseEvents = this.wrap(super._SetIgnoreMouseEvents, async (/** @type {boolean} */ ignore, /** @type {boolean} */ forward, /** @type {Tag} */ tag) => {
+      try {
+        const order = {
+          url: '/window/set-ignore-mouse-events',
+          body: {
+            ignore,
+            forward,
+          }
         }
-      }
 
-      await this.ws?.sendAndWaitForResponse(order)
+        await this.ws?.sendAndWaitForResponse(order)
+
+        this._SetIgnoreMouseEventsResultValue = true
+        this._SetIgnoreMouseEventsErrorValue = ''
+        await this.trigger(tag, [
+          C3.Plugins.pipelabv2.Cnds.OnSetIgnoreMouseEventsSuccess,
+          C3.Plugins.pipelabv2.Cnds.OnAnySetIgnoreMouseEventsSuccess,
+        ])
+      } catch (e) {
+        if (e instanceof Error) {
+          this._SetIgnoreMouseEventsErrorValue = e.message
+          this._SetIgnoreMouseEventsResultValue = false
+          await this.trigger(tag, [
+            C3.Plugins.pipelabv2.Cnds.OnSetIgnoreMouseEventsError,
+            C3.Plugins.pipelabv2.Cnds.OnAnySetIgnoreMouseEventsError,
+          ])
+        }
+        console.error(e)
+      }
     }, this.unsupportedEngine)
 
     _Unmaximize = this.wrap(super._Unmaximize, async () => {
