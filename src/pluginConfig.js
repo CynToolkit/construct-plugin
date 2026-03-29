@@ -913,6 +913,31 @@ const SetFullscreen = ACEGenerator("SetFullscreen", /** @type {const} */({
   description: "Change fullscreen state",
 }))
 
+const SetIgnoreMouseEvents = ACEGenerator("SetIgnoreMouseEvents", /** @type {const} */({
+  category: "window",
+  highlight: false,
+  deprecated: false,
+  params: [
+    {
+      id: 'ignore',
+      desc: "Whether to ignore mouse events on the window.",
+      name: "Ignore",
+      type: 'boolean',
+      initialValue: 'false',
+    },
+    {
+      id: 'forward',
+      desc: "When mouse events are ignored, whether to still forward mouse move events to the window.",
+      name: "Forward",
+      type: 'boolean',
+      initialValue: 'false',
+    },
+  ],
+  listName: "Set ignore mouse events",
+  displayText: "Set ignore mouse events to {0} (forward: {1})",
+  description: "Set whether to ignore mouse events on the window, optionally forwarding them.",
+}))
+
 // steam
 const ActivateAchievement = ACEGenerator("ActivateAchievement", /** @type {const} */({
   category: "steam",
@@ -1395,6 +1420,110 @@ const CheckDLCIsInstalled = ACEGenerator("CheckDLCIsInstalled", /** @type {const
   listName: "Check DLC is installed",
   displayText: "Check DLC [b]{0}[/b] is installed",
   description: "Checks if the user owns and has installed a specific DLC",
+}))
+
+// Steam Gamepad Text Input
+const ShowGamepadTextInput = ACEGenerator("ShowGamepadTextInput", /** @type {const} */({
+  category: "steam",
+  highlight: false,
+  deprecated: false,
+  params: [
+    {
+      id: 'inputMode',
+      desc: "The input mode for the text entry",
+      name: "Input Mode",
+      type: 'combo',
+      items: [
+        { "normal": "Normal" },
+        { "password": "Password" },
+      ]
+    },
+    {
+      id: 'inputLineMode',
+      desc: "Whether to use single-line or multi-line input",
+      name: "Line Mode",
+      type: 'combo',
+      items: [
+        { "singleLine": "Single Line" },
+        { "multipleLines": "Multiple Lines" },
+      ]
+    },
+    {
+      id: 'description',
+      desc: "The description text to display to the user",
+      name: "Description",
+      type: 'string',
+      initialValue: "\"\"",
+    },
+    {
+      id: 'maxCharacters',
+      desc: "The maximum number of characters allowed",
+      name: "Max Characters",
+      type: 'number',
+      initialValue: "256",
+    },
+    {
+      id: 'existingText',
+      desc: "Optional existing text to pre-fill in the input (leave empty for none)",
+      name: "Existing Text",
+      type: 'string',
+      initialValue: "\"\"",
+    }
+  ],
+  listName: "Show gamepad text input",
+  displayText: "Show gamepad text input (mode: {0}, line: {1}, desc: [b]{2}[/b], max: {3}, existing: {4})",
+  description: "Shows the Steam gamepad text input dialog. Returns the entered text, or null if cancelled or could not show.",
+}))
+
+const ShowFloatingGamepadTextInput = ACEGenerator("ShowFloatingGamepadTextInput", /** @type {const} */({
+  category: "steam",
+  highlight: false,
+  deprecated: false,
+  params: [
+    {
+      id: 'keyboardMode',
+      desc: "The keyboard mode to display",
+      name: "Keyboard Mode",
+      type: 'combo',
+      items: [
+        { "singleLine": "Single Line" },
+        { "multipleLines": "Multiple Lines" },
+        { "email": "Email" },
+        { "numeric": "Numeric" },
+      ]
+    },
+    {
+      id: 'x',
+      desc: "The X position of the floating keyboard",
+      name: "X",
+      type: 'number',
+      initialValue: "0",
+    },
+    {
+      id: 'y',
+      desc: "The Y position of the floating keyboard",
+      name: "Y",
+      type: 'number',
+      initialValue: "0",
+    },
+    {
+      id: 'width',
+      desc: "The width of the floating keyboard",
+      name: "Width",
+      type: 'number',
+      initialValue: "800",
+    },
+    {
+      id: 'height',
+      desc: "The height of the floating keyboard",
+      name: "Height",
+      type: 'number',
+      initialValue: "600",
+    }
+  ],
+  listName: "Show floating gamepad text input",
+  displayText: "Show floating gamepad text input (mode: {0}, x: {1}, y: {2}, size: {3}x{4})",
+  description: "Shows the Steam floating gamepad text input. Returns true if shown, otherwise false.",
 }))
 
 // Steam Workshop
@@ -1934,6 +2063,7 @@ const Config = /** @type {const} */({
     ...ShowDevTools.actions,
     ...Unmaximize.actions,
     ...SetFullscreen.actions,
+    ...SetIgnoreMouseEvents.actions,
     ...ActivateAchievement.actions,
     ...ClearAchievement.actions,
     ...CheckAchievementActivationState.actions,
@@ -1951,6 +2081,8 @@ const Config = /** @type {const} */({
     ...SaveScreenshotFromURL.actions,
     ...AddScreenshotToLibrary.actions,
     ...CheckDLCIsInstalled.actions,
+    ...ShowGamepadTextInput.actions,
+    ...ShowFloatingGamepadTextInput.actions,
     ...CreateWorkshopItem.actions,
     ...UpdateWorkshopItem.actions,
     ...GetSubscribedItemsWithMetadata.actions,
@@ -2008,6 +2140,7 @@ const Config = /** @type {const} */({
     ...ShowDevTools.conditions,
     ...Unmaximize.conditions,
     ...SetFullscreen.conditions,
+    ...SetIgnoreMouseEvents.conditions,
     ...ActivateAchievement.conditions,
     ...ClearAchievement.conditions,
     ...CheckAchievementActivationState.conditions,
@@ -2049,6 +2182,8 @@ const Config = /** @type {const} */({
     ...SaveScreenshotFromURL.conditions,
     ...AddScreenshotToLibrary.conditions,
     ...CheckDLCIsInstalled.conditions,
+    ...ShowGamepadTextInput.conditions,
+    ...ShowFloatingGamepadTextInput.conditions,
     ...CreateWorkshopItem.conditions,
     ...UpdateWorkshopItem.conditions,
     ...GetSubscribedItemsWithMetadata.conditions,
@@ -2196,6 +2331,7 @@ const Config = /** @type {const} */({
     ...ShowDevTools.expressions,
     ...Unmaximize.expressions,
     ...SetFullscreen.expressions,
+    ...SetIgnoreMouseEvents.expressions,
     ...ActivateAchievement.expressions,
     ...ClearAchievement.expressions,
     ...CheckAchievementActivationState.expressions,
@@ -2213,6 +2349,8 @@ const Config = /** @type {const} */({
     ...SaveScreenshotFromURL.expressions,
     ...AddScreenshotToLibrary.expressions,
     ...CheckDLCIsInstalled.expressions,
+    ...ShowGamepadTextInput.expressions,
+    ...ShowFloatingGamepadTextInput.expressions,
     ...CreateWorkshopItem.expressions,
     ...UpdateWorkshopItem.expressions,
     ...GetSubscribedItemsWithMetadata.expressions,

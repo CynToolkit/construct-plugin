@@ -91,6 +91,7 @@ The main files you may want to look at would be instance.js
 | Show dev tools | Show or hide the dev tools. | Show             *(combo)* <br>Tag             *(string)* <br> |
 | Unmaximize | Unmaximize the window | Tag             *(string)* <br> |
 | Set Fullscreen | Change fullscreen state | Fullscreen             *(combo)* <br>Tag             *(string)* <br> |
+| Set ignore mouse events | Set whether to ignore mouse events on the window, optionally forwarding them. | Ignore             *(boolean)* <br>Forward             *(boolean)* <br>Tag             *(string)* <br> |
 | Activate achievement | Activate a steam achievement | Achievement             *(string)* <br>Tag             *(string)* <br> |
 | Clear achievement | Clear a steam achievement | Achievement             *(string)* <br>Tag             *(string)* <br> |
 | Check achievement activation state | Check the activation state of a steam achievement | Achievement             *(string)* <br>Tag             *(string)* <br> |
@@ -110,6 +111,8 @@ When Download type is Around the user, the offsets are the amount of entries aro
 | Save screenshot from URL | Saves an image from a URL as a Steam screenshot. The image will be loaded, converted to base64, and its dimensions calculated automatically. | URL             *(string)* <br>Tag             *(string)* <br> |
 | Add screenshot to library | Adds an existing screenshot file to the Steam screenshot library. Returns the handle of the screenshot. | Filename             *(string)* <br>Thumbnail Filename             *(string)* <br>Width             *(number)* <br>Height             *(number)* <br>Tag             *(string)* <br> |
 | Check DLC is installed | Checks if the user owns and has installed a specific DLC | DLC App ID             *(number)* <br>Tag             *(string)* <br> |
+| Show gamepad text input | Shows the Steam gamepad text input dialog. Returns the entered text, or null if cancelled or could not show. | Input Mode             *(combo)* <br>Line Mode             *(combo)* <br>Description             *(string)* <br>Max Characters             *(number)* <br>Existing Text             *(string)* <br>Tag             *(string)* <br> |
+| Show floating gamepad text input | Shows the Steam floating gamepad text input. Returns true if shown, otherwise false. | Keyboard Mode             *(combo)* <br>X             *(number)* <br>Y             *(number)* <br>Width             *(number)* <br>Height             *(number)* <br>Tag             *(string)* <br> |
 | Create workshop item | Creates a new workshop item for the specified Steam App ID and returns its ID | App ID             *(number)* <br>Tag             *(string)* <br> |
 | Update workshop item | Updates content and metadata of a workshop item. Use the update flags to control which fields are updated. | App ID             *(number)* <br>Item ID             *(string)* <br>Update Title             *(boolean)* <br>Title             *(string)* <br>Update Description             *(boolean)* <br>Description             *(string)* <br>Update Content             *(boolean)* <br>Content Folder Path             *(string)* <br>Change Note             *(string)* <br>Update Preview             *(boolean)* <br>Preview Image Path             *(string)* <br>Update Tags             *(boolean)* <br>Tags             *(string)* <br>Update Visibility             *(boolean)* <br>Visibility             *(combo)* <br>Tag             *(string)* <br> |
 | Get subscribed items with metadata | Gets all subscribed workshop items with their metadata and install info | Tag             *(string)* <br> |
@@ -281,6 +284,10 @@ When Download type is Around the user, the offsets are the amount of entries aro
 | On any "SetFullscreen" success | Trigger when any of the "SetFullscreen" are executed with success. |  |
 | On "SetFullscreen" error | Trigger when the "SetFullscreen" failed to execute. | Tag *(string)* <br> |
 | On any "SetFullscreen" error | Trigger when any of the "SetFullscreen" failed to execute. |  |
+| On "SetIgnoreMouseEvents" success | Trigger when the "SetIgnoreMouseEvents" is executed with success. | Tag *(string)* <br> |
+| On any "SetIgnoreMouseEvents" success | Trigger when any of the "SetIgnoreMouseEvents" are executed with success. |  |
+| On "SetIgnoreMouseEvents" error | Trigger when the "SetIgnoreMouseEvents" failed to execute. | Tag *(string)* <br> |
+| On any "SetIgnoreMouseEvents" error | Trigger when any of the "SetIgnoreMouseEvents" failed to execute. |  |
 | On "ActivateAchievement" success | Trigger when the "ActivateAchievement" is executed with success. | Tag *(string)* <br> |
 | On any "ActivateAchievement" success | Trigger when any of the "ActivateAchievement" are executed with success. |  |
 | On "ActivateAchievement" error | Trigger when the "ActivateAchievement" failed to execute. | Tag *(string)* <br> |
@@ -359,6 +366,14 @@ When Download type is Around the user, the offsets are the amount of entries aro
 | On any "CheckDLCIsInstalled" success | Trigger when any of the "CheckDLCIsInstalled" are executed with success. |  |
 | On "CheckDLCIsInstalled" error | Trigger when the "CheckDLCIsInstalled" failed to execute. | Tag *(string)* <br> |
 | On any "CheckDLCIsInstalled" error | Trigger when any of the "CheckDLCIsInstalled" failed to execute. |  |
+| On "ShowGamepadTextInput" success | Trigger when the "ShowGamepadTextInput" is executed with success. | Tag *(string)* <br> |
+| On any "ShowGamepadTextInput" success | Trigger when any of the "ShowGamepadTextInput" are executed with success. |  |
+| On "ShowGamepadTextInput" error | Trigger when the "ShowGamepadTextInput" failed to execute. | Tag *(string)* <br> |
+| On any "ShowGamepadTextInput" error | Trigger when any of the "ShowGamepadTextInput" failed to execute. |  |
+| On "ShowFloatingGamepadTextInput" success | Trigger when the "ShowFloatingGamepadTextInput" is executed with success. | Tag *(string)* <br> |
+| On any "ShowFloatingGamepadTextInput" success | Trigger when any of the "ShowFloatingGamepadTextInput" are executed with success. |  |
+| On "ShowFloatingGamepadTextInput" error | Trigger when the "ShowFloatingGamepadTextInput" failed to execute. | Tag *(string)* <br> |
+| On any "ShowFloatingGamepadTextInput" error | Trigger when any of the "ShowFloatingGamepadTextInput" failed to execute. |  |
 | On "CreateWorkshopItem" success | Trigger when the "CreateWorkshopItem" is executed with success. | Tag *(string)* <br> |
 | On any "CreateWorkshopItem" success | Trigger when any of the "CreateWorkshopItem" are executed with success. |  |
 | On "CreateWorkshopItem" error | Trigger when the "CreateWorkshopItem" failed to execute. | Tag *(string)* <br> |
@@ -505,6 +520,8 @@ When Download type is Around the user, the offsets are the amount of entries aro
 | UnmaximizeResult | The result of the "Unmaximize last call" | string |  | 
 | SetFullscreenError | The error of the "SetFullscreen last call" | string |  | 
 | SetFullscreenResult | The result of the "SetFullscreen last call" | string |  | 
+| SetIgnoreMouseEventsError | The error of the "SetIgnoreMouseEvents last call" | string |  | 
+| SetIgnoreMouseEventsResult | The result of the "SetIgnoreMouseEvents last call" | string |  | 
 | ActivateAchievementError | The error of the "ActivateAchievement last call" | string |  | 
 | ActivateAchievementResult | The result of the "ActivateAchievement last call" | string |  | 
 | ClearAchievementError | The error of the "ClearAchievement last call" | string |  | 
@@ -539,6 +556,10 @@ When Download type is Around the user, the offsets are the amount of entries aro
 | AddScreenshotToLibraryResult | The result of the "AddScreenshotToLibrary last call" | string |  | 
 | CheckDLCIsInstalledError | The error of the "CheckDLCIsInstalled last call" | string |  | 
 | CheckDLCIsInstalledResult | The result of the "CheckDLCIsInstalled last call" | string |  | 
+| ShowGamepadTextInputError | The error of the "ShowGamepadTextInput last call" | string |  | 
+| ShowGamepadTextInputResult | The result of the "ShowGamepadTextInput last call" | string |  | 
+| ShowFloatingGamepadTextInputError | The error of the "ShowFloatingGamepadTextInput last call" | string |  | 
+| ShowFloatingGamepadTextInputResult | The result of the "ShowFloatingGamepadTextInput last call" | string |  | 
 | CreateWorkshopItemError | The error of the "CreateWorkshopItem last call" | string |  | 
 | CreateWorkshopItemResult | The result of the "CreateWorkshopItem last call" | string |  | 
 | UpdateWorkshopItemError | The error of the "UpdateWorkshopItem last call" | string |  | 

@@ -1128,6 +1128,37 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
       }
     })
 
+    _SetIgnoreMouseEvents = this.wrap(super._SetIgnoreMouseEvents, async (/** @type {boolean} */ ignore, /** @type {boolean} */ forward, /** @type {Tag} */ tag) => {
+      try {
+        const order = {
+          url: '/window/set-ignore-mouse-events',
+          body: {
+            ignore,
+            forward,
+          }
+        }
+
+        await this.ws?.sendAndWaitForResponse(order)
+
+        this._SetIgnoreMouseEventsResultValue = true
+        this._SetIgnoreMouseEventsErrorValue = ''
+        await this.trigger(tag, [
+          C3.Plugins.pipelabv2.Cnds.OnSetIgnoreMouseEventsSuccess,
+          C3.Plugins.pipelabv2.Cnds.OnAnySetIgnoreMouseEventsSuccess,
+        ])
+      } catch (e) {
+        if (e instanceof Error) {
+          this._SetIgnoreMouseEventsErrorValue = e.message
+          this._SetIgnoreMouseEventsResultValue = false
+          await this.trigger(tag, [
+            C3.Plugins.pipelabv2.Cnds.OnSetIgnoreMouseEventsError,
+            C3.Plugins.pipelabv2.Cnds.OnAnySetIgnoreMouseEventsError,
+          ])
+        }
+        console.error(e)
+      }
+    }, this.unsupportedEngine)
+
     _Unmaximize = this.wrap(super._Unmaximize, async () => {
       /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').MessageWindowUnmaximize, 'input'>} */
       const order = {
@@ -2614,6 +2645,89 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
       }
     }, this.unsupportedEngine)
 
+    // Steam Gamepad Text Input
+    _ShowGamepadTextInput = this.wrap(super._ShowGamepadTextInput, async (
+      /** @type {number} */ inputMode,
+      /** @type {number} */ inputLineMode,
+      /** @type {string} */ description,
+      /** @type {number} */ maxCharacters,
+      /** @type {string} */ existingText,
+      /** @type {Tag} */ tag
+    ) => {
+      try {
+        /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').SteamRaw<'input', 'showGamepadTextInput'>, 'input'>} */
+        const order = {
+          url: '/steam/raw',
+          body: {
+            namespace: 'utils',
+            method: 'showGamepadTextInput',
+            args: [inputMode, inputLineMode, description, maxCharacters, existingText || undefined],
+          },
+        };
+        const answer = await this.ws?.sendAndWaitForResponse(order);
+        if (answer?.body.success === false) {
+          throw new Error('Failed')
+        }
+        this._ShowGamepadTextInputResultValue = answer?.body.data ?? null
+        this._ShowGamepadTextInputErrorValue = ''
+
+        await this.trigger(tag, [
+          C3.Plugins.pipelabv2.Cnds.OnShowGamepadTextInputSuccess,
+          C3.Plugins.pipelabv2.Cnds.OnAnyShowGamepadTextInputSuccess
+        ])
+      } catch (e) {
+        if (e instanceof Error) {
+          this._ShowGamepadTextInputErrorValue = e.message
+          this._ShowGamepadTextInputResultValue = null
+          await this.trigger(tag, [
+            C3.Plugins.pipelabv2.Cnds.OnShowGamepadTextInputError,
+            C3.Plugins.pipelabv2.Cnds.OnAnyShowGamepadTextInputError
+          ])
+        }
+      }
+    }, this.unsupportedEngine)
+
+    _ShowFloatingGamepadTextInput = this.wrap(super._ShowFloatingGamepadTextInput, async (
+      /** @type {number} */ keyboardMode,
+      /** @type {number} */ x,
+      /** @type {number} */ y,
+      /** @type {number} */ width,
+      /** @type {number} */ height,
+      /** @type {Tag} */ tag
+    ) => {
+      try {
+        /** @type {import('@pipelab/core').MakeInputOutput<import('@pipelab/core').SteamRaw<'input', 'showFloatingGamepadTextInput'>, 'input'>} */
+        const order = {
+          url: '/steam/raw',
+          body: {
+            namespace: 'utils',
+            method: 'showFloatingGamepadTextInput',
+            args: [keyboardMode, x, y, width, height],
+          },
+        };
+        const answer = await this.ws?.sendAndWaitForResponse(order);
+        if (answer?.body.success === false) {
+          throw new Error('Failed')
+        }
+        this._ShowFloatingGamepadTextInputResultValue = answer?.body.data ? 1 : 0
+        this._ShowFloatingGamepadTextInputErrorValue = ''
+
+        await this.trigger(tag, [
+          C3.Plugins.pipelabv2.Cnds.OnShowFloatingGamepadTextInputSuccess,
+          C3.Plugins.pipelabv2.Cnds.OnAnyShowFloatingGamepadTextInputSuccess
+        ])
+      } catch (e) {
+        if (e instanceof Error) {
+          this._ShowFloatingGamepadTextInputErrorValue = e.message
+          this._ShowFloatingGamepadTextInputResultValue = 0
+          await this.trigger(tag, [
+            C3.Plugins.pipelabv2.Cnds.OnShowFloatingGamepadTextInputError,
+            C3.Plugins.pipelabv2.Cnds.OnAnyShowFloatingGamepadTextInputError
+          ])
+        }
+      }
+    }, this.unsupportedEngine)
+
     // Steam Workshop
     /** @type {Map<string, any>} */
     _workshopItemsMap = new Map()
@@ -3732,6 +3846,15 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
       return true
     })
 
+    _OnSetIgnoreMouseEventsSuccess = this.wrap(super._OnSetIgnoreMouseEventsSuccess, (/** @type {Tag} */ tag) => this._currentTag === tag)
+    _OnAnySetIgnoreMouseEventsSuccess = this.wrap(super._OnAnySetIgnoreMouseEventsSuccess, () => {
+      return true
+    })
+    _OnSetIgnoreMouseEventsError = this.wrap(super._OnSetIgnoreMouseEventsError, (/** @type {Tag} */ tag) => this._currentTag === tag)
+    _OnAnySetIgnoreMouseEventsError = this.wrap(super._OnAnySetIgnoreMouseEventsError, () => {
+      return true
+    })
+
     _OnActivateAchievementSuccess = this.wrap(super._OnActivateAchievementSuccess, (/** @type {Tag} */ tag) => this._currentTag === tag)
     _OnAnyActivateAchievementSuccess = this.wrap(super._OnAnyActivateAchievementSuccess, () => true)
     _OnActivateAchievementError = this.wrap(super._OnActivateAchievementError, (/** @type {Tag} */ tag) => this._currentTag === tag)
@@ -3850,6 +3973,16 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     _OnAnyGetFriendNameSuccess = this.wrap(super._OnAnyGetFriendNameSuccess, () => true)
     _OnGetFriendNameError = this.wrap(super._OnGetFriendNameError, (/** @type {Tag} */ tag) => this._currentTag === tag)
     _OnAnyGetFriendNameError = this.wrap(super._OnAnyGetFriendNameError, () => true)
+
+    _OnShowGamepadTextInputSuccess = this.wrap(super._OnShowGamepadTextInputSuccess, (/** @type {Tag} */ tag) => this._currentTag === tag)
+    _OnAnyShowGamepadTextInputSuccess = this.wrap(super._OnAnyShowGamepadTextInputSuccess, () => true)
+    _OnShowGamepadTextInputError = this.wrap(super._OnShowGamepadTextInputError, (/** @type {Tag} */ tag) => this._currentTag === tag)
+    _OnAnyShowGamepadTextInputError = this.wrap(super._OnAnyShowGamepadTextInputError, () => true)
+
+    _OnShowFloatingGamepadTextInputSuccess = this.wrap(super._OnShowFloatingGamepadTextInputSuccess, (/** @type {Tag} */ tag) => this._currentTag === tag)
+    _OnAnyShowFloatingGamepadTextInputSuccess = this.wrap(super._OnAnyShowFloatingGamepadTextInputSuccess, () => true)
+    _OnShowFloatingGamepadTextInputError = this.wrap(super._OnShowFloatingGamepadTextInputError, (/** @type {Tag} */ tag) => this._currentTag === tag)
+    _OnAnyShowFloatingGamepadTextInputError = this.wrap(super._OnAnyShowFloatingGamepadTextInputError, () => true)
 
     _OnCreateWorkshopItemSuccess = this.wrap(super._OnCreateWorkshopItemSuccess, (/** @type {Tag} */ tag) => this._currentTag === tag)
     _OnAnyCreateWorkshopItemSuccess = this.wrap(super._OnAnyCreateWorkshopItemSuccess, () => true)
@@ -4378,6 +4511,12 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     _SetFullscreenResult = this.exprs(super._SetFullscreenResult, () => {
       return this._SetFullscreenResultValue
     })
+    _SetIgnoreMouseEventsError = this.exprs(super._SetIgnoreMouseEventsError, () => {
+      return this._SetIgnoreMouseEventsErrorValue
+    })
+    _SetIgnoreMouseEventsResult = this.exprs(super._SetIgnoreMouseEventsResult, () => {
+      return this._SetIgnoreMouseEventsResultValue
+    })
     _ActivateAchievementError = this.exprs(super._ActivateAchievementError, () => {
       return this._ActivateAchievementErrorValue
     })
@@ -4505,6 +4644,20 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     })
     _GetFriendNameResult = this.exprs(super._GetFriendNameResult, () => {
       return this._GetFriendNameResultValue
+    })
+
+    _ShowGamepadTextInputError = this.exprs(super._ShowGamepadTextInputError, () => {
+      return this._ShowGamepadTextInputErrorValue
+    })
+    _ShowGamepadTextInputResult = this.exprs(super._ShowGamepadTextInputResult, () => {
+      return this._ShowGamepadTextInputResultValue ?? ''
+    })
+
+    _ShowFloatingGamepadTextInputError = this.exprs(super._ShowFloatingGamepadTextInputError, () => {
+      return this._ShowFloatingGamepadTextInputErrorValue
+    })
+    _ShowFloatingGamepadTextInputResult = this.exprs(super._ShowFloatingGamepadTextInputResult, () => {
+      return this._ShowFloatingGamepadTextInputResultValue ?? 0
     })
 
     // Workshop expressions
