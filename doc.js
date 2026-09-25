@@ -279,7 +279,8 @@ const pathMappings = [
   { name: "AppDataFolder", desc: "Application configuration data", win: "C:/Users/user/AppData/Roaming", linux: "/home/user/.config", mac: "/Users/user/Library/Application Support" },
   { name: "LocalAppDataFolder", desc: "Local application data", win: "C:/Users/user/AppData/Local", linux: "/home/user/.local/share", mac: "/Users/user/Library/Application Support" },
   { name: "UserDataFolder", desc: "App-specific data (Roaming)", win: "C:/Users/user/AppData/Roaming/com.pipelab.app", linux: "/home/user/.config/com.pipelab.app", mac: "/Users/user/Library/Application Support/com.pipelab.app" },
-  { name: "LocalUserDataFolder", desc: "App-specific data (Local)", win: "C:/Users/user/AppData/Local/com.pipelab.app", linux: "/home/user/.local/share/com.pipelab.app", mac: "/Users/user/Library/Application Support/com.pipelab.app" },
+  { name: "LocalUserDataFolder", desc: "App-specific local data (existing behavior retained)", win: "C:/Users/user/AppData/Local/com.pipelab.app", linux: "$XDG_DATA_HOME/com.pipelab.app, or Electron appData fallback (commonly ~/.config/com.pipelab.app) when unset", mac: "/Users/user/Library/Application Support/com.pipelab.app" },
+  { name: "SaveDataFolder", desc: "App-specific persistent game saves", win: "C:/Users/user/AppData/Local/com.pipelab.app", linux: "$XDG_DATA_HOME/com.pipelab.app (or ~/.local/share/com.pipelab.app when unset or invalid)", mac: "/Users/user/Library/Application Support/com.pipelab.app" },
   { name: "AppFolder", desc: "Application installation directory", win: "C:/Program Files/Pipelab/resources/app", linux: "/tmp/pipelab/.../Pipelab-linux-x64/resources/app", mac: "/Applications/Pipelab.app/Contents/Resources/app" },
   { name: "ProjectFilesFolder", desc: "Direct path to your game's content", win: ".../resources/app.asar/src/app", linux: "/tmp/pipelab/.../resources/app/src/app", mac: "/Applications/Pipelab.app/Contents/Resources/app/src/app" },
   { name: "CrashDumpsFolder", desc: "Crash reports storage", win: "C:/Users/user/AppData/Roaming/com.pipelab.app/Crashpad", linux: "/home/user/.config/cache_com.pipelab.app/Crashpad", mac: "/Users/user/Library/Application Support/com.pipelab.app/Crashpad" },
@@ -301,14 +302,13 @@ pathMappings.forEach(p => {
 readme.push(``);
 
 readme.push(`## Recommended Save Location`);
-readme.push(`For game saves and persistent data, especially when considering **Steam Cloud Sync**, it is highly recommended to use the **LocalUserDataFolder**.`);
+readme.push(`For new projects, use **SaveDataFolder** for game saves and persistent data.`);
 readme.push(``);
 readme.push(`### Why?`);
-readme.push(`- **Standardization**: It follows the industry standard for each platform:`);
-readme.push(`  - **Windows**: Uses \`AppData/Local\`, the correct place for large or frequent writes like game saves (unlike \`Roaming\`, which can slow down network logins).`);
-readme.push(`  - **Linux**: Uses \`~/.local/share\`, adhering to the XDG Base Directory Specification for persistent data.`);
-readme.push(`  - **macOS**: Uses \`~/Library/Application Support\`, the standard location for app-specific data.`);
-readme.push(`- **Cloud Sync Compatibility**: Steam Cloud and other services are easily configured to watch these standard directories.`);
+readme.push(`- **Windows**: Uses \`LOCALAPPDATA\` for app-specific saves.`);
+readme.push(`- **Linux**: Uses an absolute, non-empty \`XDG_DATA_HOME\`, or defaults to \`~/.local/share\` when unset or invalid.`);
+readme.push(`- **macOS**: Uses \`~/Library/Application Support\` for app-specific saves.`);
+readme.push(`- **Compatibility**: \`LocalUserDataFolder\` remains available with its existing behavior for projects that already use it.`);
 readme.push(``);
 
 // Object.keys(config.Exps).forEach((key) => {
