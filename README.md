@@ -698,16 +698,16 @@ App-specific data (Roaming)
 - **macOS**: `/Users/user/Library/Application Support/com.pipelab.app`
 
 ### LocalUserDataFolder
-App-specific local data (existing behavior retained)
+Legacy app-specific local data path. Kept for backwards compatibility.
 - **Windows**: `C:/Users/user/AppData/Local/com.pipelab.app`
 - **Linux**: `$XDG_DATA_HOME/com.pipelab.app, or Electron appData fallback (commonly ~/.config/com.pipelab.app) when unset`
 - **macOS**: `/Users/user/Library/Application Support/com.pipelab.app`
 
 ### SaveDataFolder
 App-specific persistent game saves
-- **Windows**: `C:/Users/user/AppData/Local/com.pipelab.app`
+- **Windows**: `%LOCALAPPDATA%/com.pipelab.app`
 - **Linux**: `$XDG_DATA_HOME/com.pipelab.app (or ~/.local/share/com.pipelab.app when unset or invalid)`
-- **macOS**: `/Users/user/Library/Application Support/com.pipelab.app`
+- **macOS**: `~/Library/Application Support/com.pipelab.app`
 
 ### AppFolder
 Application installation directory
