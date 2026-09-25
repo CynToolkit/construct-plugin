@@ -630,6 +630,7 @@ When Download type is Around the user, the offsets are the amount of entries aro
 | LocalAppDataFolder | Return the current AppDataFolder folder | string |  | 
 | UserDataFolder | Return the current UserDataFolder folder | string |  | 
 | LocalUserDataFolder | Return the current LocalUserDataFolder folder | string |  | 
+| SaveDataFolder | Return the recommended app-specific folder for persistent game saves | string |  | 
 | SessionDataFolder | Return the current SessionDataFolder folder | string |  | 
 | TempFolder | Return the current TempFolder folder | string |  | 
 | ExeFolder | Return the current ExeFolder folder | string |  | 
@@ -697,10 +698,16 @@ App-specific data (Roaming)
 - **macOS**: `/Users/user/Library/Application Support/com.pipelab.app`
 
 ### LocalUserDataFolder
-App-specific data (Local)
+Legacy app-specific local data path. Kept for backwards compatibility.
 - **Windows**: `C:/Users/user/AppData/Local/com.pipelab.app`
-- **Linux**: `/home/user/.local/share/com.pipelab.app`
+- **Linux**: `$XDG_DATA_HOME/com.pipelab.app, or Electron appData fallback (commonly ~/.config/com.pipelab.app) when unset`
 - **macOS**: `/Users/user/Library/Application Support/com.pipelab.app`
+
+### SaveDataFolder
+App-specific persistent game saves
+- **Windows**: `%LOCALAPPDATA%/com.pipelab.app`
+- **Linux**: `$XDG_DATA_HOME/com.pipelab.app (or ~/.local/share/com.pipelab.app when unset or invalid)`
+- **macOS**: `~/Library/Application Support/com.pipelab.app`
 
 ### AppFolder
 Application installation directory
@@ -746,11 +753,10 @@ Application logs
 
 
 ## Recommended Save Location
-For game saves and persistent data, especially when considering **Steam Cloud Sync**, it is highly recommended to use the **LocalUserDataFolder**.
+For new projects, use **SaveDataFolder** for game saves and persistent data.
 
 ### Why?
-- **Standardization**: It follows the industry standard for each platform:
-  - **Windows**: Uses `AppData/Local`, the correct place for large or frequent writes like game saves (unlike `Roaming`, which can slow down network logins).
-  - **Linux**: Uses `~/.local/share`, adhering to the XDG Base Directory Specification for persistent data.
-  - **macOS**: Uses `~/Library/Application Support`, the standard location for app-specific data.
-- **Cloud Sync Compatibility**: Steam Cloud and other services are easily configured to watch these standard directories.
+- **Windows**: Uses `LOCALAPPDATA` for app-specific saves.
+- **Linux**: Uses an absolute, non-empty `XDG_DATA_HOME`, or defaults to `~/.local/share` when unset or invalid.
+- **macOS**: Uses `~/Library/Application Support` for app-specific saves.
+- **Compatibility**: `LocalUserDataFolder` remains available with its existing behavior for projects that already use it.

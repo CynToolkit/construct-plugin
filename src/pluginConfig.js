@@ -2864,6 +2864,15 @@ const Config = /** @type {const} */({
       isVariadicParameters: false,
       description: "Return the current LocalUserDataFolder folder",
     },
+    SaveDataFolder: {
+      category: "filesystem",
+      forward: "_SaveDataFolder",
+      highlight: false,
+      deprecated: false,
+      returnType: 'string',
+      isVariadicParameters: false,
+      description: "Return the recommended app-specific folder for persistent game saves",
+    },
     SessionDataFolder: {
       category: "filesystem",
       forward: "_SessionDataFolder",

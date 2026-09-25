@@ -307,6 +307,9 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     _localUserDataFolder = '';
 
     /** @type {string} */
+    _saveDataFolder = '';
+
+    /** @type {string} */
     _sessionDataFolder = '';
 
     /** @type {string} */
@@ -648,7 +651,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
 
         await this.ws.connect();
 
-        /** @type {[import("@pipelab/core").Paths, string][]} */
+        /** @type {[(import("@pipelab/core").Paths | "saveData"), string][]} */
         const paths = [
           // app.getPath(name)
           ['home', '_homeFolder'],
@@ -656,6 +659,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
           ['userData', '_userDataFolder'],
           ['localAppData', '_localAppDataFolder'],
           ['localUserData', '_localUserDataFolder'],
+          ['saveData', '_saveDataFolder'],
           ['sessionData', '_sessionDataFolder'],
           ['temp', '_tempFolder'],
           ['exe', '_exeFolder'],
@@ -685,6 +689,7 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
             const orderPath = {
               url: '/paths',
               body: {
+                // @ts-expect-error saveData is supported by the matching Pipelab runtime but is not in @pipelab/core 1.4.9 yet.
                 name: name[0]
               }
             }
@@ -4092,6 +4097,9 @@ function getInstanceJs(parentClass, addonTriggers, C3) {
     })
     _LocalUserDataFolder = this.exprs(super._LocalUserDataFolder, () => {
       return this._localUserDataFolder ?? ''
+    })
+    _SaveDataFolder = this.exprs(super._SaveDataFolder, () => {
+      return this._saveDataFolder ?? ''
     })
     _SessionDataFolder = this.exprs(super._SessionDataFolder, () => {
       return this._sessionDataFolder ?? ''
